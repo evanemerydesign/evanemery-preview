@@ -210,7 +210,11 @@ button.ee-tag { cursor: pointer; }
 .ee-btn--ghost:hover { background: var(--surface-sunken); color: var(--text-primary); }
 
 /* ArtworkCard — the matted print. The signature container. */
-.ee-artcard { margin: 0; display: flex; flex-direction: column; gap: var(--sp-3); justify-content: flex-start; }
+.ee-artcard {
+  margin: 0; display: flex; flex-direction: column; gap: var(--sp-3);
+  justify-content: flex-start;
+  flex: none;              /* width is set by the justified layout */
+}
 a.ee-artcard { cursor: pointer; color: inherit; }
 .ee-artcard .mat {
   background: var(--ee-white);
@@ -251,29 +255,12 @@ a.ee-artcard { cursor: pointer; color: inherit; }
    plate is chosen so its height matches a portrait plate in the same row, so
    the grid still reads as even rows. Orientation is baked at build time from
    the file's own dimensions — it never changes with the viewport. */
-#ee-works-grid .ee-artcard[data-orient="landscape"] { grid-column: span 2; }
 /* The plate takes the work's OWN aspect (emitted inline from the file's real
    dimensions), so the artwork fills it edge to edge — the only border is the
    mat padding, no pillarboxing. The frame then hugs the work rather than the
    two-cell span, and site.js matches its height to the portrait plates in the
    row so every frame in a row lines up. */
-#ee-works-grid .ee-artcard[data-orient="landscape"],
-#ee-selscroll .ee-artcard[data-orient="landscape"] { grid-column: span 2; }
 
-/* The mat hugs the work and sits flush left, so the caption below it lines up
-   with the artwork's own left edge rather than the edge of the spanned cell. */
-#ee-works-grid .ee-artcard[data-orient="landscape"] .mat,
-#ee-selscroll .ee-artcard[data-orient="landscape"] .mat {
-  width: max-content; max-width: 100%; margin: 0;
-}
-#ee-works-grid .ee-artcard[data-orient="landscape"] .plate,
-#ee-selscroll .ee-artcard[data-orient="landscape"] .plate {
-  background: var(--ee-white); max-width: 100%;
-}
-#ee-works-grid .ee-artcard[data-orient="landscape"] .plate img,
-#ee-selscroll .ee-artcard[data-orient="landscape"] .plate img {
-  width: 100%; height: auto;
-}
 /* Captions sit under the work, flush with its bottom-left corner. site.js
    matches the caption's width to the mat so the status badge lands on the
    artwork's right edge, exactly as it does on a portrait card. */
@@ -405,13 +392,13 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   gap: 16px; margin-bottom: var(--sp-6);
 }
 .ee-selrow {
-  display: grid; grid-auto-flow: column;
-  grid-auto-columns: calc((100% - 3 * clamp(20px,2.4vw,36px)) / 4);
-  gap: clamp(20px,2.4vw,36px);
-  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px;
+  display: flex;
+  gap: var(--ee-row-gap, clamp(20px, 2.2vw, 40px));
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: none; padding-bottom: 4px;
 }
 .ee-selrow::-webkit-scrollbar { display: none; }
-.ee-selrow > * { scroll-snap-align: start; }
+.ee-selrow > * { scroll-snap-align: start; flex: none; }
 .ee-arrowbtn {
   font-family: var(--font-mono); font-size: 13px; color: var(--text-secondary);
   border: 1px solid var(--border-strong); background: transparent;
@@ -429,14 +416,13 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 /* ---------- works grid + filters ----------------------------------------- */
 
 .ee-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(24px,3vw,52px); }
-/* The works grid sizes by column width, not by a fixed count: wide screens get
-   four narrower cells, which keeps the first row above the fold while leaving
-   the 25:31 plate ratio untouched, and gives a landscape work two cells to
-   span into. */
+/* Justified rows: site.js solves each row's height so the row fills the width
+   exactly. Widths come from the canonical ratios, so nothing is cropped beyond
+   the 3:4 / 4:3 fit and no row leaves a gap. */
 #ee-works-grid {
-  grid-template-columns: repeat(auto-fill, minmax(clamp(230px, 21vw, 300px), 1fr));
-  grid-auto-flow: row dense;   /* a two-cell landscape must not leave a hole */
-  align-items: start;
+  display: flex; flex-wrap: wrap;
+  gap: var(--ee-row-gap, clamp(20px, 2.2vw, 40px));
+  align-items: flex-start;
 }
 .ee-grid-3--tight { gap: clamp(18px,2.2vw,32px); }
 .ee-dimrow { display: flex; align-items: center; gap: 2px; margin-top: var(--sp-2); flex-wrap: wrap; }
@@ -789,7 +775,6 @@ a.ee-artcard { cursor: pointer; color: inherit; }
    below the fold. Tighten the type and plates rather than let them scroll. */
 @media (min-width: 1101px) and (max-height: 860px) {
   .ee-artcard h3 { font-size: 18px; }
-  #ee-works-grid { grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 18vw, 260px), 1fr)); }
   .ee-work-plate img, .ee-work-crop { max-height: 36vh; }
   .ee-work-crop { height: 36vh; }
   .ee-spec th, .ee-spec td { padding: 4px 0; font-size: 12px; }

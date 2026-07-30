@@ -256,56 +256,133 @@
   // A landscape work spans two cells and is shown at its own aspect, so its
   // plate height cannot be derived in CSS from the column width. Match it to a
   // portrait plate in the same row so every frame in the row lines up.
-  /* ---------------- landscape frames --------------------------------------- */
+  /* ---------------- justified rows ----------------------------------------- */
 
-  // Both the works grid and the home carousel mix portrait and landscape works.
-  var FRAME_CONTAINERS = ["#ee-works-grid", "#ee-selscroll"];
+  // Canonical plate ratios, matching the stylesheet.
+  var AR = { portrait: 3 / 4, landscape: 4 / 3 };
+  var JUSTIFIED = ["#ee-works-grid", "#ee-selscroll"];
 
-  // Plate ratios are canonical (3:4 portrait, 4:3 landscape), so a row of
-  // portraits is level by construction. Only a landscape work needs help: it
-  // spans two cells, so at 4:3 it comes out taller than its portrait
-  // neighbours. Match it to the row height and let its width follow the ratio.
-  // The leftover space to its right is accepted — height is what has to hold.
-  function alignContainer(grid) {
-    if (!grid || isHidden(grid)) return;
-    var wide = $$('[data-orient="landscape"] .plate', grid);
-    if (!wide.length) return;
+  function ratioOf(card) {
+    return AR[card.getAttribute("data-orient")] || AR.portrait;
+  }
 
-    var ref = $('[data-orient="portrait"] .plate', grid);
-    if (!ref) return;
-    var h = Math.round(ref.getBoundingClientRect().height);
-    if (!h) return;
+  // Horizontal chrome around the plate: the mat's left+right padding.
+  function matInset(card) {
+    var mat = $(".mat", card);
+    if (!mat) return 0;
+    var cs = getComputedStyle(mat);
+    return (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
+  }
 
-    wide.forEach(function (plate) {
-      if (plate._eeH !== h) {
-        plate._eeH = h;
-        plate.style.height = h + "px";
-        plate.style.width = "auto";        // 4:3 taken at the row height
-      }
-      // The caption tracks the mat, so its badge lands on the artwork's edge.
-      var card = plate.closest(".ee-artcard");
-      if (!card) return;
-      var mat = $(".mat", card), cap = $("figcaption", card);
-      if (!mat || !cap) return;
-      var w = Math.round(mat.getBoundingClientRect().width);
-      if (!w || cap._eeW === w) return;
-      cap._eeW = w;
-      cap.style.width = w + "px";
+  // Solve each row's height so the row exactly fills the container:
+  //   sum(ratio_i) * H + sum(inset_i) + gaps = width
+  // Widths then follow from the canonical ratios, so nothing is cropped beyond
+  // the 3:4 / 4:3 fit and no row is left with a gap. Rows are filled in
+  // catalogue order — sequence is never rearranged.
+  function justify(container) {
+    if (!container || isHidden(container)) return;
+    var cards = $$(".ee-artcard", container).filter(function (c) { return !c.hidden; });
+    if (!cards.length) return;
+
+    var cs = getComputedStyle(container);
+    var gap = parseFloat(cs.columnGap) || 0;
+    var width = container.clientWidth;
+    if (!width) return;
+
+    var target = targetHeight(container);
+
+    // The carousel is one row. If the whole selection fits, justify it so it
+    // fills the width like any other row; if there are too many works for that,
+    // fall back to the target height and let it scroll.
+    if (cs.overflowX === "auto" || cs.overflowX === "scroll") {
+      var ratioSum = 0, insetSum = 0;
+      cards.forEach(function (c) { ratioSum += ratioOf(c); insetSum += matInset(c); });
+      var fit = (width - insetSum - gap * (cards.length - 1)) / ratioSum;
+      var h = fit >= target * 0.6 ? fit : target;
+      cards.forEach(function (c) { setCardWidth(c, ratioOf(c) * h + matInset(c)); });
+      return;
+    }
+
+    // Greedy packing at one fixed height is brittle: a slightly different
+    // target can leave the last row with two works and half the width empty.
+    // So solve the row breaks for a range of candidate heights and keep the
+    // layout that wastes the least space, preferring even rows to break ties.
+    // Catalogue order is never rearranged — only where the rows break moves.
+    var specs = cards.map(function (c) { return { ratio: ratioOf(c), inset: matInset(c) }; });
+
+    function pack(t) {
+      var rows = [], row = [], sr = 0, si = 0;
+      specs.forEach(function (sp, i) {
+        row.push(i); sr += sp.ratio; si += sp.inset;
+        var needed = sr * t + si + gap * (row.length - 1);
+        if (needed >= width) { rows.push({ idx: row, ratio: sr, inset: si, full: true }); row = []; sr = 0; si = 0; }
+      });
+      if (row.length) rows.push({ idx: row, ratio: sr, inset: si, full: false });
+      rows.forEach(function (r) {
+        var avail = width - r.inset - gap * (r.idx.length - 1);
+        r.solved = avail / r.ratio;
+        // A trailing part-row still stretches, so long as it stays in
+        // proportion with the rows above it.
+        r.h = r.full ? r.solved : (r.solved <= t * 1.5 ? r.solved : t);
+        r.waste = r.full ? 0 : (r.solved <= t * 1.5 ? 0 : 1 - (r.ratio * r.h + r.inset + gap * (r.idx.length - 1)) / width);
+      });
+      return rows;
+    }
+
+    function score(rows) {
+      var waste = rows.reduce(function (a, r) { return a + r.waste; }, 0);
+      var hs = rows.map(function (r) { return r.h; });
+      var spread = Math.max.apply(null, hs) / Math.min.apply(null, hs);
+      var avg = hs.reduce(function (a, h) { return a + h; }, 0) / hs.length;
+      // Without this term the search degenerates: more works per row always
+      // wastes less, so it would shrink the artwork indefinitely.
+      var drift = Math.abs(avg - target) / target;
+      return waste * 100 + (spread - 1) * 6 + drift * 14;
+    }
+
+    var best = null;
+    for (var f = 0.62; f <= 1.45; f += 0.03) {
+      var candidate = pack(target * f);
+      var sc = score(candidate);
+      if (!best || sc < best.score) best = { rows: candidate, score: sc };
+    }
+
+    best.rows.forEach(function (r) {
+      r.idx.forEach(function (i) {
+        setCardWidth(cards[i], specs[i].ratio * r.h + specs[i].inset);
+      });
     });
   }
 
+  function setCardWidth(card, w) {
+    w = Math.floor(w * 100) / 100;
+    if (card._eeW === w) return;      // idempotent: no write, no resize feedback
+    card._eeW = w;
+    card.style.width = w + "px";
+  }
+
+  // Tall enough to read, and for the works grid short enough that the first row
+  // clears the fold. Measured from the container's position on the page.
+  function targetHeight(container) {
+    var base = Math.min(520, Math.max(300, window.innerHeight * 0.46));
+    if (container.id !== "ee-works-grid") return Math.round(base);
+    var top = container.getBoundingClientRect().top;
+    var toFold = window.innerHeight - top - 150;   // caption + mat + breathing room
+    return Math.round(Math.min(base, Math.max(260, toFold)));
+  }
+
   function alignFrames() {
-    FRAME_CONTAINERS.forEach(function (sel) { alignContainer($(sel)); });
+    JUSTIFIED.forEach(function (sel) { justify($(sel)); });
   }
 
   function watchFrames() {
     var any = false;
-    FRAME_CONTAINERS.forEach(function (sel) {
-      var grid = $(sel);
-      if (!grid) return;
+    JUSTIFIED.forEach(function (sel) {
+      var el = $(sel);
+      if (!el) return;
       any = true;
       try {
-        new ResizeObserver(function () { requestAnimationFrame(alignFrames); }).observe(grid);
+        new ResizeObserver(function () { requestAnimationFrame(alignFrames); }).observe(el.parentNode || el);
       } catch (e) { /* the resize listener below is the fallback */ }
     });
     if (!any) return;
