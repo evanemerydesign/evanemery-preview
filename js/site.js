@@ -256,8 +256,11 @@
   // A landscape work spans two cells and is shown at its own aspect, so its
   // plate height cannot be derived in CSS from the column width. Match it to a
   // portrait plate in the same row so every frame in the row lines up.
-  function alignFrames() {
-    var grid = $("#ee-works-grid");
+  // Both the works grid and the home carousel lay portrait and landscape works
+  // side by side.
+  var FRAME_CONTAINERS = ["#ee-works-grid", "#ee-selscroll"];
+
+  function alignContainer(grid) {
     if (!grid || isHidden(grid)) return;
     var wide = $$('[data-orient="landscape"] .plate', grid);
     if (!wide.length) return;
@@ -276,17 +279,38 @@
       p.style.height = h + "px";
       p.style.width = "auto";
     });
+
+    // The caption tracks the mat's width so its badge sits on the artwork's
+    // right edge, the same as on a portrait card.
+    $$('[data-orient="landscape"]', grid).forEach(function (card) {
+      var mat = $(".mat", card), cap = $("figcaption", card);
+      if (!mat || !cap) return;
+      var w = Math.round(mat.getBoundingClientRect().width);
+      if (!w || cap._eeW === w) return;
+      cap._eeW = w;
+      cap.style.width = w + "px";
+    });
+  }
+
+  function alignFrames() {
+    FRAME_CONTAINERS.forEach(function (sel) { alignContainer($(sel)); });
   }
 
   function watchFrames() {
-    var grid = $("#ee-works-grid");
-    if (!grid) return;
+    var any = false;
+    FRAME_CONTAINERS.forEach(function (sel) {
+      var grid = $(sel);
+      if (!grid) return;
+      any = true;
+      try {
+        new ResizeObserver(function () { requestAnimationFrame(alignFrames); }).observe(grid);
+      } catch (e) { /* fall back to the resize listener below */ }
+    });
+    if (!any) return;
     alignFrames();
-    // re-measure once images have real boxes and on every resize
+    // re-measure once images have real boxes
     window.addEventListener("load", alignFrames);
-    try {
-      new ResizeObserver(function () { requestAnimationFrame(alignFrames); }).observe(grid);
-    } catch (e) { window.addEventListener("resize", alignFrames); }
+    window.addEventListener("resize", alignFrames);
   }
 
   /* ---------------- selected-works carousel ------------------------------- */
@@ -300,6 +324,22 @@
         row.scrollBy({ left: dir * row.clientWidth, behavior: "smooth" });
       });
     });
+
+    // Show the arrows whenever the row actually overflows. A landscape work
+    // spans two cells, so four works can overflow just as six would.
+    var nav = $("#ee-selnav");
+    function syncNav() {
+      if (!nav) return;
+      var overflows = row.scrollWidth - row.clientWidth > 4;
+      nav.hidden = !overflows;
+      nav.style.display = overflows ? "flex" : "none";
+    }
+    syncNav();
+    window.addEventListener("load", syncNav);
+    window.addEventListener("resize", syncNav);
+    try {
+      new ResizeObserver(function () { requestAnimationFrame(syncNav); }).observe(row);
+    } catch (e) { /* resize listener above is the fallback */ }
   }
 
   /* ---------------- hero cues --------------------------------------------- */

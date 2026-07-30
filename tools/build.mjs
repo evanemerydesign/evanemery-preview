@@ -271,7 +271,7 @@ function buildIndex(D) {
         <div class="ee-secthead" data-reveal>
           ${specLabel("Selected works")}
           <div style="display:flex;align-items:center;gap:16px">
-            <div style="display:${selected.length > 4 ? "flex" : "none"};align-items:center;gap:6px">
+            <div class="ee-selnav" id="ee-selnav" hidden style="align-items:center;gap:6px">
               <button type="button" class="ee-arrowbtn" data-sel-scroll="prev" aria-label="Previous works">←</button>
               <button type="button" class="ee-arrowbtn" data-sel-scroll="next" aria-label="Next works">→</button>
             </div>

@@ -210,7 +210,7 @@ button.ee-tag { cursor: pointer; }
 .ee-btn--ghost:hover { background: var(--surface-sunken); color: var(--text-primary); }
 
 /* ArtworkCard — the matted print. The signature container. */
-.ee-artcard { margin: 0; display: flex; flex-direction: column; gap: var(--sp-3); }
+.ee-artcard { margin: 0; display: flex; flex-direction: column; gap: var(--sp-3); justify-content: flex-start; }
 a.ee-artcard { cursor: pointer; color: inherit; }
 .ee-artcard .mat {
   background: var(--ee-white);
@@ -246,13 +246,26 @@ a.ee-artcard { cursor: pointer; color: inherit; }
    mat padding, no pillarboxing. The frame then hugs the work rather than the
    two-cell span, and site.js matches its height to the portrait plates in the
    row so every frame in a row lines up. */
-#ee-works-grid .ee-artcard[data-orient="landscape"] .mat {
-  width: max-content; max-width: 100%; margin: 0 auto;
+#ee-works-grid .ee-artcard[data-orient="landscape"],
+#ee-selscroll .ee-artcard[data-orient="landscape"] { grid-column: span 2; }
+
+/* The mat hugs the work and sits flush left, so the caption below it lines up
+   with the artwork's own left edge rather than the edge of the spanned cell. */
+#ee-works-grid .ee-artcard[data-orient="landscape"] .mat,
+#ee-selscroll .ee-artcard[data-orient="landscape"] .mat {
+  width: max-content; max-width: 100%; margin: 0;
 }
-#ee-works-grid .ee-artcard[data-orient="landscape"] .plate {
+#ee-works-grid .ee-artcard[data-orient="landscape"] .plate,
+#ee-selscroll .ee-artcard[data-orient="landscape"] .plate {
   background: var(--ee-white); max-width: 100%;
 }
-#ee-works-grid .ee-artcard[data-orient="landscape"] figcaption { text-align: left; }
+/* Captions sit under the work, flush with its bottom-left corner. site.js
+   matches the caption's width to the mat so the status badge lands on the
+   artwork's right edge, exactly as it does on a portrait card. */
+#ee-works-grid .ee-artcard[data-orient="landscape"] figcaption,
+#ee-selscroll .ee-artcard[data-orient="landscape"] figcaption {
+  text-align: left; max-width: 100%; margin: 0;
+}
 #ee-works-grid .ee-artcard[data-orient="landscape"] .plate img {
   width: 100%; height: 100%; object-fit: contain;
 }
