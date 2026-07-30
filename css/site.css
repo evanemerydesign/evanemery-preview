@@ -271,17 +271,24 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 /* ---------- hero ---------------------------------------------------------- */
 
 .ee-hero { position: relative; padding: clamp(48px,7vw,104px) var(--page-gutter) clamp(40px,5vw,72px); }
+/* align-items:start, not stretch: the sheet must size itself, never inherit the
+   height of the copy column — otherwise a tall viewport stretches the frame
+   past the fold. */
 .ee-hero-stack {
   position: relative; z-index: 1; display: grid;
   grid-template-columns: minmax(0,30fr) minmax(0,70fr);
-  gap: clamp(32px,5vw,80px); align-items: stretch;
+  gap: clamp(32px,5vw,80px); align-items: start;
 }
 .ee-hero-copy { display: flex; flex-direction: column; gap: var(--sp-5); }
 .ee-hero-cta { display: flex; align-items: center; gap: 14px; margin-top: var(--sp-2); }
 .ee-hero-tile { display: flex; gap: clamp(14px,1.6vw,22px); min-height: 0; }
 
+/* The frame keeps a fixed 16:10 plate and is capped to the remaining viewport,
+   so the whole hero is always visible and fitCamera() gets a stable aspect. */
 .ee-sheet {
-  position: relative; flex: 1; min-height: 0; min-width: 0;
+  position: relative; flex: 1; min-width: 0;
+  aspect-ratio: 16 / 10;
+  max-height: calc(100dvh - var(--ee-nav-h, 96px) - clamp(120px, 16vh, 200px));
   background-color: var(--ee-page-tint, #eeeae1);
   border: var(--bw-frame) solid var(--border-strong);
   box-shadow: var(--shadow-frame);
@@ -395,14 +402,6 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 .ee-datasheet .hd {
   color: var(--text-muted); letter-spacing: 0.18em; text-transform: uppercase;
   font-size: 10px; margin-bottom: 8px;
-}
-.ee-wf-rail {
-  position: sticky; top: 88px; z-index: 6; height: 0; overflow: visible;
-  display: flex; align-items: baseline; gap: 14px; pointer-events: none;
-}
-#ee-wf-label {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em;
-  text-transform: uppercase; color: rgba(255,255,255,.5);
 }
 .ee-stages { display: flex; flex-direction: column; gap: clamp(40px,5vw,84px); position: relative; }
 /* Drafting-sheet row: numeral rail on the left, the stage itself on the right.
@@ -639,36 +638,9 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   background: var(--ee-accent, var(--text-primary)); z-index: 230;
   pointer-events: none; transition: width .1s linear;
 }
-#ee-progress-num {
-  position: fixed; bottom: 18px; right: 18px; z-index: 230; pointer-events: none;
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
-  color: var(--text-muted);
-  background: color-mix(in srgb, var(--ee-paper) 78%, transparent);
-  padding: 4px 8px; border: 1px solid var(--border-hairline);
-  border-left: 2px solid var(--ee-accent, var(--border-hairline));
-  backdrop-filter: blur(4px);
-}
-[data-progress="0"] #ee-progress, [data-progress="0"] #ee-progress-num { display: none; }
+[data-progress="0"] #ee-progress { display: none; }
 
-/* marginalia — vertical mono labels in the gutters */
-.ee-margin {
-  position: fixed; top: 50%; z-index: 205; pointer-events: none;
-  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.34em;
-  text-transform: uppercase; color: var(--text-faint); writing-mode: vertical-rl;
-}
-.ee-margin.l { left: 6px; transform: translateY(-50%) rotate(180deg); }
-.ee-margin.r { right: 6px; transform: translateY(-50%); }
-[data-margin="0"] .ee-margin { display: none; }
 
-/* oversized ghost section numeral */
-.ee-bignum {
-  font-family: var(--font-display); font-weight: var(--fw-bold); line-height: .8;
-  letter-spacing: -0.04em; color: var(--text-primary); opacity: .07;
-  font-size: clamp(90px,15vw,220px); pointer-events: none; user-select: none;
-}
-.ee-bignum--corner { position: absolute; top: clamp(4px,1vw,26px); right: var(--page-gutter); z-index: 0; }
-[data-bignum="0"] .ee-bignum { display: none; }
-.ee-dark .ee-bignum { color: #fff; opacity: .06; }
 
 [data-parallax] { will-change: transform; }
 
@@ -708,7 +680,6 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   .ee-grid-3 { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .ee-selrow { grid-auto-columns: calc((100% - clamp(20px,2.4vw,36px)) / 2); }
   .ee-hero-tile { min-height: 56vh; order: -1; }
-  .ee-margin { display: none; }
   #ee-frame .reg { width: 12px; height: 12px; }
   #ee-frame .reg::before { top: -4px; height: 20px; }
   #ee-frame .reg::after { left: -4px; width: 20px; }

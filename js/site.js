@@ -131,7 +131,6 @@
 
   function setupScrollFx() {
     var bar = $("#ee-progress");
-    var num = $("#ee-progress-num");
     var shell = $("[data-ee-shell]");
     var nav = $("#ee-nav");
     var parEls = $$("[data-parallax]");
@@ -145,7 +144,6 @@
       var frac = Math.max(0, Math.min(1, y / max));
 
       if (bar) bar.style.width = (frac * 100).toFixed(1) + "%";
-      if (num) num.textContent = String(Math.round(frac * 100)).padStart(2, "0") + "%";
 
       var scrolled = y > 8 ? 1 : 0;
       if (nav && scrolled !== navScrolled) { navScrolled = scrolled; nav.setAttribute("data-scrolled", String(scrolled)); }
@@ -168,25 +166,6 @@
         el.style.transform = "translate3d(0," + (mid * s).toFixed(1) + "px,0)";
       });
 
-      // sticky workflow numeral
-      var railNum = $("#ee-wf-num");
-      if (railNum) {
-        var showRail = p.stickyWorkflow !== false;
-        var lbl = $("#ee-wf-label");
-        railNum.style.display = showRail ? "" : "none";
-        if (lbl) lbl.style.display = showRail ? "" : "none";
-        if (showRail) {
-          var n = "01", t = "";
-          $$("[data-wf-stage]").forEach(function (st) {
-            if (st.getBoundingClientRect().top < window.innerHeight * 0.55) {
-              n = st.getAttribute("data-wf-n");
-              t = st.getAttribute("data-wf-title") || "";
-            }
-          });
-          railNum.textContent = n;
-          if (lbl) lbl.textContent = t;
-        }
-      }
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);

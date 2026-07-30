@@ -181,9 +181,8 @@
       ["paperTexture", "range", 0, 1, 0.05], ["simGrain", "range", 0, 1, 0.05],
       ["filmGrain", "bool"], ["grainIntensity", "range", 0, 1, 0.05],
       ["cropMarks", "bool"], ["chromaAberration", "range", 0, 12, 0.5],
-      ["halftone", "bool"], ["marginalia", "bool"], ["scrollProgress", "bool"],
-      ["bigNumerals", "bool"], ["scrollParallax", "bool"], ["drawInRules", "bool"],
-      ["stickyWorkflow", "bool"]
+      ["halftone", "bool"], ["scrollProgress", "bool"],
+      ["scrollParallax", "bool"], ["drawInRules", "bool"]
     ]]
   ];
 

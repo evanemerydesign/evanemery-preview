@@ -29,10 +29,7 @@
     // Scroll FX v2
     scrollParallax: true,
     drawInRules: true,
-    stickyWorkflow: true,
     scrollProgress: true,
-    marginalia: true,
-    bigNumerals: true,
     // Timing
     introRampSeconds: 5,
     introDriftSeconds: 7,
@@ -188,9 +185,7 @@
     set("data-crop", p.cropMarks ? "1" : "0");
     set("data-chroma", ca > 0 ? "1" : "0");
     set("data-halftone", p.halftone ? "1" : "0");
-    set("data-margin", p.marginalia ? "1" : "0");
     set("data-progress", p.scrollProgress ? "1" : "0");
-    set("data-bignum", p.bigNumerals ? "1" : "0");
     set("data-simgrain", (p.simGrain || 0) > 0 ? "1" : "0");
     set("data-inkbleed", bleed > 0.01 ? "1" : "0");
 

@@ -186,14 +186,11 @@ function nav({ prefix = "", standalone = false }) {
   </header>`;
 }
 
-function fxLayers(site) {
+function fxLayers() {
   return `  <div id="ee-paper-tex" aria-hidden="true"></div>
   <div id="ee-progress" aria-hidden="true"></div>
-  <div id="ee-progress-num" aria-hidden="true">00%</div>
   <div id="ee-grain" aria-hidden="true"></div>
-  <div id="ee-frame" aria-hidden="true"><span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span></div>
-  <div class="ee-margin l" aria-hidden="true">Evan Emery — process record · 2023–2025</div>
-  <div class="ee-margin r" aria-hidden="true">${esc(site.tagline)}</div>`;
+  <div id="ee-frame" aria-hidden="true"><span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span></div>`;
 }
 
 function footer(site) {
@@ -305,7 +302,6 @@ ${STAGES.slice(0, 3).map((s, i) => `            <div data-reveal data-reveal-del
 
   const worksSection = `
     <section data-view="works" class="ee-sec" aria-label="Works" hidden style="position:relative;overflow:hidden">
-      <div class="ee-bignum ee-bignum--corner" data-parallax="0.05" aria-hidden="true">02</div>
       <div class="ee-stack" data-reveal style="position:relative;z-index:1;gap:var(--sp-4);margin-bottom:var(--sp-7)">
         <div class="ee-speclabel" id="ee-works-count">Catalogue · ${works.length} works</div>
         <h1 class="ee-h1 ee-chroma" data-text="Works">Works</h1>
@@ -324,7 +320,6 @@ ${works.map((w, i) => artworkCard(w, { delay: (i % 3) * 90 })).join("\n")}
   const experimentsSection = `
     <section data-view="experiments" aria-label="Experiments" hidden>
       <div class="ee-sec ee-sec--tight" style="position:relative;overflow:hidden">
-        <div class="ee-bignum ee-bignum--corner" data-parallax="0.05" aria-hidden="true">03</div>
         <div class="ee-splitend" data-reveal style="position:relative;z-index:1">
           <div class="ee-stack" style="gap:var(--sp-4);max-width:44ch">
             ${specLabel(`The sketchbook · ${String(exps.length).padStart(2, "0")} tests`)}
@@ -367,7 +362,6 @@ ${exps.map((x, i) => `          <div class="ee-exp" data-reveal data-reveal-dela
   const workflowSection = `
     <section data-view="workflow" aria-label="Workflow" hidden>
       <div class="ee-sec ee-sec--tight" style="position:relative;overflow:hidden">
-        <div class="ee-bignum ee-bignum--corner" data-parallax="0.05" aria-hidden="true">01</div>
         <div class="ee-splitend" data-reveal style="position:relative;z-index:1">
           <div class="ee-stack" style="gap:var(--sp-4);max-width:40ch">
             ${specLabel("The process · 2023–2025")}
@@ -388,18 +382,14 @@ ${exps.map((x, i) => `          <div class="ee-exp" data-reveal data-reveal-dela
 
       <div class="ee-dark ee-band">
         <div class="ee-band-inner ee-stages">
-          <div class="ee-wf-rail" aria-hidden="true">
-            <span id="ee-wf-num" class="ee-bignum" style="font-size:clamp(56px,7vw,110px);opacity:.14">01</span>
-            <span id="ee-wf-label"></span>
-          </div>
 ${STAGES.map((s) => `          <div class="ee-stage" data-reveal data-wf-stage data-wf-n="${s.n}" data-wf-title="${attr(s.title)}">
-            <div class="ee-stack" style="gap:var(--sp-3)">
-              <div style="display:flex;align-items:center;gap:12px">
-                <span class="n">${s.n}</span>
-                ${figTag(s.n, s.tag)}
-              </div>
-              <h2 class="ee-h2" style="font-size:clamp(24px,2.6vw,38px);line-height:1.06">${esc(s.title)}</h2>
-              <p class="ee-body" style="font-size:15px;line-height:1.62;max-width:44ch">${esc(s.body)}</p>
+            <div class="rail">
+              <span class="n">${s.n}</span>
+              ${figTag(s.n, s.tag)}
+            </div>
+            <div class="ee-stack body" style="gap:var(--sp-3)">
+              <h2 class="ee-h2" style="font-size:clamp(24px,2.8vw,40px);line-height:1.06">${esc(s.title)}</h2>
+              <p class="ee-body" style="font-size:16px;line-height:1.62">${esc(s.body)}</p>
               <div class="meta"><span>${esc(s.tool)}</span><span>${esc(s.output)}</span></div>
             </div>
           </div>`).join("\n")}
@@ -477,7 +467,7 @@ ${head({
 <body>
 <a class="ee-skip" href="#ee-main">Skip to content</a>
 <div class="ee-page" data-ee-shell data-frame="black" data-wall="plaster" data-bg="paper">
-${fxLayers(site)}
+${fxLayers()}
 ${nav({})}
   <main class="ee-main" id="ee-main">
 ${homeSection}
@@ -561,7 +551,7 @@ ${head({
 <body>
 <a class="ee-skip" href="#ee-main">Skip to content</a>
 <div class="ee-page" data-ee-shell data-frame="black" data-wall="plaster" data-bg="paper">
-${fxLayers(site)}
+${fxLayers()}
 ${nav({ prefix: P, standalone: true })}
   <main class="ee-main ee-sec" id="ee-main">
 
