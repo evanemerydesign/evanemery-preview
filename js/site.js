@@ -260,37 +260,74 @@
   // side by side.
   var FRAME_CONTAINERS = ["#ee-works-grid", "#ee-selscroll"];
 
+  function aspectOf(card) {
+    var p = $(".plate", card);
+    if (!p) return 0;
+    var m = /([\d.]+)\s*\/\s*([\d.]+)/.exec(p.style.aspectRatio || "");
+    if (m) return parseFloat(m[1]) / parseFloat(m[2]);
+    var img = $("img", card);
+    return (img && img.naturalWidth && img.naturalHeight) ? img.naturalWidth / img.naturalHeight : 0;
+  }
+
+  // Level every plate in a row to the tallest work in that row. The work keeps
+  // the full cell width and its true aspect; the leftover becomes mat above and
+  // below. Levelling per row (not per page) keeps that mat minimal.
   function alignContainer(grid) {
     if (!grid || isHidden(grid)) return;
-    var wide = $$('[data-orient="landscape"] .plate', grid);
-    if (!wide.length) return;
+    var cards = $$(".ee-artcard", grid).filter(function (c) { return !c.hidden; });
+    if (!cards.length) return;
 
-    // A portrait plate's height comes from the column width alone, so it can be
-    // measured without first clearing the landscape height — and not clearing
-    // keeps this from fighting the ResizeObserver that its own writes trigger.
-    var ref = $('[data-orient="portrait"] .plate', grid);
-    if (!ref) return;
-    var h = Math.round(ref.getBoundingClientRect().height);
-    if (!h) return;
-
-    wide.forEach(function (p) {
-      if (p._eeH === h) return;   // idempotent: no write, no resize feedback
-      p._eeH = h;
-      p.style.height = h + "px";
-      p.style.width = "auto";
+    var rows = {};
+    cards.forEach(function (c) {
+      var key = Math.round(c.offsetTop);
+      (rows[key] = rows[key] || []).push(c);
     });
 
-    // The caption tracks the mat's width so its badge sits on the artwork's
-    // right edge, the same as on a portrait card.
-    $$('[data-orient="landscape"]', grid).forEach(function (card) {
-      var mat = $(".mat", card), cap = $("figcaption", card);
-      if (!mat || !cap) return;
-      var w = Math.round(mat.getBoundingClientRect().width);
-      if (!w || cap._eeW === w) return;
-      cap._eeW = w;
-      cap.style.width = w + "px";
+    Object.keys(rows).forEach(function (key) {
+      var row = rows[key];
+
+      // The row's height is set by the portrait works, which span their cell.
+      var h = 0;
+      row.forEach(function (c) {
+        if (c.getAttribute("data-orient") !== "portrait") return;
+        var plate = $(".plate", c);
+        var ar = aspectOf(c);
+        var w = plate ? plate.getBoundingClientRect().width : 0;
+        if (!ar || !w) return;
+        var want = w / ar;
+        if (want > h) h = want;
+      });
+      if (!h) return;
+      h = Math.round(h);
+
+      row.forEach(function (c) {
+        var plate = $(".plate", c);
+        if (!plate || plate._eeH === h) return;
+        plate._eeH = h;
+        plate.style.height = h + "px";
+        // With an inline aspect-ratio, a definite height would also fix the
+        // width — so pin the width explicitly. A portrait keeps the full cell
+        // width and mats vertically; a landscape takes whatever width its
+        // aspect needs at the row height, so it carries no mat of its own.
+        plate.style.width = c.getAttribute("data-orient") === "landscape" ? "auto" : "100%";
+      });
+
+      // Captions track the mat width so a badge lands on the artwork's edge.
+      row.forEach(function (c) {
+        if (c.getAttribute("data-orient") !== "landscape") return;
+        var mat = $(".mat", c), cap = $("figcaption", c);
+        if (!mat || !cap) return;
+        var w = Math.round(mat.getBoundingClientRect().width);
+        if (!w || cap._eeW === w) return;
+        cap._eeW = w;
+        cap.style.width = w + "px";
+      });
     });
   }
+
+  // Both the works grid and the home carousel lay portrait and landscape works
+  // side by side.
+  var FRAME_CONTAINERS = ["#ee-works-grid", "#ee-selscroll"];
 
   function alignFrames() {
     FRAME_CONTAINERS.forEach(function (sel) { alignContainer($(sel)); });
@@ -304,11 +341,10 @@
       any = true;
       try {
         new ResizeObserver(function () { requestAnimationFrame(alignFrames); }).observe(grid);
-      } catch (e) { /* fall back to the resize listener below */ }
+      } catch (e) { /* the resize listener below is the fallback */ }
     });
     if (!any) return;
     alignFrames();
-    // re-measure once images have real boxes
     window.addEventListener("load", alignFrames);
     window.addEventListener("resize", alignFrames);
   }
