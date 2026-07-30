@@ -730,8 +730,6 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   .ee-hero-stack, .ee-splitend, .ee-about, .ee-stage, .ee-work {
     grid-template-columns: 1fr !important; gap: clamp(24px,5vw,40px) !important;
   }
-  .ee-grid-3 { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .ee-selrow { grid-auto-columns: calc((100% - clamp(20px,2.4vw,36px)) / 2); }
   .ee-hero-tile { min-height: 56vh; order: -1; }
   #ee-frame .reg { width: 12px; height: 12px; }
   #ee-frame .reg::before { top: -4px; height: 20px; }
@@ -754,6 +752,8 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 
 @media (max-width: 700px) {
   .ee-hero { padding-top: 14px; padding-bottom: 20px; }
+  /* Let the sheet fill the tall mobile hero rather than hold a 16:10 plate. */
+  .ee-sheet { aspect-ratio: auto; max-height: none; height: 100%; }
   .ee-hero-stack { display: flex; flex-direction: column; gap: 16px; }
   .ee-hero-tile { flex: 0 0 auto; height: calc(100dvh - var(--ee-nav-h, 96px) - 112px); min-height: 340px; }
   .ee-hero-copy { order: 2; padding-top: 12px; }
@@ -763,9 +763,12 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   #ee-orbit-cue { display: none; }
 }
 
+@media (max-width: 700px) {
+  /* One work per row on a phone; the solver enforces this too. */
+  #ee-works-grid { gap: clamp(24px, 6vw, 36px); }
+}
+
 @media (max-width: 560px) {
-  .ee-selrow { grid-auto-columns: 86%; }
-  .ee-grid-3 { grid-template-columns: 1fr; }
   .ee-prevnext a { max-width: 48%; }
 }
 

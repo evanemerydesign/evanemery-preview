@@ -302,7 +302,22 @@
       // so a work is never shown smaller here than it is on the works page.
       var fit = (width - insetSum - gap * (cards.length - 1)) / ratioSum;
       var h = Math.max(fit, target);
+
+      // No card may be wider than the rail itself — on a phone a landscape
+      // work would otherwise run off the side of the screen.
+      var cap = Infinity;
+      cards.forEach(function (c) {
+        cap = Math.min(cap, (width - matInset(c)) / ratioOf(c));
+      });
+      h = Math.min(h, cap);
       cards.forEach(function (c) { setCardWidth(c, ratioOf(c) * h + matInset(c)); });
+      return;
+    }
+
+    // On a phone every work gets its own full-width row, as it did before the
+    // justified layout — no solving needed.
+    if (width < 620) {
+      cards.forEach(function (c) { setCardWidth(c, width); });
       return;
     }
 
@@ -319,6 +334,18 @@
     function pack(t) {
       var rows = [], row = [], sr = 0, si = 0;
       specs.forEach(function (sp, i) {
+        // Close the row *before* adding this work if that lands nearer the
+        // target height. Without this the row always keeps the work that
+        // tipped it over, which on a narrow screen crushes two works into a
+        // row that should hold one.
+        if (row.length) {
+          var withNew = (width - (si + sp.inset) - gap * row.length) / (sr + sp.ratio);
+          var without = (width - si - gap * (row.length - 1)) / sr;
+          if (Math.abs(without - t) < Math.abs(withNew - t)) {
+            rows.push({ idx: row, ratio: sr, inset: si, full: true });
+            row = []; sr = 0; si = 0;
+          }
+        }
         row.push(i); sr += sp.ratio; si += sp.inset;
         if (sr * t + si + gap * (row.length - 1) >= width) {
           rows.push({ idx: row, ratio: sr, inset: si, full: true });
