@@ -1,0 +1,87 @@
+/* ============================================================
+   COLORS — Evan Emery
+   TECHNICAL-FIRST, LIGHT with a SUBTLE SAND accent. Surfaces are
+   near-white paper carrying only a whisper of warm sand; ink + greys
+   stay near-neutral so the technical grid, type and marks stay crisp.
+   The artwork carries the color; the frame stays light and quiet.
+   NO chromatic accent by design.
+   ============================================================ */
+:root {
+  /* --- Base ramp: LIGHT sand-tinted paper → near-neutral ink - */
+  --ee-paper:      #f6f3ec; /* light paper, whisper of sand — primary surface */
+  --ee-paper-2:    #efebe1; /* recessed paper, hover wells */
+  --ee-paper-3:    #e5dfd1; /* deeper paper, borders on light */
+  --ee-mist:       #cfc7b5; /* soft sand mid-light, dividers */
+
+  --ee-graphite-0: #c2c2c2; /* light grey — secondary text on DARK only */
+  --ee-graphite-1: #8a8a8a; /* faint — disabled / non-text marks only (fails AA) */
+  --ee-graphite-2: #5c5c5c; /* muted text — AA on paper */
+  --ee-graphite-3: #414141; /* secondary text — strong on paper */
+
+  --ee-ink-3:      #2e2e2e; /* soft ink — neutral */
+  --ee-ink-2:      #1f1f1f; /* charcoal — neutral */
+  --ee-ink:        #161616; /* soft near-black ink — neutral */
+  --ee-void:       #0c0c0c; /* deepest, dark-mode ground — neutral */
+
+  --ee-white:      #fbf9f4; /* lightest highlight / paper-on-ink */
+
+  /* --- Semantic aliases (LIGHT / paper is the default) ------- */
+  --surface-page:     var(--ee-paper);
+  --surface-raised:   var(--ee-white);
+  --surface-sunken:   var(--ee-paper-2);
+  --surface-inverse:  var(--ee-ink);
+
+  /* --- Text: a CONTRAST-TIERED system. Each tier is legible on its
+     intended ground; --text-faint is decorative/disabled only and must
+     never carry reading copy.
+       primary   : ink        — body, headings, anything you must read
+       secondary : graphite-3 — sub-heads, captions, meta (AA)
+       muted     : graphite-2 — de-emphasized labels, hints (AA, small ok)
+       faint     : graphite-1 — disabled state + non-text drafting marks
+     On ink/void, use the *-onInverse tiers (light greys) instead. -- */
+  --text-primary:      var(--ee-ink);
+  --text-secondary:    var(--ee-graphite-3);
+  --text-muted:        var(--ee-graphite-2);
+  --text-faint:        var(--ee-graphite-1);
+  --text-disabled:     var(--ee-graphite-1);
+  --text-onInverse:    var(--ee-paper);
+  --text-onInverse-2:  var(--ee-graphite-0);
+  --text-onInverse-muted: var(--ee-graphite-1);
+
+  --border-hairline:  var(--ee-paper-3);
+  --border-default:   var(--ee-mist);
+  --border-strong:    var(--ee-ink);
+
+  --field-bg:         var(--ee-white);
+  --field-border:     var(--ee-mist);
+  --field-focus:      var(--ee-ink);
+
+  /* Feedback — desaturated + cooled so it never fights the artwork */
+  --signal-ok:    #4f6b5d; /* cool sage */
+  --signal-warn:  #8a7440; /* dim ochre (the one faint warm note) */
+  --signal-err:   #8a4a44; /* muted oxide */
+}
+
+/* --- Inverse / dark scope: for gallery-dark sections -------- */
+.ee-dark {
+  --surface-page:    var(--ee-void);
+  --surface-raised:  var(--ee-ink-2);
+  --surface-sunken:  var(--ee-void);
+  --surface-inverse: var(--ee-paper);
+
+  /* Dark ground: shift text tiers UP the ramp so they stay legible on
+     void/ink (light greys instead of dark). faint stays decorative. */
+  --text-primary:    var(--ee-paper);
+  --text-secondary:  var(--ee-graphite-0);
+  --text-muted:      var(--ee-graphite-1);
+  --text-faint:      var(--ee-graphite-2);
+  --text-disabled:   var(--ee-graphite-2);
+
+  --border-hairline: #1c1e20;
+  --border-default:  #2b2e30;
+  --border-strong:   var(--ee-paper);
+
+  --field-bg:        var(--ee-ink-2);
+  --field-border:    #2b2e30;
+  --field-focus:     var(--ee-paper);
+}

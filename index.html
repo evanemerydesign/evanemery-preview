@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evan Emery — generative artwork, plotted and printed</title>
+<meta name="description" content="Generative programs redraw the human head — vector fields, depth extrusions, faceted geometry, continuous plotter paths — then each result is printed into cotton rag. Work by Evan Emery.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://evanemery.art/">
+<meta name="theme-color" content="#f6f3ec">
+<meta name="author" content="Evan Emery">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Evan Emery">
+<meta property="og:title" content="Evan Emery — generative artwork, plotted and printed">
+<meta property="og:description" content="Generative programs redraw the human head — vector fields, depth extrusions, faceted geometry, continuous plotter paths — then each result is printed into cotton rag. Work by Evan Emery.">
+<meta property="og:url" content="https://evanemery.art/">
+<meta property="og:image" content="https://evanemery.art/assets/works/duality.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Evan Emery — generative artwork, plotted and printed">
+<meta name="twitter:description" content="Generative programs redraw the human head — vector fields, depth extrusions, faceted geometry, continuous plotter paths — then each result is printed into cotton rag. Work by Evan Emery.">
+<meta name="twitter:image" content="https://evanemery.art/assets/works/duality.jpg">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/tokens/fonts.css">
+<link rel="stylesheet" href="css/tokens/colors.css">
+<link rel="stylesheet" href="css/tokens/typography.css">
+<link rel="stylesheet" href="css/tokens/spacing.css">
+<link rel="stylesheet" href="css/tokens/effects.css">
+<link rel="stylesheet" href="css/site.css">
+<link rel="preload" href="assets/fonts/ChakraPetch-700n.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/SpaceGrotesk-400n.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/SpaceMono-400n.woff2" as="font" type="font/woff2" crossorigin>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Evan Emery","url":"https://evanemery.art","email":"mailto:evanemerydesign@gmail.com","jobTitle":"Artist","description":"Artist working between generative programs and analog output — pen plotter, cyanotype and pigment print.","sameAs":["https://www.instagram.com/evanemerydesign/","https://github.com/evanemerydesign","https://www.linkedin.com/in/evan-emery-2021/"]}</script>
+</head>
+<body>
+<a class="ee-skip" href="#ee-main">Skip to content</a>
+<div class="ee-page" data-ee-shell data-frame="black" data-wall="plaster" data-bg="paper">
+  <div id="ee-paper-tex" aria-hidden="true"></div>
+  <div id="ee-progress" aria-hidden="true"></div>
+  <div id="ee-progress-num" aria-hidden="true">00%</div>
+  <div id="ee-grain" aria-hidden="true"></div>
+  <div id="ee-frame" aria-hidden="true"><span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span></div>
+  <div class="ee-margin l" aria-hidden="true">Evan Emery — process record · 2023–2025</div>
+  <div class="ee-margin r" aria-hidden="true">Marks made by machine · grain made by hand</div>
+  <header id="ee-nav" data-nav="ink" data-scrolled="0">
+    <div class="ee-navbar">
+      <a class="ee-brand" href="" data-route="home">Evan Emery</a>
+      <nav aria-label="Primary">
+        <a class="ee-navlink" href="#/home" data-route="home">Index</a>
+        <a class="ee-navlink" href="#/works" data-route="works">Works</a>
+        <a class="ee-navlink" href="#/experiments" data-route="experiments">Experiments</a>
+        <a class="ee-navlink" href="#/workflow" data-route="workflow">Workflow</a>
+        <a class="ee-navlink" href="#/about" data-route="about">About</a>
+      </nav>
+    </div>
+  </header>
+  <main class="ee-main" id="ee-main">
+
+    <section data-view="home" aria-label="Index">
+
+      <div class="ee-hero">
+        <div class="ee-hero-stack">
+          <div class="ee-hero-copy" data-reveal>
+            <div class="ee-speclabel">Process-driven artwork · 2023–2025</div>
+            <h1 class="ee-h1 ee-h1--hero ee-chroma" data-text="Digital art grounding in analog output">Digital art grounding in analog output</h1>
+            <p class="ee-lede">Generative programs redraw the human head — vector fields, depth extrusions, faceted geometry, continuous plotter paths — then each result is printed into cotton rag. The process is part of the work; every piece opens onto how it was made.</p>
+            <div class="ee-hero-cta">
+              <a class="ee-btn" href="#/works" data-route="works">View the works →</a>
+              <a class="ee-btn ee-btn--ghost" href="#/about" data-route="about">Statement</a>
+            </div>
+          </div>
+          <div class="ee-hero-tile" data-reveal>
+            <div class="ee-sheet">
+              <span class="ee-sheet-tag tl" aria-hidden="true">Vector field — live</span>
+              <span class="ee-sheet-tag br" aria-hidden="true">θ 0–360° · growing</span>
+              <div id="ee-orbit-cue" aria-hidden="true"><span class="cue">↻</span><span>Drag to orbit</span></div>
+              <div class="ee-scrollcue" aria-hidden="true"><span class="cue">↓</span><span>More below</span></div>
+              <canvas id="ee-hero-canvas" aria-label="Live particle simulation tracing a three-dimensional scan of a human head" role="img"></canvas>
+              <div id="ee-hero-grain" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="ee-hero-cta-m" style="display:none">
+            <a class="ee-btn" href="#/works" data-route="works">View the works →</a>
+            <a class="ee-btn ee-btn--ghost" href="#/about" data-route="about">Statement</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="ee-rulewrap"><div class="ee-draw"></div></div>
+
+      <div style="padding:clamp(44px,5vw,72px) var(--page-gutter)">
+        <div class="ee-secthead" data-reveal>
+          <div class="ee-speclabel">Selected works</div>
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="display:none;align-items:center;gap:6px">
+              <button type="button" class="ee-arrowbtn" data-sel-scroll="prev" aria-label="Previous works">←</button>
+              <button type="button" class="ee-arrowbtn" data-sel-scroll="next" aria-label="Next works">→</button>
+            </div>
+            <a class="ee-textbtn" href="#/works" data-route="works">All works →</a>
+          </div>
+        </div>
+        <div id="ee-selscroll" class="ee-selrow">
+
+          <a class="ee-artcard" href="work/fracture-head/" data-work
+             data-category="Fracture"
+             data-type="Print"
+             data-reveal data-reveal-delay="0">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/fracture-head.jpg" alt="Fracture Head, 2024 — Mixed media on fine art paper" loading="lazy" decoding="async" width="2511" height="3256">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Fracture</span>
+              <div class="titlerow">
+                <h3>Fracture Head<span class="yr">, 2024</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/deep-blue/" data-work
+             data-category="Depth Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="90">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/deep-blue.jpg" alt="Deep Blue, 2025 — Cyanotype print on watercolor paper" loading="lazy" decoding="async" width="2250" height="3000">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Depth Field</span>
+              <div class="titlerow">
+                <h3>Deep Blue<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/dazzle-dim/" data-work
+             data-category="Vector Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="180">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/dazzle-dim.jpg" alt="Dazzle Dim, 2024 — Archival pigment on fine art paper" loading="lazy" decoding="async" width="2559" height="3280">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Vector Field</span>
+              <div class="titlerow">
+                <h3>Dazzle Dim<span class="yr">, 2024</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/duality/" data-work
+             data-category="Duality"
+             data-type="Print"
+             data-reveal data-reveal-delay="270">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/duality.jpg" alt="Duality, 2025 — White ink on mat board" loading="lazy" decoding="async" width="2222" height="1662">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Duality</span>
+              <div class="titlerow">
+                <h3>Duality<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>30 × 40 in</span><span></span></div>
+            </figcaption>
+          </a>
+        </div>
+      </div>
+
+      <div class="ee-dark ee-band" style="padding:clamp(48px,6vw,96px) var(--page-gutter)">
+        <div class="ee-band-inner" data-reveal>
+          <div class="ee-stack" style="gap:var(--sp-3);margin-bottom:var(--sp-6);max-width:52ch">
+            <div class="ee-speclabel">Behind the scenes</div>
+            <h2 class="ee-h2">Every piece begins as a process.</h2>
+            <p class="ee-body">Early states, generative sketches, plotter runs and the print itself. Four stages, run in the same order every time.</p>
+          </div>
+          <div class="ee-grid-3 ee-grid-3--tight" style="gap:clamp(16px,2vw,28px)">
+            <div data-reveal data-reveal-delay="0" class="ee-stack" style="gap:12px">
+              <span class="ee-figtag ee-figtag--outline"><span class="fig">FIG.</span><span class="num">01</span><span class="lbl">Capture</span></span>
+              <span class="ee-body" style="font-size:15px">Reference &amp; capture</span>
+            </div>
+            <div data-reveal data-reveal-delay="100" class="ee-stack" style="gap:12px">
+              <span class="ee-figtag ee-figtag--outline"><span class="fig">FIG.</span><span class="num">02</span><span class="lbl">Field</span></span>
+              <span class="ee-body" style="font-size:15px">Field &amp; displacement</span>
+            </div>
+            <div data-reveal data-reveal-delay="200" class="ee-stack" style="gap:12px">
+              <span class="ee-figtag ee-figtag--outline"><span class="fig">FIG.</span><span class="num">03</span><span class="lbl">Plot</span></span>
+              <span class="ee-body" style="font-size:15px">Plot &amp; render</span>
+            </div>
+          </div>
+          <div style="margin-top:var(--sp-7)">
+            <a class="ee-btn ee-btn--secondary" href="#/workflow" data-route="workflow">Explore the workflow →</a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section data-view="works" class="ee-sec" aria-label="Works" hidden style="position:relative;overflow:hidden">
+      <div class="ee-bignum ee-bignum--corner" data-parallax="0.05" aria-hidden="true">02</div>
+      <div class="ee-stack" data-reveal style="position:relative;z-index:1;gap:var(--sp-4);margin-bottom:var(--sp-7)">
+        <div class="ee-speclabel" id="ee-works-count">Catalogue · 11 works</div>
+        <h1 class="ee-h1 ee-chroma" data-text="Works">Works</h1>
+        <div class="ee-dimrow">
+          <span class="lbl">Group by</span>
+          <button type="button" class="ee-dimbtn" data-dim="Category" aria-pressed="true">Category</button>
+          <button type="button" class="ee-dimbtn" data-dim="Type" aria-pressed="false">Type</button>
+        </div>
+        <div class="ee-chiprow" id="ee-chips"></div>
+      </div>
+      <div class="ee-grid-3" id="ee-works-grid">
+
+          <a class="ee-artcard" href="work/dazzle-dim/" data-work
+             data-category="Vector Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="0">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/dazzle-dim.jpg" alt="Dazzle Dim, 2024 — Archival pigment on fine art paper" loading="lazy" decoding="async" width="2559" height="3280">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Vector Field</span>
+              <div class="titlerow">
+                <h3>Dazzle Dim<span class="yr">, 2024</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/deep-blue/" data-work
+             data-category="Depth Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="90">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/deep-blue.jpg" alt="Deep Blue, 2025 — Cyanotype print on watercolor paper" loading="lazy" decoding="async" width="2250" height="3000">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Depth Field</span>
+              <div class="titlerow">
+                <h3>Deep Blue<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/distant-blues/" data-work
+             data-category="Depth Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="180">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/distant-blues.jpg" alt="Distant Blues, 2025 — Cyanotype print on watercolor paper" loading="lazy" decoding="async" width="2180" height="3000">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Depth Field</span>
+              <div class="titlerow">
+                <h3>Distant Blues<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/duality/" data-work
+             data-category="Duality"
+             data-type="Print"
+             data-reveal data-reveal-delay="0">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/duality.jpg" alt="Duality, 2025 — White ink on mat board" loading="lazy" decoding="async" width="2222" height="1662">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Duality</span>
+              <div class="titlerow">
+                <h3>Duality<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>30 × 40 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/falling/" data-work
+             data-category="Depth Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="90">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/falling.jpg" alt="Falling, 2025 — Cyanotype print on watercolor paper" loading="lazy" decoding="async" width="2303" height="3000">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Depth Field</span>
+              <div class="titlerow">
+                <h3>Falling<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/fractal-blues/" data-work
+             data-category="Depth Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="180">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/fractal-blues.jpg" alt="Fractal Blues, 2025 — Cyanotype print on watercolor paper" loading="lazy" decoding="async" width="2250" height="3000">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Depth Field</span>
+              <div class="titlerow">
+                <h3>Fractal Blues<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/fracture-head/" data-work
+             data-category="Fracture"
+             data-type="Print"
+             data-reveal data-reveal-delay="0">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/fracture-head.jpg" alt="Fracture Head, 2024 — Mixed media on fine art paper" loading="lazy" decoding="async" width="2511" height="3256">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Fracture</span>
+              <div class="titlerow">
+                <h3>Fracture Head<span class="yr">, 2024</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/self-portrait/" data-work
+             data-category="Linework"
+             data-type="Original"
+             data-reveal data-reveal-delay="90">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/self-portrait.jpg" alt="Self Portrait, 2024 — White ink on archival paper" loading="lazy" decoding="async" width="2750" height="3480">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Linework</span>
+              <div class="titlerow">
+                <h3>Self Portrait<span class="yr">, 2024</span></h3>
+                <span class="status">Original — not for sale</span>
+              </div>
+              <div class="dims"><span>18 × 22 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/dazzle-mass/" data-work
+             data-category="Dazzle"
+             data-type="Print"
+             data-reveal data-reveal-delay="180">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/new/ee-work-01-main.webp" alt="Dazzle Mass, 2025 — Archival pigment on fine art paper" loading="lazy" decoding="async" width="714" height="852">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Dazzle</span>
+              <div class="titlerow">
+                <h3>Dazzle Mass<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/disassembly/" data-work
+             data-category="Voxel Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="0">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/new/ee-work-02-main.webp" alt="Disassembly, 2025 — Ink on graph paper" loading="lazy" decoding="async" width="564" height="852">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Voxel Field</span>
+              <div class="titlerow">
+                <h3>Disassembly<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/survey-figure/" data-work
+             data-category="Annotation"
+             data-type="Original"
+             data-reveal data-reveal-delay="90">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/new/ee-work-03-main.webp" alt="Survey Figure, 2025 — White ink on black archival paper" loading="lazy" decoding="async" width="551" height="852">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Annotation</span>
+              <div class="titlerow">
+                <h3>Survey Figure<span class="yr">, 2025</span></h3>
+                <span class="status">Original</span>
+              </div>
+              <div class="dims"><span>18 × 40 in</span><span></span></div>
+            </figcaption>
+          </a>
+      </div>
+    </section>
+
+    <section data-view="experiments" aria-label="Experiments" hidden>
+      <div class="ee-sec ee-sec--tight" style="position:relative;overflow:hidden">
+        <div class="ee-bignum ee-bignum--corner" data-parallax="0.05" aria-hidden="true">03</div>
+        <div class="ee-splitend" data-reveal style="position:relative;z-index:1">
+          <div class="ee-stack" style="gap:var(--sp-4);max-width:44ch">
+            <div class="ee-speclabel">The sketchbook · 06 tests</div>
+            <h1 class="ee-h1 ee-chroma" data-text="Experiments">Experiments</h1>
+            <p class="ee-body" style="font-size:16px;line-height:1.62">Smaller tests, off-cuts, and studies — the seeds and misfires the finished works grow out of. Unframed, uneditioned, kept as a running log of what the process turns up.</p>
+          </div>
+          <div class="ee-datasheet">
+            <div class="hd">Status</div>
+            <div>studies · not for sale</div>
+            <div>proofs · variable state</div>
+            <div>logged by seed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ee-rulewrap"><div class="ee-draw"></div></div>
+
+      <div style="padding:clamp(36px,4.5vw,72px) var(--page-gutter) clamp(56px,7vw,112px)">
+        <div class="ee-grid-3 ee-grid-3--tight">
+          <div class="ee-exp" data-reveal data-reveal-delay="0">
+            <div class="sheet"><span>EXP.01 · plate not yet exposed</span></div>
+            <div class="ee-stack" style="gap:6px">
+              <div class="titlerow"><span class="t">Arrow density</span><span class="no">EXP.01</span></div>
+              <div class="ee-chiprow"><span class="ee-tag ee-tag--outline">Vector field</span></div>
+              <span class="params">seed 0912 · vectors 1,280</span>
+            </div>
+          </div>
+          <div class="ee-exp" data-reveal data-reveal-delay="90">
+            <div class="sheet"><span>EXP.02 · plate not yet exposed</span></div>
+            <div class="ee-stack" style="gap:6px">
+              <div class="titlerow"><span class="t">Sort threshold</span><span class="no">EXP.02</span></div>
+              <div class="ee-chiprow"><span class="ee-tag ee-tag--outline">Pixel sort</span></div>
+              <span class="params">seed 0448 · lum 0.62</span>
+            </div>
+          </div>
+          <div class="ee-exp" data-reveal data-reveal-delay="180">
+            <div class="sheet"><span>EXP.03 · plate not yet exposed</span></div>
+            <div class="ee-stack" style="gap:6px">
+              <div class="titlerow"><span class="t">Facet count</span><span class="no">EXP.03</span></div>
+              <div class="ee-chiprow"><span class="ee-tag ee-tag--outline">Low-poly</span></div>
+              <span class="params">seed 0311 · faces 512</span>
+            </div>
+          </div>
+          <div class="ee-exp" data-reveal data-reveal-delay="0">
+            <div class="sheet"><span>EXP.04 · plate not yet exposed</span></div>
+            <div class="ee-stack" style="gap:6px">
+              <div class="titlerow"><span class="t">Single path</span><span class="no">EXP.04</span></div>
+              <div class="ee-chiprow"><span class="ee-tag ee-tag--outline">Plotter linework</span></div>
+              <span class="params">seed 0006 · length 38 m</span>
+            </div>
+          </div>
+          <div class="ee-exp" data-reveal data-reveal-delay="90">
+            <div class="sheet"><span>EXP.05 · plate not yet exposed</span></div>
+            <div class="ee-stack" style="gap:6px">
+              <div class="titlerow"><span class="t">Z-scale study</span><span class="no">EXP.05</span></div>
+              <div class="ee-chiprow"><span class="ee-tag ee-tag--outline">Depth extrusion</span></div>
+              <span class="params">seed 1147 · z 0.9</span>
+            </div>
+          </div>
+          <div class="ee-exp" data-reveal data-reveal-delay="180">
+            <div class="sheet"><span>EXP.06 · plate not yet exposed</span></div>
+            <div class="ee-stack" style="gap:6px">
+              <div class="titlerow"><span class="t">Dazzle offset</span><span class="no">EXP.06</span></div>
+              <div class="ee-chiprow"><span class="ee-tag ee-tag--outline">Dazzle pattern</span></div>
+              <span class="params">seed 2231 · θ 21.7°</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ee-stack" data-reveal style="margin-top:clamp(44px,5vw,72px);gap:var(--sp-4)">
+          <div class="ee-divider"><span>From test to work</span></div>
+          <p class="ee-note">A handful of these become editioned prints. Most stay here — the record of what the machine drew before a piece resolved.</p>
+          <div style="margin-top:var(--sp-2)">
+            <a class="ee-btn" href="#/works" data-route="works">See the finished works →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section data-view="workflow" aria-label="Workflow" hidden>
+      <div class="ee-sec ee-sec--tight" style="position:relative;overflow:hidden">
+        <div class="ee-bignum ee-bignum--corner" data-parallax="0.05" aria-hidden="true">01</div>
+        <div class="ee-splitend" data-reveal style="position:relative;z-index:1">
+          <div class="ee-stack" style="gap:var(--sp-4);max-width:40ch">
+            <div class="ee-speclabel">The process · 2023–2025</div>
+            <h1 class="ee-h1 ee-chroma" data-text="Workflow">Workflow</h1>
+            <p class="ee-body" style="font-size:16px;line-height:1.62">Every piece runs the same pipeline — from a captured reference, through a generative program, to plotter and pigment. The process is the work; this is the sheet that catalogs it.</p>
+          </div>
+          <div class="ee-datasheet">
+            <div class="hd">Pipeline</div>
+            <div>01 — reference / capture</div>
+            <div>02 — field · displacement</div>
+            <div>03 — plot / render</div>
+            <div>04 — pigment print · cotton rag</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ee-rulewrap"><div class="ee-draw"></div></div>
+
+      <div class="ee-dark ee-band">
+        <div class="ee-band-inner ee-stages">
+          <div class="ee-wf-rail" aria-hidden="true">
+            <span id="ee-wf-num" class="ee-bignum" style="font-size:clamp(56px,7vw,110px);opacity:.14">01</span>
+            <span id="ee-wf-label"></span>
+          </div>
+          <div class="ee-stage" data-reveal data-wf-stage data-wf-n="01" data-wf-title="Reference &amp; capture">
+            <div class="ee-stack" style="gap:var(--sp-3)">
+              <div style="display:flex;align-items:center;gap:12px">
+                <span class="n">01</span>
+                <span class="ee-figtag ee-figtag--outline"><span class="fig">FIG.</span><span class="num">01</span><span class="lbl">Capture</span></span>
+              </div>
+              <h2 class="ee-h2" style="font-size:clamp(24px,2.6vw,38px);line-height:1.06">Reference &amp; capture</h2>
+              <p class="ee-body" style="font-size:15px;line-height:1.62;max-width:44ch">A photograph or scan of the human head becomes the raw signal — the single input the program will interrogate.</p>
+              <div class="meta"><span>Camera · scanner</span><span>→ source plate</span></div>
+            </div>
+          </div>
+          <div class="ee-stage" data-reveal data-wf-stage data-wf-n="02" data-wf-title="Field &amp; displacement">
+            <div class="ee-stack" style="gap:var(--sp-3)">
+              <div style="display:flex;align-items:center;gap:12px">
+                <span class="n">02</span>
+                <span class="ee-figtag ee-figtag--outline"><span class="fig">FIG.</span><span class="num">02</span><span class="lbl">Field</span></span>
+              </div>
+              <h2 class="ee-h2" style="font-size:clamp(24px,2.6vw,38px);line-height:1.06">Field &amp; displacement</h2>
+              <p class="ee-body" style="font-size:15px;line-height:1.62;max-width:44ch">A generative program reads the head as data — vector fields, depth maps, pixel-sorting or faceted meshes drive the image away from its source.</p>
+              <div class="meta"><span>Custom code · editor</span><span>→ generative sketch</span></div>
+            </div>
+          </div>
+          <div class="ee-stage" data-reveal data-wf-stage data-wf-n="03" data-wf-title="Plot &amp; render">
+            <div class="ee-stack" style="gap:var(--sp-3)">
+              <div style="display:flex;align-items:center;gap:12px">
+                <span class="n">03</span>
+                <span class="ee-figtag ee-figtag--outline"><span class="fig">FIG.</span><span class="num">03</span><span class="lbl">Plot</span></span>
+              </div>
+              <h2 class="ee-h2" style="font-size:clamp(24px,2.6vw,38px);line-height:1.06">Plot &amp; render</h2>
+              <p class="ee-body" style="font-size:15px;line-height:1.62;max-width:44ch">The resolved geometry is committed to a path — a continuous plotter line, or a high-resolution render staged for print.</p>
+              <div class="meta"><span>Pen plotter · render</span><span>→ proof</span></div>
+            </div>
+          </div>
+          <div class="ee-stage" data-reveal data-wf-stage data-wf-n="04" data-wf-title="Pigment print">
+            <div class="ee-stack" style="gap:var(--sp-3)">
+              <div style="display:flex;align-items:center;gap:12px">
+                <span class="n">04</span>
+                <span class="ee-figtag ee-figtag--outline"><span class="fig">FIG.</span><span class="num">04</span><span class="lbl">Print</span></span>
+              </div>
+              <h2 class="ee-h2" style="font-size:clamp(24px,2.6vw,38px);line-height:1.06">Pigment print</h2>
+              <p class="ee-body" style="font-size:15px;line-height:1.62;max-width:44ch">The final mark is pressed into natural material — pigment on cotton rag — then matted and framed. Machine precision meets the grain.</p>
+              <div class="meta"><span>Pigment · cotton rag</span><span>→ editioned print</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ee-sec">
+        <div class="ee-stack" data-reveal style="gap:var(--sp-5)">
+          <div class="ee-divider"><span>Process vocabulary</span></div>
+          <div class="ee-chiprow"><span class="ee-tag ee-tag--soft">Vector fields</span><span class="ee-tag ee-tag--soft">Pixel-sorting</span><span class="ee-tag ee-tag--soft">Depth extrusion</span><span class="ee-tag ee-tag--soft">Faceted geometry</span><span class="ee-tag ee-tag--soft">Plotter paths</span><span class="ee-tag ee-tag--soft">Cotton rag</span><span class="ee-tag ee-tag--soft">Pigment</span></div>
+          <p class="ee-note">Each work's page carries its own record — dimensions, medium, the tools that made it and the analog output it ends on. This sheet is the shared method behind all of them.</p>
+          <div style="margin-top:var(--sp-2)">
+            <a class="ee-btn" href="#/works" data-route="works">See the works →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section data-view="about" class="ee-sec" aria-label="Statement" hidden>
+      <div class="ee-about">
+        <div class="ee-stack" data-reveal style="gap:var(--sp-5);max-width:56ch">
+          <div class="ee-speclabel">Statement</div>
+          <h1 class="ee-h1" style="font-size:clamp(32px,3.8vw,56px);line-height:1.02">The work lives between the machine's precision and the material's resistance.</h1>
+          <p class="ee-body">Each piece begins as a process — a generative program that reads the human head as data: vector fields, depth maps, faceted meshes, a single continuous plotter path. The program is coaxed, seeded and re-run until an image resolves.</p>
+          <p class="ee-body">What the machine makes is then pressed into the grain of natural material — pigment on cotton rag, plotter ink on paper, the black frame and its mat. The tension between the two is the subject.</p>
+          <div class="ee-divider"><span>Process vocabulary</span></div>
+          <div class="ee-chiprow"><span class="ee-tag ee-tag--soft">Vector fields</span><span class="ee-tag ee-tag--soft">Pixel-sorting</span><span class="ee-tag ee-tag--soft">Depth extrusion</span><span class="ee-tag ee-tag--soft">Faceted geometry</span><span class="ee-tag ee-tag--soft">Plotter paths</span></div>
+          <div style="margin-top:var(--sp-3)">
+            <a class="ee-mail" href="mailto:evanemerydesign@gmail.com">evanemerydesign@gmail.com</a>
+          </div>
+        </div>
+        <div data-reveal>
+          <div class="ee-sheetframe">
+            <span class="ee-sheet-tag tl" aria-hidden="true">Sheet — Linework · 2024</span>
+            <figure class="ee-framed">
+              <div class="mat"><div class="plate">
+                <img src="assets/works/self-portrait.jpg" alt="Self Portrait, 2024 — White ink on archival paper" decoding="async" width="2750" height="3480">
+              </div></div>
+            </figure>
+            <span class="ee-sheet-tag br" aria-hidden="true">seed 0006 · path 1 · length 214 m</span>
+          </div>
+          <div class="ee-mono" style="text-align:center;margin-top:14px">Self Portrait · 2024 · 18 × 22 in</div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="ee-footer">
+    <span class="mark">Evan Emery</span>
+    <span class="ee-mono">Marks made by machine · grain made by hand</span>
+    <div class="links">
+      <a href="https://www.instagram.com/evanemerydesign/" target="_blank" rel="noopener">Instagram ↗</a>
+      <a href="https://github.com/evanemerydesign" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://www.linkedin.com/in/evan-emery-2021/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="mailto:evanemerydesign@gmail.com">evanemerydesign@gmail.com</a>
+    </div>
+  </footer>
+</div>
+
+<script src="js/works-data.js"></script>
+<script src="js/site-config.js"></script>
+<script src="assets/vendor/three.min.js"></script>
+<script src="js/head-points.js"></script>
+<script src="js/head-mesh.js"></script>
+<script src="js/hero-field.js"></script>
+<script src="js/bg-grid.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

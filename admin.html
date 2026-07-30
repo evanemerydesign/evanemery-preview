@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Evan Emery</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/tokens/fonts.css">
+<link rel="stylesheet" href="css/tokens/colors.css">
+<link rel="stylesheet" href="css/tokens/typography.css">
+<link rel="stylesheet" href="css/tokens/spacing.css">
+<link rel="stylesheet" href="css/tokens/effects.css">
+<link rel="stylesheet" href="css/site.css">
+<style>
+  body { background: var(--ee-paper); }
+  .a-wrap { max-width: 1180px; margin: 0 auto; padding: clamp(24px,4vw,56px) var(--page-gutter) 120px; }
+  .a-head { display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom: var(--sp-5); }
+  .a-warn {
+    border: 1.5px solid var(--ee-ink); border-left-width: 6px;
+    padding: 16px 18px; margin-bottom: var(--sp-6); background: var(--surface-sunken);
+  }
+  .a-warn h2 { margin:0 0 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: var(--ls-wider); text-transform: uppercase; }
+  .a-warn p { margin: 0 0 8px; font-size: 14px; line-height: 1.6; color: var(--text-secondary); max-width: 74ch; }
+  .a-warn p:last-child { margin-bottom: 0; }
+  .a-tabs { display:flex; gap:2px; margin-bottom: var(--sp-5); flex-wrap: wrap; }
+  .a-tab {
+    background:none; border:0; border-bottom:2px solid transparent; cursor:pointer;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--text-muted); padding: 8px 14px;
+  }
+  .a-tab[aria-selected="true"] { color: var(--text-primary); border-bottom-color: var(--ee-ink); }
+  .a-panel[hidden] { display:none; }
+  .a-card { border:1px solid var(--border-default); padding: 18px 20px; margin-bottom: var(--sp-4); background: var(--ee-white); }
+  .a-card > h3 { margin:0 0 14px; font-family: var(--font-display); font-size: 18px; font-weight: var(--fw-semibold); }
+  .a-fields { display:grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap: 12px 18px; }
+  .a-f { display:flex; flex-direction:column; gap:5px; }
+  .a-f.wide { grid-column: 1 / -1; }
+  .a-f label { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
+  .a-f input, .a-f textarea, .a-f select {
+    font-family: var(--font-body); font-size: 14px; color: var(--text-primary);
+    background: var(--field-bg); border: 1px solid var(--field-border);
+    border-radius: var(--radius-sm); padding: 8px 10px; width: 100%;
+  }
+  .a-f input:focus, .a-f textarea:focus, .a-f select:focus { outline:none; border-color: var(--field-focus); box-shadow: var(--focus-ring); }
+  .a-f textarea { min-height: 74px; resize: vertical; line-height: 1.5; }
+  .a-slider { display:grid; grid-template-columns: 1fr 130px 62px; align-items:center; gap: 12px; padding: 5px 0; }
+  .a-slider label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-secondary); }
+  .a-slider output { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); text-align: right; }
+  .a-slider input[type=range] { width: 100%; accent-color: var(--ee-ink); }
+  .a-slider input[type=color] { width:100%; height:28px; padding:0; border:1px solid var(--field-border); background: none; }
+  .a-slider select { font-family: var(--font-mono); font-size: 11px; padding: 5px 7px; border:1px solid var(--field-border); background: var(--field-bg); width:100%; }
+  .a-group { border-top: 1px solid var(--border-hairline); margin-top: 14px; padding-top: 12px; }
+  .a-group > h4 { margin: 0 0 6px; font-family: var(--font-mono); font-size: 10px; letter-spacing: var(--ls-wider); text-transform: uppercase; color: var(--text-faint); }
+  .a-actions { display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
+  .a-toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--ee-ink); color: var(--ee-paper); padding: 10px 18px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; z-index: 400; opacity: 0; pointer-events: none;
+    transition: opacity var(--dur-base) var(--ease-standard);
+  }
+  .a-toast[data-on="1"] { opacity: 1; }
+  .a-preview { position: sticky; top: 12px; }
+  .a-preview .ee-sheet { height: 300px; }
+</style>
+</head>
+<body>
+<div class="a-wrap">
+
+  <div class="a-head">
+    <div class="ee-stack" style="gap:10px">
+      <div class="ee-speclabel">Content admin · local only</div>
+      <h1 class="ee-h1" style="font-size:clamp(28px,3vw,42px)">Admin</h1>
+    </div>
+    <a class="ee-btn ee-btn--secondary ee-btn--sm" href="index.html">← Back to the site</a>
+  </div>
+
+  <div class="a-warn">
+    <h2>This page does not publish</h2>
+    <p><strong>Nothing you change here reaches evanemery.art.</strong> The site is a
+    static build with no backend. Edits are written to <code>localStorage</code> in
+    this browser only — they show up in your own preview and vanish on another
+    machine, another browser, or after clearing site data.</p>
+    <p>To actually publish a change: edit it here, press
+    <strong>Export works-data.js</strong>, drop the downloaded file into
+    <code>js/works-data.js</code> in the deploy repo, run <code>node tools/build.mjs</code>,
+    then commit and push. Cloudflare Pages redeploys on push.</p>
+    <p>Image uploads are not supported here. The old drag-and-drop image slots
+    only worked inside the authoring runtime; on a static host they were read-only.
+    Add images as files under <code>assets/works/</code> and reference them from
+    <code>works-data.js</code>.</p>
+  </div>
+
+  <div class="a-tabs" role="tablist">
+    <button class="a-tab" role="tab" id="tab-works" aria-controls="p-works" aria-selected="true">Works</button>
+    <button class="a-tab" role="tab" id="tab-exps" aria-controls="p-exps" aria-selected="false">Experiments</button>
+    <button class="a-tab" role="tab" id="tab-site" aria-controls="p-site" aria-selected="false">Site copy</button>
+    <button class="a-tab" role="tab" id="tab-hero" aria-controls="p-hero" aria-selected="false">Hero tuning</button>
+  </div>
+
+  <div class="a-panel" id="p-works" role="tabpanel" aria-labelledby="tab-works"></div>
+  <div class="a-panel" id="p-exps"  role="tabpanel" aria-labelledby="tab-exps" hidden></div>
+  <div class="a-panel" id="p-site"  role="tabpanel" aria-labelledby="tab-site" hidden></div>
+  <div class="a-panel" id="p-hero"  role="tabpanel" aria-labelledby="tab-hero" hidden></div>
+
+  <div class="a-actions" style="margin-top:var(--sp-6);border-top:1px solid var(--border-hairline);padding-top:var(--sp-5)">
+    <button type="button" class="ee-btn" id="a-export">Export works-data.js</button>
+    <button type="button" class="ee-btn ee-btn--secondary" id="a-export-fx">Export hero preset</button>
+    <button type="button" class="ee-btn ee-btn--ghost" id="a-reset">Discard all local edits</button>
+  </div>
+
+</div>
+
+<div class="a-toast" id="a-toast" role="status" aria-live="polite"></div>
+
+<!-- Skeleton for "Export works-data.js". The three markers are replaced with
+     the current catalogue, so the download is a drop-in replacement for
+     js/works-data.js with the localStorage overlay already folded in. -->
+<script type="text/plain" id="a-source">/* Shared works catalogue for the Evan Emery site.
+   Exposes window.EE_WORKS_DATA. Both the generator (tools/build.mjs) and the
+   browser read from here, so this file is the single source of truth.
+   Generated by admin.html — re-run `node tools/build.mjs` after replacing it. */
+(function () {
+  var STORE_KEY = "ee-portfolio-content-v1";
+
+  var BASE_WORKS = [
+/*__WORKS__*/
+  ];
+
+  var BASE_EXPERIMENTS = [
+/*__EXPS__*/
+  ];
+
+  var BASE_SITE = /*__SITE__*/;
+
+  var SIMULATIONS = [
+    { id: "vector-field-head", name: "Vector-field head — live particle sim" }
+  ];
+
+  var BASE_HERO = [];
+
+  function store() {
+    try { var raw = localStorage.getItem(STORE_KEY); return raw ? (JSON.parse(raw) || {}) : {}; }
+    catch (e) { return {}; }
+  }
+  function writeStore(s) {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (e) {}
+  }
+  function strOnly(ov) {
+    var out = {};
+    for (var k in ov) { if (typeof ov[k] === "string" && ov[k].indexOf("[object ") === -1) out[k] = ov[k]; }
+    return out;
+  }
+
+  function loadWorks() {
+    var ov = store().works || {};
+    return BASE_WORKS.map(function (w) { return Object.assign({}, w, ov[w.id] || {}); });
+  }
+  function saveField(id, field, value) {
+    var s = store();
+    s.works = s.works || {};
+    s.works[id] = Object.assign({}, s.works[id] || {}, (function () { var o = {}; o[field] = value; return o; })());
+    writeStore(s);
+  }
+  function loadExperiments() {
+    var ov = store().exps || {};
+    return BASE_EXPERIMENTS.map(function (x, i) {
+      var m = Object.assign({}, x, ov[x.id] || {});
+      m.no = "EXP." + String(i + 1).padStart(2, "0");
+      return m;
+    });
+  }
+  function saveExpField(id, field, value) {
+    var s = store();
+    s.exps = s.exps || {};
+    s.exps[id] = Object.assign({}, s.exps[id] || {}, (function () { var o = {}; o[field] = value; return o; })());
+    writeStore(s);
+  }
+  function getWork(id) {
+    var list = loadWorks();
+    return list.filter(function (w) { return w.id === id; })[0] || list[0];
+  }
+  function neighbors(id) {
+    var list = loadWorks();
+    var i = list.map(function (w) { return w.id; }).indexOf(id);
+    if (i < 0) i = 0;
+    return { index: i, total: list.length, current: list[i],
+             prev: list[(i - 1 + list.length) % list.length],
+             next: list[(i + 1) % list.length] };
+  }
+  function loadSite() { return Object.assign({}, BASE_SITE, strOnly(store().site || {})); }
+  function saveSiteField(f, v) {
+    var s = store();
+    s.site = strOnly(Object.assign({}, s.site || {}));
+    s.site[f] = String(v == null ? "" : v);
+    writeStore(s);
+  }
+  function loadHero() { return BASE_HERO.slice(); }
+
+  window.EE_WORKS_DATA = {
+    STORE_KEY: STORE_KEY, BASE_WORKS: BASE_WORKS, BASE_SITE: BASE_SITE,
+    BASE_HERO: BASE_HERO, SIMULATIONS: SIMULATIONS,
+    loadWorks: loadWorks, getWork: getWork, neighbors: neighbors, saveField: saveField,
+    loadExperiments: loadExperiments, saveExpField: saveExpField,
+    loadSite: loadSite, saveSiteField: saveSiteField, loadHero: loadHero
+  };
+})();
+</script>
+
+<script src="js/works-data.js"></script>
+<script src="js/site-config.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

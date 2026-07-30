@@ -1,0 +1,11 @@
+/* Webfonts — Google Fonts.
+   NOTE: no custom font files were supplied with the brand. These are the
+   chosen stand-ins. The voice is TECHNICAL-FIRST (drafting instrument),
+   adopting the ASU-class approach as the basis:
+   - Chakra Petch  : squared technical display + headings + big numerals
+   - Space Grotesk : neutral grotesque body + UI
+   - Space Mono    : telemetry / labels — dimensions, editions, coordinates
+   The serif (Spectral) has been dropped: the direction is machine, not hand.
+   If you have licensed brand fonts, drop the files in assets/fonts/ and
+   replace these @import / @font-face rules. */
+@import url('../../assets/fonts/fonts-local.css'); /* vendored locally for offline publishing */

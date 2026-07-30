@@ -1,0 +1,55 @@
+/* ============================================================
+   TYPOGRAPHY — Evan Emery
+   TECHNICAL-FIRST, drafting-instrument voice (ASU-class basis).
+   - Chakra Petch (display): squared technical headers, titles, big
+     numerals. Tracked tight (−0.02em). The machine's headline voice.
+   - Space Grotesk (body/UI): neutral grotesque working voice.
+   - Space Mono (label): telemetry — dimensions, editions, coordinates,
+     eyebrows. UPPERCASE, wide tracking.
+   The serif is gone; there is no "hand" voice — the machine leads.
+   ============================================================ */
+:root {
+  --font-display: 'Chakra Petch', 'Arial Narrow', sans-serif;
+  --font-grotesk: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:    'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Roles */
+  --font-heading: var(--font-display);
+  --font-body:    var(--font-grotesk);
+  --font-ui:      var(--font-grotesk);
+  --font-label:   var(--font-mono);
+  --font-title:   var(--font-display); /* artwork / work titles */
+
+  /* Type scale — 1.25 major-third, 16px base ---------------- */
+  --fs-100: 0.694rem;  /* 11.1 — micro label */
+  --fs-200: 0.8rem;    /* 12.8 — label / caption */
+  --fs-300: 0.9rem;    /* 14.4 — small */
+  --fs-400: 1rem;      /* 16   — body */
+  --fs-500: 1.25rem;   /* 20   — lead */
+  --fs-600: 1.563rem;  /* 25   — h4 */
+  --fs-700: 1.953rem;  /* 31   — h3 */
+  --fs-800: 2.441rem;  /* 39   — h2 */
+  --fs-900: 3.052rem;  /* 49   — h1 */
+  --fs-1000: 4.768rem; /* 76   — display */
+  --fs-1100: 7.451rem; /* 119  — hero display */
+
+  /* Weights */
+  --fw-light: 300;     /* @kind font */
+  --fw-regular: 400;   /* @kind font */
+  --fw-medium: 500;    /* @kind font */
+  --fw-semibold: 600;  /* @kind font */
+  --fw-bold: 700;      /* @kind font */
+
+  /* Line heights */
+  --lh-tight: 1.04;    /* @kind font */
+  --lh-snug: 1.18;     /* @kind font */
+  --lh-normal: 1.5;    /* @kind font */
+  --lh-relaxed: 1.7;   /* @kind font */
+
+  /* Tracking — grotesk display goes tight, mono labels wide */
+  --ls-tighter: -0.03em; /* @kind font */
+  --ls-tight: -0.015em;  /* @kind font */
+  --ls-normal: 0;        /* @kind font */
+  --ls-wide: 0.08em;     /* @kind font */
+  --ls-wider: 0.22em;    /* @kind font */
+}

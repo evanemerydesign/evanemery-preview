@@ -1,0 +1,95 @@
+/* ============================================================
+   EFFECTS — Evan Emery
+   Shadows are restrained and warm (never blue-grey). The dominant
+   depth cue is the FRAME / MAT and hairline rules, not drop shadow.
+   Motion is calm: slow fades and small translations, no bounce.
+   ============================================================ */
+:root {
+  /* Shadows — HARD OFFSET, no blur (printed-ink / drafting-sheet look,
+     ASU-class basis). Cool graphite ink, never warm. The only blurred
+     shadow is --shadow-render, reserved for floating photographic renders. */
+  --shadow-0: none;
+  --shadow-sm: 2px 2px 0 var(--ee-ink);
+  --shadow-md: 4px 4px 0 var(--ee-ink);
+  --shadow-lg: 8px 8px 0 var(--ee-ink);
+  --shadow-frame: 6px 6px 0 var(--ee-ink);
+  --shadow-render: 0 24px 60px -20px rgba(6,7,8,0.35);
+
+  /* Focus ring — ink, offset (keyboard) */
+  --focus-ring: 0 0 0 2px var(--surface-page), 0 0 0 4px var(--ee-ink);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.4, 0.0, 0.2, 1); /* @kind other */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --ease-in: cubic-bezier(0.4, 0.0, 1, 1); /* @kind other */
+  --dur-fast: 120ms; /* @kind other */
+  --dur-base: 220ms; /* @kind other */
+  --dur-slow: 420ms; /* @kind other */
+  --dur-gallery: 720ms;  /* @kind other */
+
+  /* Grain / texture overlay opacity — the SUBTLE SAND PAPER TEXTURE.
+     Light touch: reads as fine paper, not a heavy grain. */
+  --grain-opacity: 0.04; /* @kind other */
+
+  /* Technical GRID — the signature overlay. A FINE construction grid
+     (16px cell, ASU-class basis) so any gridded surface reads as PAPER,
+     never a coarse layout grid. Explicit warm-ink rgba (NOT color-mix,
+     which renders unreliably inside gradients). A heavier 5-up major
+     rule groups the cells like engineering paper. */
+  --grid-line:     rgba(26,24,19,0.045); /* @kind color */
+  --grid-line-2:   rgba(26,24,19,0.09); /* @kind color */
+  --grid-cell:     16px; /* @kind spacing */
+  --grid-size:     var(--grid-cell); /* @kind spacing */
+  --grid-size-lg:  calc(var(--grid-cell) * 5); /* @kind spacing */
+
+  /* The signature "spec label" underline offset */
+  --rule-offset: 6px;
+}
+
+/* Reusable grain layer — now very faint. Apply .ee-grain to a
+   positioned element for a whisper of material under the machine grid. */
+.ee-grain { position: relative; }
+.ee-grain::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  opacity: var(--grain-opacity); mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.36 0 0 0 0 0.32 0 0 0 0 0.24 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* THE GRID. Lean into it: fine technical graph paper over the warm paper.
+   .ee-grid       — fine 16px engineering grid
+   .ee-grid-lg    — fine grid + heavier 80px major lines (blueprint)
+   Both sit on whatever background-color the element already has. */
+.ee-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+}
+.ee-grid-lg {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(var(--grid-line-2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-2) 1px, transparent 1px);
+  background-size:
+    var(--grid-size) var(--grid-size),
+    var(--grid-size) var(--grid-size),
+    var(--grid-size-lg) var(--grid-size-lg),
+    var(--grid-size-lg) var(--grid-size-lg);
+}
+
+/* HAZARD stripe — diagonal ink/paper bars. Drafting-sheet caution motif,
+   used as a thin divider or edge accent (never a large fill). */
+.ee-hazard { background: repeating-linear-gradient(-45deg, var(--ee-ink) 0 10px, transparent 10px 20px); }
+
+/* Corner registration crosshair — the blueprint tick mark. Drop
+   .ee-tick on an element; it paints a small + at its top-left. */
+.ee-tick { position: relative; }
+.ee-tick::before {
+  content: ""; position: absolute; top: -1px; left: -1px; width: 11px; height: 11px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--border-strong), var(--border-strong)) no-repeat center/1px 11px,
+    linear-gradient(var(--border-strong), var(--border-strong)) no-repeat center/11px 1px;
+}

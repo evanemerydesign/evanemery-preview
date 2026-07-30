@@ -1,0 +1,3 @@
+# Review build. Not the live site — see https://evanemery.art
+User-agent: *
+Disallow: /
