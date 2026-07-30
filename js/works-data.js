@@ -196,7 +196,9 @@
     heroHeading: "Digital art grounding in analog output",
     heroIntro: "Generative programs redraw the human head — vector fields, depth extrusions, faceted geometry, continuous plotter paths — then each result is printed into cotton rag. The process is part of the work; every piece opens onto how it was made.",
     tagline: "Marks made by machine · grain made by hand",
-    selected1: "fracture-head", selected2: "deep-blue", selected3: "dazzle-dim", selected4: "duality",
+    // Comma-separated ids, in display order. Add or reorder freely — the
+    // carousel sizes itself and shows its controls based on what fits.
+    selectedIds: "fracture-head,deep-blue,dazzle-dim,duality,self-portrait,falling,distant-blues,fractal-blues",
     expIntro: "Smaller tests, off-cuts, and studies — the seeds and misfires the finished works grow out of. Unframed, uneditioned, kept as a running log of what the process turns up.",
   };
   var BASE_HERO = [

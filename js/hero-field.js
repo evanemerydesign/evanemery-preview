@@ -530,14 +530,39 @@ var EE_HERO_BASE = (function () {
     canvas.style.cursor = "grab";
     // mobile: horizontal drags orbit (browser keeps vertical pan for page scroll)
     canvas.style.touchAction = "pan-y";
-    canvas.addEventListener("touchmove", function (ev) { if (dragging) ev.preventDefault(); }, { passive: false });
+    // A touch drag must only claim the gesture when it is horizontal. Calling
+    // preventDefault cancels scrolling whatever touch-action says, so blocking
+    // every move left a visitor unable to scroll off the hero — stuck orbiting
+    // the head. Decide the axis on the first move, then honour it.
+    var tStartX = 0, tStartY = 0, tAxis = 0;   // 0 undecided, 1 orbit, -1 scroll
+    canvas.addEventListener("touchstart", function (ev) {
+      var t = ev.touches[0]; if (!t) return;
+      tStartX = t.clientX; tStartY = t.clientY; tAxis = 0;
+    }, { passive: true });
+    canvas.addEventListener("touchmove", function (ev) {
+      if (!dragging) return;
+      var t = ev.touches[0]; if (!t) return;
+      if (!tAxis) {
+        var dx = Math.abs(t.clientX - tStartX), dy = Math.abs(t.clientY - tStartY);
+        if (dx < 6 && dy < 6) return;               // too small to call yet
+        tAxis = dx > dy ? 1 : -1;
+        if (tAxis === -1) { endDrag(); return; }    // hand the gesture back to the page
+      }
+      if (tAxis === 1) ev.preventDefault();
+    }, { passive: false });
+
     canvas.addEventListener("pointerdown", function (ev) {
       dragging = true; hideCue(); lpx = ev.clientX; lpy = ev.clientY;
       canvas.style.cursor = "grabbing";
-      try { canvas.setPointerCapture(ev.pointerId); } catch (e) {}
+      // Capturing a touch pointer would keep the move events here even after
+      // the browser decides the gesture is a scroll.
+      if (ev.pointerType !== "touch") {
+        try { canvas.setPointerCapture(ev.pointerId); } catch (e) {}
+      }
     });
     canvas.addEventListener("pointermove", function (ev) {
       if (!dragging) return;
+      if (ev.pointerType === "touch" && tAxis === -1) return;   // the page owns this gesture
       var coarse = ev.pointerType === "touch";
       var sens = (coarse ? 0.008 : 0.0045) * (cfg().orbit || 1); // finger travel is shorter — higher gain so it feels grabbed
       rotYV = (ev.clientX - lpx) * sens;

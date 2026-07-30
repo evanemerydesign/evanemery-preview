@@ -297,14 +297,26 @@
     if (cs.overflowX === "auto" || cs.overflowX === "scroll") {
       var ratioSum = 0, insetSum = 0;
       cards.forEach(function (c) { ratioSum += ratioOf(c); insetSum += matInset(c); });
+      // On a phone the rail shows about one work at a time. Size a portrait
+      // work to 86% of the rail, as the original design did, so the card reads
+      // large and the next one peeks. A landscape work is capped to the rail so
+      // it stays fully visible, which makes it the shorter card here — the
+      // trade for never cropping.
+      if (width < 620) {
+        var hPortrait = (width * 0.86 - matInset(cards[0])) / AR.portrait;
+        cards.forEach(function (c) {
+          setCardWidth(c, Math.min(ratioOf(c) * hPortrait + matInset(c), width));
+        });
+        return;
+      }
+
       // Stretch to fill when the selection is small enough to fit; otherwise
       // hold the same plate height as the works grid and let the row scroll,
       // so a work is never shown smaller here than it is on the works page.
       var fit = (width - insetSum - gap * (cards.length - 1)) / ratioSum;
       var h = Math.max(fit, target);
 
-      // No card may be wider than the rail itself — on a phone a landscape
-      // work would otherwise run off the side of the screen.
+      // No card may be wider than the rail itself.
       var cap = Infinity;
       cards.forEach(function (c) {
         cap = Math.min(cap, (width - matInset(c)) / ratioOf(c));
@@ -444,42 +456,106 @@
   function setupCarousel() {
     var row = $("#ee-selscroll");
     if (!row) return;
+    var rail = $("#ee-rail"), nav = $("#ee-selnav");
+    var thumb = $("#ee-railbar-thumb"), hint = $("#ee-railhint"), count = $("#ee-railcount");
+    var cards = $$(".ee-artcard", row);
+
     $$("[data-sel-scroll]").forEach(function (b) {
       b.addEventListener("click", function () {
         var dir = b.getAttribute("data-sel-scroll") === "next" ? 1 : -1;
-        row.scrollBy({ left: dir * row.clientWidth, behavior: "smooth" });
+        row.scrollBy({ left: dir * row.clientWidth * 0.85, behavior: "smooth" });
+        markUsed();
       });
     });
 
-    // Show the arrows whenever the row actually overflows. A landscape work
-    // spans two cells, so four works can overflow just as six would.
-    var nav = $("#ee-selnav");
-    function syncNav() {
-      if (!nav) return;
-      var overflows = row.scrollWidth - row.clientWidth > 4;
-      nav.hidden = !overflows;
-      nav.style.display = overflows ? "flex" : "none";
+    function markUsed() { if (hint) hint.setAttribute("data-used", "1"); }
+    row.addEventListener("pointerdown", markUsed, { once: true });
+    row.addEventListener("wheel", markUsed, { once: true, passive: true });
+
+    function sync() {
+      var max = row.scrollWidth - row.clientWidth;
+      var overflows = max > 4;
+
+      if (nav) {
+        nav.hidden = !overflows;
+        nav.style.display = overflows ? "flex" : "none";
+      }
+      var foot = $(".ee-railfoot");
+      if (foot) foot.style.display = overflows ? "flex" : "none";
+      if (!overflows) {
+        if (rail) { rail.setAttribute("data-at-start", "1"); rail.setAttribute("data-at-end", "1"); }
+        return;
+      }
+
+      var x = row.scrollLeft;
+      var atStart = x <= 2, atEnd = x >= max - 2;
+      if (rail) {
+        rail.setAttribute("data-at-start", atStart ? "1" : "0");
+        rail.setAttribute("data-at-end", atEnd ? "1" : "0");
+      }
+      $$("[data-sel-scroll]").forEach(function (b) {
+        var isNext = b.getAttribute("data-sel-scroll") === "next";
+        b.disabled = isNext ? atEnd : atStart;
+      });
+
+      if (thumb) {
+        // Thumb width is the visible fraction; its offset, expressed relative to
+        // its own width, is simply how many viewports along we have scrolled.
+        thumb.style.width = (row.clientWidth / row.scrollWidth * 100) + "%";
+        thumb.style.transform = "translateX(" + (x / row.clientWidth * 100) + "%)";
+      }
+      if (count && cards.length) {
+        // Which work sits at the left edge of the viewport.
+        var first = 1;
+        for (var i = 0; i < cards.length; i++) {
+          if (cards[i].offsetLeft - row.offsetLeft <= x + 8) first = i + 1;
+        }
+        count.textContent = String(first).padStart(2, "0") + " / " + String(cards.length).padStart(2, "0");
+      }
     }
-    syncNav();
-    window.addEventListener("load", syncNav);
-    window.addEventListener("resize", syncNav);
+
+    row.addEventListener("scroll", function () { requestAnimationFrame(sync); }, { passive: true });
+    window.addEventListener("resize", sync);
+    window.addEventListener("load", sync);
     try {
-      new ResizeObserver(function () { requestAnimationFrame(syncNav); }).observe(row);
-    } catch (e) { /* resize listener above is the fallback */ }
+      new ResizeObserver(function () { requestAnimationFrame(sync); }).observe(row);
+    } catch (e) { /* the resize listener above is the fallback */ }
+
+    // Watch the scroll offset directly rather than trusting the scroll event:
+    // momentum scrolling and snap can coalesce or drop it, and the rail state
+    // must never disagree with what is on screen. One comparison per frame.
+    var seen = -1;
+    (function watch() {
+      if (row.scrollLeft !== seen) { seen = row.scrollLeft; sync(); }
+      requestAnimationFrame(watch);
+    })();
+
+    sync();
   }
 
   /* ---------------- hero cues --------------------------------------------- */
 
   function setupHeroCue() {
-    var cue = $("#ee-orbit-cue");
     var canvas = $("#ee-hero-canvas");
-    if (!cue || !canvas) return;
-    var hide = function () {
-      cue.setAttribute("data-hide", "1");
-      canvas.removeEventListener("pointerdown", hide);
-    };
-    canvas.addEventListener("pointerdown", hide, { once: true });
-    setTimeout(hide, 12000);
+    var orbit = $("#ee-orbit-cue");
+    var scroll = $("#ee-scrollcue");
+
+    if (orbit && canvas) {
+      var hideOrbit = function () { orbit.setAttribute("data-hide", "1"); };
+      canvas.addEventListener("pointerdown", hideOrbit, { once: true });
+      setTimeout(hideOrbit, 12000);
+    }
+
+    // The scroll cue is the one that matters on a phone: retire it as soon as
+    // the visitor actually scrolls, but not merely because they touched the
+    // head — orbiting is exactly the state they get stuck in.
+    if (scroll) {
+      var hideScroll = function () { scroll.setAttribute("data-hide", "1"); };
+      window.addEventListener("scroll", function () {
+        if (window.scrollY > 40) hideScroll();
+      }, { passive: true });
+      setTimeout(hideScroll, 20000);
+    }
   }
 
   /* ---------------- boot --------------------------------------------------- */

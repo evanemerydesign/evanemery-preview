@@ -110,8 +110,7 @@
     ["heroIntro", "Hero intro", { multi: true, wide: true }],
     ["tagline", "Tagline (footer + margin)", { wide: true }],
     ["expIntro", "Experiments intro", { multi: true, wide: true }],
-    ["selected1", "Selected work 1 (id)"], ["selected2", "Selected work 2 (id)"],
-    ["selected3", "Selected work 3 (id)"], ["selected4", "Selected work 4 (id)"]
+    ["selectedIds", "Selected works (comma-separated ids, in order)", { multi: true, wide: true }]
   ];
 
   function renderSite() {

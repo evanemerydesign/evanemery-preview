@@ -229,7 +229,8 @@ function buildIndex(D) {
   const exps = D.loadExperiments();
   const byId = (id) => works.find((w) => w.id === id);
 
-  const selected = [site.selected1, site.selected2, site.selected3, site.selected4]
+  const selected = String(site.selectedIds || [site.selected1, site.selected2, site.selected3, site.selected4].filter(Boolean).join(","))
+    .split(",").map(function (s) { return s.trim(); }).filter(Boolean)
     .map(byId).filter(Boolean);
 
   const desc = "Generative programs redraw the human head — vector fields, depth extrusions, faceted geometry, continuous plotter paths — then each result is printed into cotton rag. Work by Evan Emery.";
@@ -253,7 +254,10 @@ function buildIndex(D) {
               <span class="ee-sheet-tag tl" aria-hidden="true">Vector field — live</span>
               <span class="ee-sheet-tag br" aria-hidden="true">θ 0–360° · growing</span>
               <div id="ee-orbit-cue" aria-hidden="true"><span class="cue">↻</span><span>Drag to orbit</span></div>
-              <div class="ee-scrollcue" aria-hidden="true"><span class="cue">↓</span><span>More below</span></div>
+              <div class="ee-scrollcue" id="ee-scrollcue" aria-hidden="true">
+                <span class="ee-cue-grab"><span class="ee-cue-dot"></span>Drag to orbit</span>
+                <span class="ee-cue-scroll"><span class="ee-cue-arrow">↓</span>Scroll for the works</span>
+              </div>
               <canvas id="ee-hero-canvas" aria-label="Live particle simulation tracing a three-dimensional scan of a human head" role="img"></canvas>
               <div id="ee-hero-grain" aria-hidden="true"></div>
             </div>
@@ -272,14 +276,25 @@ function buildIndex(D) {
           ${specLabel("Selected works")}
           <div style="display:flex;align-items:center;gap:16px">
             <div class="ee-selnav" id="ee-selnav" hidden style="align-items:center;gap:6px">
-              <button type="button" class="ee-arrowbtn" data-sel-scroll="prev" aria-label="Previous works">←</button>
+              <button type="button" class="ee-arrowbtn" data-sel-scroll="prev" aria-label="Previous works" disabled>←</button>
               <button type="button" class="ee-arrowbtn" data-sel-scroll="next" aria-label="Next works">→</button>
             </div>
             <a class="ee-textbtn" href="#/works" data-route="works">All works →</a>
           </div>
         </div>
-        <div id="ee-selscroll" class="ee-selrow">
+        <div class="ee-rail" id="ee-rail" data-at-start="1" data-at-end="0">
+          <div id="ee-selscroll" class="ee-selrow" tabindex="0" role="region"
+               aria-label="Selected works, scrollable">
 ${selected.map((w, i) => artworkCard(w, { delay: (i % 4) * 90 })).join("\n")}
+          </div>
+        </div>
+        <div class="ee-railfoot">
+          <div class="ee-railbar" aria-hidden="true"><span id="ee-railbar-thumb"></span></div>
+          <span class="ee-railhint" id="ee-railhint">
+            <span class="ee-railhint-touch">Swipe for more</span>
+            <span class="ee-railhint-mouse">Drag or use the arrows</span>
+            <span class="ee-railcount" id="ee-railcount"></span>
+          </span>
         </div>
       </div>
 

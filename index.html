@@ -70,7 +70,10 @@
               <span class="ee-sheet-tag tl" aria-hidden="true">Vector field — live</span>
               <span class="ee-sheet-tag br" aria-hidden="true">θ 0–360° · growing</span>
               <div id="ee-orbit-cue" aria-hidden="true"><span class="cue">↻</span><span>Drag to orbit</span></div>
-              <div class="ee-scrollcue" aria-hidden="true"><span class="cue">↓</span><span>More below</span></div>
+              <div class="ee-scrollcue" id="ee-scrollcue" aria-hidden="true">
+                <span class="ee-cue-grab"><span class="ee-cue-dot"></span>Drag to orbit</span>
+                <span class="ee-cue-scroll"><span class="ee-cue-arrow">↓</span>Scroll for the works</span>
+              </div>
               <canvas id="ee-hero-canvas" aria-label="Live particle simulation tracing a three-dimensional scan of a human head" role="img"></canvas>
               <div id="ee-hero-grain" aria-hidden="true"></div>
             </div>
@@ -89,13 +92,15 @@
           <div class="ee-speclabel">Selected works</div>
           <div style="display:flex;align-items:center;gap:16px">
             <div class="ee-selnav" id="ee-selnav" hidden style="align-items:center;gap:6px">
-              <button type="button" class="ee-arrowbtn" data-sel-scroll="prev" aria-label="Previous works">←</button>
+              <button type="button" class="ee-arrowbtn" data-sel-scroll="prev" aria-label="Previous works" disabled>←</button>
               <button type="button" class="ee-arrowbtn" data-sel-scroll="next" aria-label="Next works">→</button>
             </div>
             <a class="ee-textbtn" href="#/works" data-route="works">All works →</a>
           </div>
         </div>
-        <div id="ee-selscroll" class="ee-selrow">
+        <div class="ee-rail" id="ee-rail" data-at-start="1" data-at-end="0">
+          <div id="ee-selscroll" class="ee-selrow" tabindex="0" role="region"
+               aria-label="Selected works, scrollable">
 
           <a class="ee-artcard" href="work/fracture-head/" data-work data-orient="portrait"
              data-category="Fracture"
@@ -172,6 +177,91 @@
               <div class="dims"><span>30 × 40 in</span><span></span></div>
             </figcaption>
           </a>
+
+          <a class="ee-artcard" href="work/self-portrait/" data-work data-orient="portrait"
+             data-category="Linework"
+             data-type="Original"
+             data-reveal data-reveal-delay="0">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/self-portrait.jpg" alt="Self Portrait, 2024 — White ink on archival paper" loading="lazy" decoding="async" width="2750" height="3480">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Linework</span>
+              <div class="titlerow">
+                <h3>Self Portrait<span class="yr">, 2024</span></h3>
+                <span class="status">Original — not for sale</span>
+              </div>
+              <div class="dims"><span>18 × 22 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/falling/" data-work data-orient="portrait"
+             data-category="Depth Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="90">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/falling.jpg" alt="Falling, 2025 — Cyanotype print on watercolor paper" loading="lazy" decoding="async" width="2303" height="3000">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Depth Field</span>
+              <div class="titlerow">
+                <h3>Falling<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/distant-blues/" data-work data-orient="portrait"
+             data-category="Depth Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="180">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/distant-blues.jpg" alt="Distant Blues, 2025 — Cyanotype print on watercolor paper" loading="lazy" decoding="async" width="2180" height="3000">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Depth Field</span>
+              <div class="titlerow">
+                <h3>Distant Blues<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+
+          <a class="ee-artcard" href="work/fractal-blues/" data-work data-orient="portrait"
+             data-category="Depth Field"
+             data-type="Print"
+             data-reveal data-reveal-delay="270">
+            <div class="mat">
+              <div class="plate">
+                <img src="assets/works/fractal-blues.jpg" alt="Fractal Blues, 2025 — Cyanotype print on watercolor paper" loading="lazy" decoding="async" width="2250" height="3000">
+              </div>
+            </div>
+            <figcaption>
+              <span class="series">Depth Field</span>
+              <div class="titlerow">
+                <h3>Fractal Blues<span class="yr">, 2025</span></h3>
+                <span class="status">Print</span>
+              </div>
+              <div class="dims"><span>25 × 31 in</span><span></span></div>
+            </figcaption>
+          </a>
+          </div>
+        </div>
+        <div class="ee-railfoot">
+          <div class="ee-railbar" aria-hidden="true"><span id="ee-railbar-thumb"></span></div>
+          <span class="ee-railhint" id="ee-railhint">
+            <span class="ee-railhint-touch">Swipe for more</span>
+            <span class="ee-railhint-mouse">Drag or use the arrows</span>
+            <span class="ee-railcount" id="ee-railcount"></span>
+          </span>
         </div>
       </div>
 
