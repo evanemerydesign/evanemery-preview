@@ -302,7 +302,7 @@ ${STAGES.slice(0, 3).map((s, i) => `            <div data-reveal data-reveal-del
 
   const worksSection = `
     <section data-view="works" class="ee-sec" aria-label="Works" hidden style="position:relative;overflow:hidden">
-      <div class="ee-stack" data-reveal style="position:relative;z-index:1;gap:var(--sp-4);margin-bottom:var(--sp-7)">
+      <div class="ee-stack" data-reveal style="position:relative;z-index:1;gap:var(--sp-3);margin-bottom:var(--sp-5)">
         <div class="ee-speclabel" id="ee-works-count">Catalogue · ${works.length} works</div>
         <h1 class="ee-h1 ee-chroma" data-text="Works">Works</h1>
         <div class="ee-dimrow">
@@ -505,14 +505,14 @@ function buildWork(D, w, index, all) {
 
   // Focus options: full plate, each detail crop, then the in-situ mockup.
   const opts = [
-    { key: "full", label: "Full work", img: w.image, size: "contain", pos: "center" },
+    { key: "full", label: "Full work", short: "Full", img: w.image, size: "contain", pos: "center" },
     ...details.map((d) => ({
-      key: "detail", label: "Detail — " + d.label,
+      key: "detail", label: "Detail — " + d.label, short: d.label,
       img: d.img || w.image,
       size: d.img ? "contain" : d.size,
       pos: d.img ? "center" : d.pos
     })),
-    ...(hasMockup ? [{ key: "mockup", label: "In situ", img: w.mockupImage, size: "contain", pos: "center" }] : [])
+    ...(hasMockup ? [{ key: "mockup", label: "In situ", short: "In situ", img: w.mockupImage, size: "contain", pos: "center" }] : [])
   ];
 
   const specRows = [
@@ -555,7 +555,7 @@ ${fxLayers()}
 ${nav({ prefix: P, standalone: true })}
   <main class="ee-main ee-sec" id="ee-main">
 
-    <nav class="ee-mono" aria-label="Breadcrumb" style="margin-bottom:var(--sp-5)">
+    <nav class="ee-mono" aria-label="Breadcrumb" style="margin-bottom:var(--sp-4)">
       <a href="${P}#/works">Works</a> <span aria-hidden="true">/</span> ${esc(w.title)}
     </nav>
 
@@ -572,12 +572,12 @@ ${opts.length > 1 ? `        <div class="ee-focusrow" role="group" aria-label="V
 ${opts.map((o, i) => `          <button type="button" class="ee-focusbtn" aria-pressed="${i === 0}"
                   data-focus="${i}" data-img="${attr(P + o.img)}" data-size="${attr(o.size)}" data-pos="${attr(o.pos)}" data-label="${attr(o.label)}">
             <span class="th" style="background-image:url('${attr(P + o.img)}');background-size:${o.key === "full" ? "cover" : attr(o.size)};background-position:${o.key === "full" ? "center" : attr(o.pos)}"></span>
-            <span class="cap">${esc(o.label)}</span>
+            <span class="cap">${esc(o.short || o.label)}</span>
           </button>`).join("\n")}
         </div>` : ""}
       </div>
 
-      <div class="ee-stack" data-reveal style="gap:var(--sp-5)">
+      <div class="ee-stack" data-reveal style="gap:var(--sp-4)">
         ${specLabel(`${w.series || "Work"} · ${w.year}`)}
         <h1 class="ee-h1" style="font-size:clamp(30px,3.4vw,50px)">${esc(w.title)}</h1>
         ${w.badge ? `<div class="ee-chiprow">${tag(w.badge, "outline")}</div>` : ""}

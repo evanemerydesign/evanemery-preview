@@ -78,7 +78,7 @@ img { max-width: 100%; height: auto; }
 .ee-main { position: relative; z-index: 1; }
 
 /* section padding rhythm */
-.ee-sec { padding: clamp(44px, 5vw, 80px) var(--page-gutter) clamp(60px, 7vw, 120px); }
+.ee-sec { padding: clamp(30px, 3.2vw, 52px) var(--page-gutter) clamp(60px, 7vw, 120px); }
 .ee-sec--tight { padding-bottom: clamp(28px, 3.5vw, 48px); }
 .ee-rulewrap { padding: 0 var(--page-gutter); }
 
@@ -220,7 +220,13 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   transition: box-shadow var(--dur-base) var(--ease-standard);
 }
 .ee-artcard:hover .mat { box-shadow: var(--shadow-lg); }
-.ee-artcard .plate { overflow: hidden; background: var(--surface-sunken); aspect-ratio: 25 / 31; }
+/* Height is viewport-derived, not a fixed 25:31 ratio, so the first row of the
+   works grid lands fully above the fold. object-fit:cover keeps every work
+   framed identically regardless of its own proportions. */
+.ee-artcard .plate {
+  overflow: hidden; background: var(--surface-sunken);
+  height: clamp(190px, 38vh, 460px);
+}
 .ee-artcard .plate img {
   width: 100%; height: 100%; object-fit: cover; display: block;
   transform: scale(1); transition: transform var(--dur-gallery) var(--ease-out);
@@ -509,36 +515,36 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 .ee-work { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(0,0.65fr); gap: clamp(32px,4vw,72px); align-items: start; }
 .ee-work-stage {
   position: relative; background-color: var(--sheet-bg, #f4f1ea);
-  border: 1.5px solid var(--border-strong); padding: clamp(20px,3vw,56px);
-  display: flex; align-items: center; justify-content: center; min-height: 46vh;
+  border: 1.5px solid var(--border-strong); padding: clamp(14px,2.2vw,40px);
+  display: flex; align-items: center; justify-content: center; min-height: 0;
 }
 .ee-work-plate {
   max-width: 100%; background: #fff;
   outline: 5px solid var(--ee-ink); outline-offset: -5px;
-  padding: clamp(20px,3vw,52px); box-shadow: var(--shadow-frame);
+  padding: clamp(14px,2vw,34px); box-shadow: var(--shadow-frame);
 }
-.ee-work-plate img { display: block; width: 100%; height: auto; max-height: 66vh; object-fit: contain; }
+.ee-work-plate img { display: block; width: 100%; height: auto; max-height: min(42vh, 440px); object-fit: contain; }
 .ee-work-crop {
-  width: 100%; aspect-ratio: 4/3; background-color: #0d0d0d;
+  width: 100%; height: min(42vh, 440px); background-color: #0d0d0d;
   background-repeat: no-repeat; border: 1.5px solid var(--border-strong);
 }
-.ee-focusrow { display: flex; flex-wrap: wrap; gap: 10px; margin-top: var(--sp-4); }
+.ee-focusrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--sp-3); }
 .ee-focusbtn {
-  background: none; padding: 0; cursor: pointer; width: 74px;
+  background: none; padding: 0; cursor: pointer; width: 92px;
   border: 1px solid var(--border-hairline);
   transition: outline-color var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard);
 }
 .ee-focusbtn .th { display: block; width: 100%; aspect-ratio: 1; background-repeat: no-repeat; }
 .ee-focusbtn .cap {
-  display: block; font-family: var(--font-mono); font-size: 8.5px;
-  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);
-  padding: 4px 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: block; font-family: var(--font-mono); font-size: 8px;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted);
+  padding: 4px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .ee-focusbtn[aria-pressed="true"] { border: 2px solid var(--ee-ink); box-shadow: 4px 4px 0 rgba(22,22,22,.14); }
 .ee-focusbtn[aria-pressed="true"] .cap { color: var(--text-primary); }
 .ee-spec { width: 100%; border-collapse: collapse; }
 .ee-spec th, .ee-spec td {
-  text-align: left; padding: 10px 0; vertical-align: top;
+  text-align: left; padding: 6px 0; vertical-align: top;
   border-bottom: 1px solid var(--border-hairline); font-size: 13px;
 }
 .ee-spec th {
@@ -549,7 +555,7 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 .ee-spec td { color: var(--text-secondary); font-family: var(--font-mono); font-size: 12px; }
 .ee-prevnext {
   display: flex; align-items: stretch; justify-content: space-between; gap: 16px;
-  border-top: 1px solid var(--border-hairline); margin-top: clamp(40px,5vw,80px); padding-top: var(--sp-5);
+  border-top: 1px solid var(--border-hairline); margin-top: clamp(28px,3.5vw,56px); padding-top: var(--sp-4);
 }
 .ee-prevnext a { display: flex; flex-direction: column; gap: 6px; max-width: 45%; }
 .ee-prevnext a:last-child { text-align: right; align-items: flex-end; }
@@ -714,6 +720,20 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   .ee-selrow { grid-auto-columns: 86%; }
   .ee-grid-3 { grid-template-columns: 1fr; }
   .ee-prevnext a { max-width: 48%; }
+}
+
+/* ---------- short viewports ----------------------------------------------- */
+
+/* On a shallow window the works row and the work detail would otherwise spill
+   below the fold. Tighten the type and plates rather than let them scroll. */
+@media (min-width: 1101px) and (max-height: 860px) {
+  .ee-artcard .plate { height: clamp(170px, 34vh, 300px); }
+  .ee-artcard h3 { font-size: 18px; }
+  .ee-work-plate img, .ee-work-crop { max-height: 36vh; }
+  .ee-work-crop { height: 36vh; }
+  .ee-spec th, .ee-spec td { padding: 4px 0; font-size: 12px; }
+  .ee-work h1 { font-size: clamp(26px, 2.8vw, 38px); }
+  .ee-focusbtn { width: 78px; }
 }
 
 /* ---------- reduced motion ------------------------------------------------ */
