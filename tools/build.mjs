@@ -125,7 +125,7 @@ function artworkCard(w, { delay = 0, prefix = "" } = {}) {
              data-type="${attr((w.badge || "").split("—")[0].trim())}"
              data-reveal data-reveal-delay="${delay}">
             <div class="mat">
-              <div class="plate"${d ? ` style="aspect-ratio:${d.w} / ${d.h}"` : ""}>
+              <div class="plate">
                 <img src="${prefix}${attr(w.image)}" alt="${attr(w.title)}, ${attr(w.year)} — ${attr(w.medium || "artwork")}" loading="lazy" decoding="async"${sizeAttrs(w.image)}>
               </div>
             </div>

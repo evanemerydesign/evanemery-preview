@@ -220,21 +220,30 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   transition: box-shadow var(--dur-base) var(--ease-standard);
 }
 .ee-artcard:hover .mat { box-shadow: var(--shadow-lg); }
-/* ARTWORK IS NEVER CROPPED. Each plate carries its work's own aspect inline
-   (emitted from the file's real dimensions), and site.js then levels every
-   plate in a row to the tallest work in that row. The work always spans the
-   full cell width; the height difference is taken up as mat above and below,
-   the way a framer mats different proportions into matching frames.
-   Levelling per row rather than per page keeps that mat as small as possible. */
+/* TWO CANONICAL PLATE RATIOS — 3:4 portrait, 4:3 landscape. Every work in the
+   catalogue is presented in one of these two frames, so the grid reads as a
+   single hang and the mat is the same size on every card.
+
+   The work is scaled to fill the plate WIDTH. A piece taller than the plate is
+   cropped top and bottom; a piece shorter shows mat. Height is never
+   compromised to avoid that — the row must stay level.
+
+   Chosen against the real catalogue (portrait aspects 0.647-0.838): 3:4 gives
+   at most 13.8% crop and 11.7% mat, averaging 2.9% crop, and two works sit on
+   it exactly. The full, uncropped piece is always on its detail page. */
 .ee-artcard .plate {
+  aspect-ratio: 3 / 4;
   background: var(--ee-white);
+  overflow: hidden;
   display: flex; align-items: center; justify-content: center;
 }
+.ee-artcard[data-orient="landscape"] .plate { aspect-ratio: 4 / 3; }
 .ee-artcard .plate img {
-  width: 100%; height: auto; max-height: 100%; object-fit: contain; display: block;
+  width: 100%; height: auto; display: block;
+  flex: none;                 /* overflow rather than be squashed by the flexbox */
   transition: opacity var(--dur-base) var(--ease-standard);
 }
-/* No hover zoom — scaling inside the plate would crop. The frame lifts instead. */
+/* No hover zoom — the frame lifts on its shadow instead. */
 .ee-artcard:hover .plate img { opacity: 0.94; }
 
 /* Landscape works hang across two cells and are shown whole (contain), matted
@@ -263,7 +272,7 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 }
 #ee-works-grid .ee-artcard[data-orient="landscape"] .plate img,
 #ee-selscroll .ee-artcard[data-orient="landscape"] .plate img {
-  width: auto; height: 100%; max-width: 100%;
+  width: 100%; height: auto;
 }
 /* Captions sit under the work, flush with its bottom-left corner. site.js
    matches the caption's width to the mat so the status badge lands on the

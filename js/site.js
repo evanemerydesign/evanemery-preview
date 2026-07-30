@@ -256,78 +256,43 @@
   // A landscape work spans two cells and is shown at its own aspect, so its
   // plate height cannot be derived in CSS from the column width. Match it to a
   // portrait plate in the same row so every frame in the row lines up.
-  // Both the works grid and the home carousel lay portrait and landscape works
-  // side by side.
+  /* ---------------- landscape frames --------------------------------------- */
+
+  // Both the works grid and the home carousel mix portrait and landscape works.
   var FRAME_CONTAINERS = ["#ee-works-grid", "#ee-selscroll"];
 
-  function aspectOf(card) {
-    var p = $(".plate", card);
-    if (!p) return 0;
-    var m = /([\d.]+)\s*\/\s*([\d.]+)/.exec(p.style.aspectRatio || "");
-    if (m) return parseFloat(m[1]) / parseFloat(m[2]);
-    var img = $("img", card);
-    return (img && img.naturalWidth && img.naturalHeight) ? img.naturalWidth / img.naturalHeight : 0;
-  }
-
-  // Level every plate in a row to the tallest work in that row. The work keeps
-  // the full cell width and its true aspect; the leftover becomes mat above and
-  // below. Levelling per row (not per page) keeps that mat minimal.
+  // Plate ratios are canonical (3:4 portrait, 4:3 landscape), so a row of
+  // portraits is level by construction. Only a landscape work needs help: it
+  // spans two cells, so at 4:3 it comes out taller than its portrait
+  // neighbours. Match it to the row height and let its width follow the ratio.
+  // The leftover space to its right is accepted — height is what has to hold.
   function alignContainer(grid) {
     if (!grid || isHidden(grid)) return;
-    var cards = $$(".ee-artcard", grid).filter(function (c) { return !c.hidden; });
-    if (!cards.length) return;
+    var wide = $$('[data-orient="landscape"] .plate', grid);
+    if (!wide.length) return;
 
-    var rows = {};
-    cards.forEach(function (c) {
-      var key = Math.round(c.offsetTop);
-      (rows[key] = rows[key] || []).push(c);
-    });
+    var ref = $('[data-orient="portrait"] .plate', grid);
+    if (!ref) return;
+    var h = Math.round(ref.getBoundingClientRect().height);
+    if (!h) return;
 
-    Object.keys(rows).forEach(function (key) {
-      var row = rows[key];
-
-      // The row's height is set by the portrait works, which span their cell.
-      var h = 0;
-      row.forEach(function (c) {
-        if (c.getAttribute("data-orient") !== "portrait") return;
-        var plate = $(".plate", c);
-        var ar = aspectOf(c);
-        var w = plate ? plate.getBoundingClientRect().width : 0;
-        if (!ar || !w) return;
-        var want = w / ar;
-        if (want > h) h = want;
-      });
-      if (!h) return;
-      h = Math.round(h);
-
-      row.forEach(function (c) {
-        var plate = $(".plate", c);
-        if (!plate || plate._eeH === h) return;
+    wide.forEach(function (plate) {
+      if (plate._eeH !== h) {
         plate._eeH = h;
         plate.style.height = h + "px";
-        // With an inline aspect-ratio, a definite height would also fix the
-        // width — so pin the width explicitly. A portrait keeps the full cell
-        // width and mats vertically; a landscape takes whatever width its
-        // aspect needs at the row height, so it carries no mat of its own.
-        plate.style.width = c.getAttribute("data-orient") === "landscape" ? "auto" : "100%";
-      });
-
-      // Captions track the mat width so a badge lands on the artwork's edge.
-      row.forEach(function (c) {
-        if (c.getAttribute("data-orient") !== "landscape") return;
-        var mat = $(".mat", c), cap = $("figcaption", c);
-        if (!mat || !cap) return;
-        var w = Math.round(mat.getBoundingClientRect().width);
-        if (!w || cap._eeW === w) return;
-        cap._eeW = w;
-        cap.style.width = w + "px";
-      });
+        plate.style.width = "auto";        // 4:3 taken at the row height
+      }
+      // The caption tracks the mat, so its badge lands on the artwork's edge.
+      var card = plate.closest(".ee-artcard");
+      if (!card) return;
+      var mat = $(".mat", card), cap = $("figcaption", card);
+      if (!mat || !cap) return;
+      var w = Math.round(mat.getBoundingClientRect().width);
+      if (!w || cap._eeW === w) return;
+      cap._eeW = w;
+      cap.style.width = w + "px";
     });
   }
-
-  // Both the works grid and the home carousel lay portrait and landscape works
-  // side by side.
-  var FRAME_CONTAINERS = ["#ee-works-grid", "#ee-selscroll"];
 
   function alignFrames() {
     FRAME_CONTAINERS.forEach(function (sel) { alignContainer($(sel)); });
