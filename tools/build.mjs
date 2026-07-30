@@ -115,8 +115,12 @@ function tag(text, variant) {
 /** ArtworkCard, as an anchor so it is a real, crawlable link. */
 function artworkCard(w, { delay = 0, prefix = "" } = {}) {
   const dims = [w.dims, w.medium].filter(Boolean);
+  const d = imageSize(w.image);
+  // Landscape works span two grid cells so they hang alongside portraits
+  // instead of being squeezed into a portrait window.
+  const orient = d && d.w > d.h ? "landscape" : "portrait";
   return `
-          <a class="ee-artcard" href="${prefix}${workUrl(w.id)}" data-work
+          <a class="ee-artcard" href="${prefix}${workUrl(w.id)}" data-work data-orient="${orient}"
              data-category="${attr(w.series || "")}"
              data-type="${attr((w.badge || "").split("—")[0].trim())}"
              data-reveal data-reveal-delay="${delay}">

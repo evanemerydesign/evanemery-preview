@@ -220,18 +220,35 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   transition: box-shadow var(--dur-base) var(--ease-standard);
 }
 .ee-artcard:hover .mat { box-shadow: var(--shadow-lg); }
-/* Height is viewport-derived, not a fixed 25:31 ratio, so the first row of the
-   works grid lands fully above the fold. object-fit:cover keeps every work
-   framed identically regardless of its own proportions. */
+/* The plate is a FIXED 25:31 window, exactly as the design-system ArtworkCard
+   defined it. Every card crops identically and the framing never changes with
+   the viewport — the composition a visitor sees on a laptop is the same one
+   they see on a large display. Card size scales; the crop does not.
+   Do not make this height viewport-derived. */
 .ee-artcard .plate {
   overflow: hidden; background: var(--surface-sunken);
-  height: clamp(190px, 38vh, 460px);
+  aspect-ratio: 25 / 31;
 }
 .ee-artcard .plate img {
   width: 100%; height: 100%; object-fit: cover; display: block;
   transform: scale(1); transition: transform var(--dur-gallery) var(--ease-out);
 }
 .ee-artcard:hover .plate img { transform: scale(1.03); }
+
+/* Landscape works hang across two cells and are shown whole (contain), matted
+   by the wider plate rather than cropped into a portrait window. The 26:15
+   plate is chosen so its height matches a portrait plate in the same row, so
+   the grid still reads as even rows. Orientation is baked at build time from
+   the file's own dimensions — it never changes with the viewport. */
+#ee-works-grid .ee-artcard[data-orient="landscape"] { grid-column: span 2; }
+#ee-works-grid .ee-artcard[data-orient="landscape"] .plate {
+  aspect-ratio: 26 / 15; background: var(--ee-white);
+  display: flex; align-items: center; justify-content: center;
+}
+#ee-works-grid .ee-artcard[data-orient="landscape"] .plate img {
+  width: auto; height: auto; max-width: 100%; max-height: 100%;
+  object-fit: contain;
+}
 .ee-artcard figcaption { display: flex; flex-direction: column; gap: 8px; }
 .ee-artcard .series {
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em;
@@ -377,6 +394,15 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 /* ---------- works grid + filters ----------------------------------------- */
 
 .ee-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(24px,3vw,52px); }
+/* The works grid sizes by column width, not by a fixed count: wide screens get
+   four narrower cells, which keeps the first row above the fold while leaving
+   the 25:31 plate ratio untouched, and gives a landscape work two cells to
+   span into. */
+#ee-works-grid {
+  grid-template-columns: repeat(auto-fill, minmax(clamp(230px, 21vw, 300px), 1fr));
+  grid-auto-flow: row dense;   /* a two-cell landscape must not leave a hole */
+  align-items: start;
+}
 .ee-grid-3--tight { gap: clamp(18px,2.2vw,32px); }
 .ee-dimrow { display: flex; align-items: center; gap: 2px; margin-top: var(--sp-2); flex-wrap: wrap; }
 .ee-dimrow .lbl {
@@ -435,7 +461,7 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   background: #141414; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
 }
-.ee-plate img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ee-plate img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
 /* placeholder for a not-yet-supplied process image — a drafting hatch, never a fake photo */
 .ee-plate--empty {
   background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.045) 0 1px, transparent 1px 9px);
@@ -727,8 +753,8 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 /* On a shallow window the works row and the work detail would otherwise spill
    below the fold. Tighten the type and plates rather than let them scroll. */
 @media (min-width: 1101px) and (max-height: 860px) {
-  .ee-artcard .plate { height: clamp(170px, 34vh, 300px); }
   .ee-artcard h3 { font-size: 18px; }
+  #ee-works-grid { grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 18vw, 260px), 1fr)); }
   .ee-work-plate img, .ee-work-crop { max-height: 36vh; }
   .ee-work-crop { height: 36vh; }
   .ee-spec th, .ee-spec td { padding: 4px 0; font-size: 12px; }
