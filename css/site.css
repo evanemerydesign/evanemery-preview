@@ -241,13 +241,20 @@ a.ee-artcard { cursor: pointer; color: inherit; }
    the grid still reads as even rows. Orientation is baked at build time from
    the file's own dimensions — it never changes with the viewport. */
 #ee-works-grid .ee-artcard[data-orient="landscape"] { grid-column: span 2; }
-#ee-works-grid .ee-artcard[data-orient="landscape"] .plate {
-  aspect-ratio: 26 / 15; background: var(--ee-white);
-  display: flex; align-items: center; justify-content: center;
+/* The plate takes the work's OWN aspect (emitted inline from the file's real
+   dimensions), so the artwork fills it edge to edge — the only border is the
+   mat padding, no pillarboxing. The frame then hugs the work rather than the
+   two-cell span, and site.js matches its height to the portrait plates in the
+   row so every frame in a row lines up. */
+#ee-works-grid .ee-artcard[data-orient="landscape"] .mat {
+  width: max-content; max-width: 100%; margin: 0 auto;
 }
+#ee-works-grid .ee-artcard[data-orient="landscape"] .plate {
+  background: var(--ee-white); max-width: 100%;
+}
+#ee-works-grid .ee-artcard[data-orient="landscape"] figcaption { text-align: left; }
 #ee-works-grid .ee-artcard[data-orient="landscape"] .plate img {
-  width: auto; height: auto; max-width: 100%; max-height: 100%;
-  object-fit: contain;
+  width: 100%; height: 100%; object-fit: contain;
 }
 .ee-artcard figcaption { display: flex; flex-direction: column; gap: 8px; }
 .ee-artcard .series {

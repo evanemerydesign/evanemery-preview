@@ -34,6 +34,7 @@
     if (!opts || !opts.silent) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     setupReveal();
     setupDraw();
+    alignFrames();
   }
 
   var TITLES = {
@@ -233,6 +234,7 @@
       var count = $("#ee-works-count");
       if (count) count.textContent = "Catalogue · " + shown + " works";
       setupReveal();
+      alignFrames();
     }
 
     $$("[data-dim]").forEach(function (b) {
@@ -247,6 +249,44 @@
 
     renderChips();
     applyFilter();
+  }
+
+  /* ---------------- align landscape frames with portrait frames ----------- */
+
+  // A landscape work spans two cells and is shown at its own aspect, so its
+  // plate height cannot be derived in CSS from the column width. Match it to a
+  // portrait plate in the same row so every frame in the row lines up.
+  function alignFrames() {
+    var grid = $("#ee-works-grid");
+    if (!grid || isHidden(grid)) return;
+    var wide = $$('[data-orient="landscape"] .plate', grid);
+    if (!wide.length) return;
+
+    // A portrait plate's height comes from the column width alone, so it can be
+    // measured without first clearing the landscape height — and not clearing
+    // keeps this from fighting the ResizeObserver that its own writes trigger.
+    var ref = $('[data-orient="portrait"] .plate', grid);
+    if (!ref) return;
+    var h = Math.round(ref.getBoundingClientRect().height);
+    if (!h) return;
+
+    wide.forEach(function (p) {
+      if (p._eeH === h) return;   // idempotent: no write, no resize feedback
+      p._eeH = h;
+      p.style.height = h + "px";
+      p.style.width = "auto";
+    });
+  }
+
+  function watchFrames() {
+    var grid = $("#ee-works-grid");
+    if (!grid) return;
+    alignFrames();
+    // re-measure once images have real boxes and on every resize
+    window.addEventListener("load", alignFrames);
+    try {
+      new ResizeObserver(function () { requestAnimationFrame(alignFrames); }).observe(grid);
+    } catch (e) { window.addEventListener("resize", alignFrames); }
   }
 
   /* ---------------- selected-works carousel ------------------------------- */
@@ -282,6 +322,7 @@
     bindNav();
     trackNavHeight();
     setupFilters();
+    watchFrames();
     setupCarousel();
     setupHeroCue();
     show(routeFromUrl(), { silent: true });
