@@ -297,51 +297,72 @@
     if (cs.overflowX === "auto" || cs.overflowX === "scroll") {
       var ratioSum = 0, insetSum = 0;
       cards.forEach(function (c) { ratioSum += ratioOf(c); insetSum += matInset(c); });
+      // Stretch to fill when the selection is small enough to fit; otherwise
+      // hold the same plate height as the works grid and let the row scroll,
+      // so a work is never shown smaller here than it is on the works page.
       var fit = (width - insetSum - gap * (cards.length - 1)) / ratioSum;
-      var h = fit >= target * 0.6 ? fit : target;
+      var h = Math.max(fit, target);
       cards.forEach(function (c) { setCardWidth(c, ratioOf(c) * h + matInset(c)); });
       return;
     }
 
-    // Greedy packing at one fixed height is brittle: a slightly different
-    // target can leave the last row with two works and half the width empty.
-    // So solve the row breaks for a range of candidate heights and keep the
-    // layout that wastes the least space, preferring even rows to break ties.
-    // Catalogue order is never rearranged — only where the rows break moves.
+    // Row breaks are solved, not guessed. Each full row is justified to fill the
+    // width exactly; a trailing part-row keeps close to the target height and is
+    // allowed to leave space at the end. Consistent height across rows matters
+    // more than filling the final row.
+    //
+    // Scales to any catalogue size: the search is over candidate heights, not
+    // over arrangements, so adding works costs one linear pass each.
+    var TRAIL_CAP = 1.15;   // a part-row may stretch this far to close a near-fit
     var specs = cards.map(function (c) { return { ratio: ratioOf(c), inset: matInset(c) }; });
 
     function pack(t) {
       var rows = [], row = [], sr = 0, si = 0;
       specs.forEach(function (sp, i) {
         row.push(i); sr += sp.ratio; si += sp.inset;
-        var needed = sr * t + si + gap * (row.length - 1);
-        if (needed >= width) { rows.push({ idx: row, ratio: sr, inset: si, full: true }); row = []; sr = 0; si = 0; }
+        if (sr * t + si + gap * (row.length - 1) >= width) {
+          rows.push({ idx: row, ratio: sr, inset: si, full: true });
+          row = []; sr = 0; si = 0;
+        }
       });
       if (row.length) rows.push({ idx: row, ratio: sr, inset: si, full: false });
+
+      var lastFull = 0;
       rows.forEach(function (r) {
         var avail = width - r.inset - gap * (r.idx.length - 1);
-        r.solved = avail / r.ratio;
-        // A trailing part-row still stretches, so long as it stays in
-        // proportion with the rows above it.
-        r.h = r.full ? r.solved : (r.solved <= t * 1.5 ? r.solved : t);
-        r.waste = r.full ? 0 : (r.solved <= t * 1.5 ? 0 : 1 - (r.ratio * r.h + r.inset + gap * (r.idx.length - 1)) / width);
+        var solved = avail / r.ratio;
+        if (r.full) {
+          r.h = solved;
+          r.waste = 0;
+          lastFull = solved;
+        } else {
+          // A trailing row never stands taller than the row above it. It may
+          // stretch to close a near-fit, but a lone work is shown at the same
+          // height as its neighbours and simply leaves space at the end.
+          var ceiling = lastFull || t * TRAIL_CAP;
+          r.h = Math.min(solved, ceiling);
+          r.waste = 1 - (r.ratio * r.h + r.inset + gap * (r.idx.length - 1)) / width;
+        }
       });
       return rows;
     }
 
     function score(rows) {
-      var waste = rows.reduce(function (a, r) { return a + r.waste; }, 0);
+      // Consistency is judged across every row, including the trailing one,
+      // because an outsized final row is exactly what we are avoiding.
       var hs = rows.map(function (r) { return r.h; });
       var spread = Math.max.apply(null, hs) / Math.min.apply(null, hs);
       var avg = hs.reduce(function (a, h) { return a + h; }, 0) / hs.length;
-      // Without this term the search degenerates: more works per row always
+      // Without a size term the search degenerates: more works per row always
       // wastes less, so it would shrink the artwork indefinitely.
       var drift = Math.abs(avg - target) / target;
-      return waste * 100 + (spread - 1) * 6 + drift * 14;
+      // Trailing space is acceptable, so it only breaks ties.
+      var waste = rows.reduce(function (a, r) { return a + r.waste; }, 0);
+      return (spread - 1) * 40 + drift * 34 + waste * 6;
     }
 
     var best = null;
-    for (var f = 0.62; f <= 1.45; f += 0.03) {
+    for (var f = 0.82; f <= 1.28; f += 0.015) {   // keep plates near the intended size
       var candidate = pack(target * f);
       var sc = score(candidate);
       if (!best || sc < best.score) best = { rows: candidate, score: sc };
