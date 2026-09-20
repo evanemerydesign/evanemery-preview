@@ -343,7 +343,7 @@ ${STAGES.slice(0, 3).map((s, i) => `            <div data-reveal data-reveal-del
             </div>`).join("\n")}
           </div>
           <div style="margin-top:var(--sp-7)">
-            <a class="ee-btn ee-btn--secondary" href="#/about" data-route="about">Explore the workflow →</a>
+            <a class="ee-btn ee-btn--secondary" href="#/workflow" data-route="workflow">Explore the workflow →</a>
           </div>
         </div>
       </div>

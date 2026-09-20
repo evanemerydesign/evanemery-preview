@@ -15,8 +15,17 @@
 
   /* ---------------- routing ---------------------------------------------- */
 
+  // "#/workflow" opens About and lands on the workflow section; the hash is
+  // kept so the section can be linked to directly.
+  var ANCHORS = { workflow: "workflow" };
+
+  function rawRoute() {
+    return (location.hash || "").replace(/^#\/?/, "").split("?")[0];
+  }
+  function anchorFromUrl() { return ANCHORS[rawRoute()] || null; }
+
   function routeFromUrl() {
-    var h = (location.hash || "").replace(/^#\/?/, "").split("?")[0];
+    var h = rawRoute();
     h = ALIASES[h] || h;
     if (ROUTES.indexOf(h) !== -1) return h;
     var v = new URLSearchParams(location.search).get("view");
@@ -39,6 +48,14 @@
     setupReveal();
     setupDraw();
     alignFrames();
+    var anchor = anchorFromUrl();
+    if (anchor) {
+      var target = document.getElementById(anchor);
+      if (target) setTimeout(function () {
+        var nav = $("#ee-nav"), navH = nav ? nav.offsetHeight : 0;
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - navH - 8, behavior: "instant" });
+      }, 0);
+    }
   }
 
   var TITLES = {
@@ -56,7 +73,7 @@
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
         e.preventDefault();
         var r = a.getAttribute("data-route");
-        if (routeFromUrl() === r) { show(r); return; }
+        if (location.hash === "#/" + r) { show(routeFromUrl()); return; }
         location.hash = "#/" + r;
       });
     });
@@ -307,9 +324,12 @@
       // it stays fully visible, which makes it the shorter card here — the
       // trade for never cropping.
       if (width < 620) {
+        // Every card takes the portrait plate here (the stylesheet mats a
+        // landscape work inside it), so the row is one even height and a
+        // landscape piece is never the short card.
         var hPortrait = (width * 0.86 - matInset(cards[0])) / AR.portrait;
         cards.forEach(function (c) {
-          setCardWidth(c, Math.min(ratioOf(c) * hPortrait + matInset(c), width));
+          setCardWidth(c, Math.min(AR.portrait * hPortrait + matInset(c), width));
         });
         return;
       }
@@ -539,10 +559,11 @@
     // Mouse drag scrolls the row, as a finger does on a phone. Touch is left
     // to the browser. Snap is suspended during the drag so the row follows the
     // hand, and a drag suppresses the click that would otherwise open a work.
-    var drag = null;
+    var drag = null, glide = 0;
     row.addEventListener("pointerdown", function (e) {
       if (e.pointerType !== "mouse" || e.button !== 0) return;
-      drag = { x: e.clientX, left: row.scrollLeft, moved: false };
+      cancelAnimationFrame(glide);
+      drag = { x: e.clientX, left: row.scrollLeft, moved: false, v: 0, lastX: e.clientX, lastT: performance.now() };
       row.classList.add("is-grabbing");
     });
     row.addEventListener("pointermove", function (e) {
@@ -550,19 +571,35 @@
       var dx = e.clientX - drag.x;
       if (!drag.moved && Math.abs(dx) > 4) {
         drag.moved = true;
-        row.style.scrollSnapType = "none";
         try { row.setPointerCapture(e.pointerId); } catch (err) {}
       }
-      if (drag.moved) { row.scrollLeft = drag.left - dx; e.preventDefault(); }
+      if (drag.moved) {
+        row.scrollLeft = drag.left - dx;
+        // Smoothed release velocity, px per ms, for the glide after letting go.
+        var now = performance.now(), dt = Math.max(1, now - drag.lastT);
+        drag.v = drag.v * 0.6 + ((drag.lastX - e.clientX) / dt) * 0.4;
+        drag.lastX = e.clientX; drag.lastT = now;
+        e.preventDefault();
+      }
     });
     function endDrag() {
       if (!drag) return;
-      var moved = drag.moved;
+      var moved = drag.moved, v = drag.v;
       drag = null;
       row.classList.remove("is-grabbing");
       if (moved) {
         row.classList.add("is-dragged");
-        setTimeout(function () { row.classList.remove("is-dragged"); row.style.scrollSnapType = ""; }, 60);
+        setTimeout(function () { row.classList.remove("is-dragged"); }, 60);
+        // Glide: the row keeps moving with the hand's speed and eases out,
+        // the way a native scroll view behaves.
+        var last = performance.now();
+        (function step(now) {
+          var dt = now - last; last = now;
+          v *= Math.pow(0.94, dt / 16);
+          if (Math.abs(v) < 0.02) return;
+          row.scrollLeft += v * dt;
+          glide = requestAnimationFrame(step);
+        })(performance.now());
       }
     }
     row.addEventListener("pointerup", endDrag);

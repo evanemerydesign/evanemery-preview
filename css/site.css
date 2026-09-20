@@ -437,7 +437,9 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 }
 .ee-selrow::-webkit-scrollbar { display: none; }
 @media (hover: hover) and (pointer: fine) {
-  .ee-selrow { cursor: grab; }
+  /* No snap with a mouse or trackpad: the row scrolls and glides like any
+     native view. Snap stays on touch, where it feels right. */
+  .ee-selrow { cursor: grab; scroll-snap-type: none; }
   .ee-selrow.is-grabbing { cursor: grabbing; user-select: none; }
   .ee-selrow.is-grabbing .ee-artcard { pointer-events: none; }
 }
@@ -941,6 +943,11 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 @media (max-width: 700px) {
   /* One work per row on a phone; the solver enforces this too. */
   #ee-works-grid { gap: clamp(24px, 6vw, 36px); }
+
+  /* Phone carousel: a landscape work sits matted inside the portrait plate,
+     so every card in the row is the same full height. */
+  #ee-selscroll .ee-artcard[data-orient="landscape"] .plate { aspect-ratio: 3 / 4; }
+  #ee-selscroll .ee-artcard[data-orient="landscape"] .plate img { width: 100%; height: 100%; object-fit: contain; }
 
   /* Works heading: keep the first plate near the top of the screen. The
      filter chips run as one line that scrolls sideways, the cut-off last
