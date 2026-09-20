@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="css/tokens/typography.css">
 <link rel="stylesheet" href="css/tokens/spacing.css">
 <link rel="stylesheet" href="css/tokens/effects.css">
-<link rel="stylesheet" href="css/site.css?v=mu9x1kyz">
+<link rel="stylesheet" href="css/site.css?v=mu9xq5mq">
 <link rel="preload" href="assets/fonts/ChakraPetch-700n.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/SpaceGrotesk-400n.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/SpaceMono-400n.woff2" as="font" type="font/woff2" crossorigin>
@@ -89,12 +89,9 @@
       <div style="padding:clamp(44px,5vw,72px) var(--page-gutter)">
         <div class="ee-secthead" data-reveal>
           <div class="ee-speclabel">Selected works</div>
-          <div style="display:flex;align-items:center;gap:16px">
-            <div class="ee-selnav" id="ee-selnav" hidden style="align-items:center;gap:6px">
-              <button type="button" class="ee-arrowbtn" data-sel-scroll="prev" aria-label="Previous works" disabled>←</button>
-              <button type="button" class="ee-arrowbtn" data-sel-scroll="next" aria-label="Next works">→</button>
-            </div>
-            <a class="ee-textbtn" href="#/works" data-route="works">All works →</a>
+          <div class="ee-selnav" id="ee-selnav" hidden style="align-items:center;gap:6px">
+            <button type="button" class="ee-arrowbtn" data-sel-scroll="prev" aria-label="Previous works" disabled>←</button>
+            <button type="button" class="ee-arrowbtn" data-sel-scroll="next" aria-label="Next works">→</button>
           </div>
         </div>
         <div class="ee-rail" id="ee-rail" data-at-start="1" data-at-end="0">
@@ -266,18 +263,21 @@
             <h2 class="ee-h2">Every piece begins as a process.</h2>
             <p class="ee-body">Early states, generative sketches, plotter runs and the print itself. Four stages, run in the same order every time.</p>
           </div>
-          <div class="ee-grid-3 ee-grid-3--tight" style="gap:clamp(16px,2vw,28px)">
-            <div data-reveal data-reveal-delay="0" class="ee-stack" style="gap:12px">
+          <div class="ee-grid-3 ee-grid-3--tight ee-bts-grid" style="gap:clamp(16px,2vw,28px)">
+            <div data-reveal data-reveal-delay="0" class="ee-stack ee-bts" style="gap:12px">
+              <figure class="ee-bts-img"><img src="assets/bts/bts-01-linework-plot.jpg" alt="Pen plotter laying white ink linework on black paper" loading="lazy" decoding="async" width="776" height="1380"></figure>
               <span class="ee-figtag ee-figtag--outline"><span class="fig">FIG.</span><span class="num">01</span><span class="lbl">Capture</span></span>
-              <span class="ee-body" style="font-size:15px">Reference &amp; capture</span>
+              <span class="ee-body ee-bts-title" style="font-size:15px">Reference &amp; capture</span>
             </div>
-            <div data-reveal data-reveal-delay="100" class="ee-stack" style="gap:12px">
+            <div data-reveal data-reveal-delay="100" class="ee-stack ee-bts" style="gap:12px">
+              <figure class="ee-bts-img"><img src="assets/bts/bts-02-voxel-plot.jpg" alt="Plotter pen tracing a faceted field in blue on grey paper" loading="lazy" decoding="async" width="776" height="1380"></figure>
               <span class="ee-figtag ee-figtag--outline"><span class="fig">FIG.</span><span class="num">02</span><span class="lbl">Field</span></span>
-              <span class="ee-body" style="font-size:15px">Field &amp; displacement</span>
+              <span class="ee-body ee-bts-title" style="font-size:15px">Field &amp; displacement</span>
             </div>
-            <div data-reveal data-reveal-delay="200" class="ee-stack" style="gap:12px">
+            <div data-reveal data-reveal-delay="200" class="ee-stack ee-bts" style="gap:12px">
+              <figure class="ee-bts-img"><img src="assets/bts/bts-03-duality-plot.jpg" alt="Plotter drawing the Duality plate in white ink on blue mat board" loading="lazy" decoding="async" width="776" height="1380"></figure>
               <span class="ee-figtag ee-figtag--outline"><span class="fig">FIG.</span><span class="num">03</span><span class="lbl">Plot</span></span>
-              <span class="ee-body" style="font-size:15px">Plot &amp; render</span>
+              <span class="ee-body ee-bts-title" style="font-size:15px">Plot &amp; render</span>
             </div>
           </div>
           <div style="margin-top:var(--sp-7)">
@@ -713,13 +713,13 @@
   </footer>
 </div>
 
-<script src="js/works-data.js?v=mu9x1kyz"></script>
-<script src="js/site-config.js?v=mu9x1kyz"></script>
+<script src="js/works-data.js?v=mu9xq5mq"></script>
+<script src="js/site-config.js?v=mu9xq5mq"></script>
 <script src="assets/vendor/three.min.js"></script>
-<script src="js/head-points.js?v=mu9x1kyz"></script>
-<script src="js/head-mesh.js?v=mu9x1kyz"></script>
-<script src="js/hero-field.js?v=mu9x1kyz"></script>
-<script src="js/bg-grid.js?v=mu9x1kyz"></script>
-<script src="js/site.js?v=mu9x1kyz"></script>
+<script src="js/head-points.js?v=mu9xq5mq"></script>
+<script src="js/head-mesh.js?v=mu9xq5mq"></script>
+<script src="js/hero-field.js?v=mu9xq5mq"></script>
+<script src="js/bg-grid.js?v=mu9xq5mq"></script>
+<script src="js/site.js?v=mu9xq5mq"></script>
 </body>
 </html>

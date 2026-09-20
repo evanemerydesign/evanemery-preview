@@ -436,6 +436,11 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   scrollbar-width: none; padding-bottom: 4px;
 }
 .ee-selrow::-webkit-scrollbar { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .ee-selrow { cursor: grab; }
+  .ee-selrow.is-grabbing { cursor: grabbing; user-select: none; }
+  .ee-selrow.is-grabbing .ee-artcard { pointer-events: none; }
+}
 .ee-selrow > * { scroll-snap-align: start; flex: none; }
 /* ---------- scroll rail affordances ---------------------------------------
    Horizontal scrolling has weak information scent. The row says "there is
@@ -509,6 +514,27 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 
 .ee-band { background: var(--ee-void); padding: clamp(40px,5vw,88px) var(--page-gutter); }
 .ee-band-inner { max-width: 1200px; margin: 0 auto; }
+
+/* Behind the scenes: 9:16 process stills, monochrome until hovered so the
+   band stays quiet and the colour arrives with attention. */
+.ee-bts-img {
+  margin: 0; aspect-ratio: 9 / 16; overflow: hidden;
+  border: 1px solid rgba(255,255,255,.22); background: #0d0d0d;
+}
+.ee-bts-img img {
+  display: block; width: 100%; height: 100%;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter var(--dur-slow) var(--ease-standard), transform var(--dur-slow) var(--ease-standard);
+}
+.ee-bts:hover .ee-bts-img img, .ee-bts:focus-within .ee-bts-img img { filter: none; }
+@media (max-width: 700px) {
+  /* Three stills side by side is right for 9:16; the labels under them
+     were built for a wide cell, so they go compact here. */
+  .ee-bts-grid { gap: 10px !important; }
+  .ee-bts .ee-figtag .lbl { display: none; }
+  .ee-bts .ee-figtag .fig, .ee-bts .ee-figtag .num { padding: 3px 6px; font-size: 9px; }
+  .ee-bts-title { font-size: 12px !important; line-height: 1.35; }
+}
 .ee-splitend {
   display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,0.85fr);
   gap: clamp(28px,4vw,72px); align-items: end;

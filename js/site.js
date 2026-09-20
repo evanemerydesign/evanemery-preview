@@ -536,6 +536,43 @@
       }
     }
 
+    // Mouse drag scrolls the row, as a finger does on a phone. Touch is left
+    // to the browser. Snap is suspended during the drag so the row follows the
+    // hand, and a drag suppresses the click that would otherwise open a work.
+    var drag = null;
+    row.addEventListener("pointerdown", function (e) {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      drag = { x: e.clientX, left: row.scrollLeft, moved: false };
+      row.classList.add("is-grabbing");
+    });
+    row.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      var dx = e.clientX - drag.x;
+      if (!drag.moved && Math.abs(dx) > 4) {
+        drag.moved = true;
+        row.style.scrollSnapType = "none";
+        try { row.setPointerCapture(e.pointerId); } catch (err) {}
+      }
+      if (drag.moved) { row.scrollLeft = drag.left - dx; e.preventDefault(); }
+    });
+    function endDrag() {
+      if (!drag) return;
+      var moved = drag.moved;
+      drag = null;
+      row.classList.remove("is-grabbing");
+      if (moved) {
+        row.classList.add("is-dragged");
+        setTimeout(function () { row.classList.remove("is-dragged"); row.style.scrollSnapType = ""; }, 60);
+      }
+    }
+    row.addEventListener("pointerup", endDrag);
+    row.addEventListener("pointercancel", endDrag);
+    row.addEventListener("pointerleave", endDrag);
+    row.addEventListener("click", function (e) {
+      if (row.classList.contains("is-dragged")) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+    row.addEventListener("dragstart", function (e) { e.preventDefault(); });
+
     row.addEventListener("scroll", function () { requestAnimationFrame(sync); }, { passive: true });
     window.addEventListener("resize", sync);
     window.addEventListener("load", sync);

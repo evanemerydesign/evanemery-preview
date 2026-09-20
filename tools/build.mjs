@@ -249,6 +249,14 @@ const STAGES = [
   { n: "04", tag: "Print", title: "Pigment print", body: "The final mark is pressed into natural material — pigment on cotton rag — then matted and framed. Machine precision meets the grain.", tool: "Pigment · cotton rag", output: "→ editioned print" }
 ];
 
+// Behind-the-scenes stills, 9:16 (the format the process video will use),
+// one per visible stage. Cropped from studio footage: plotter on paper.
+const BTS = [
+  { src: "assets/bts/bts-01-linework-plot.jpg", alt: "Pen plotter laying white ink linework on black paper" },
+  { src: "assets/bts/bts-02-voxel-plot.jpg", alt: "Plotter pen tracing a faceted field in blue on grey paper" },
+  { src: "assets/bts/bts-03-duality-plot.jpg", alt: "Plotter drawing the Duality plate in white ink on blue mat board" }
+];
+
 const VOCAB = ["Vector fields", "Pixel-sorting", "Depth extrusion", "Faceted geometry", "Plotter paths", "Cotton rag", "Pigment"];
 
 /* ---------- index.html ------------------------------------------------------ */
@@ -304,12 +312,9 @@ function buildIndex(D) {
       <div style="padding:clamp(44px,5vw,72px) var(--page-gutter)">
         <div class="ee-secthead" data-reveal>
           ${specLabel("Selected works")}
-          <div style="display:flex;align-items:center;gap:16px">
-            <div class="ee-selnav" id="ee-selnav" hidden style="align-items:center;gap:6px">
-              <button type="button" class="ee-arrowbtn" data-sel-scroll="prev" aria-label="Previous works" disabled>←</button>
-              <button type="button" class="ee-arrowbtn" data-sel-scroll="next" aria-label="Next works">→</button>
-            </div>
-            <a class="ee-textbtn" href="#/works" data-route="works">All works →</a>
+          <div class="ee-selnav" id="ee-selnav" hidden style="align-items:center;gap:6px">
+            <button type="button" class="ee-arrowbtn" data-sel-scroll="prev" aria-label="Previous works" disabled>←</button>
+            <button type="button" class="ee-arrowbtn" data-sel-scroll="next" aria-label="Next works">→</button>
           </div>
         </div>
         <div class="ee-rail" id="ee-rail" data-at-start="1" data-at-end="0">
@@ -330,10 +335,11 @@ ${selected.map((w, i) => artworkCard(w, { delay: (i % 4) * 90 })).join("\n")}
             <h2 class="ee-h2">Every piece begins as a process.</h2>
             <p class="ee-body">Early states, generative sketches, plotter runs and the print itself. Four stages, run in the same order every time.</p>
           </div>
-          <div class="ee-grid-3 ee-grid-3--tight" style="gap:clamp(16px,2vw,28px)">
-${STAGES.slice(0, 3).map((s, i) => `            <div data-reveal data-reveal-delay="${i * 100}" class="ee-stack" style="gap:12px">
+          <div class="ee-grid-3 ee-grid-3--tight ee-bts-grid" style="gap:clamp(16px,2vw,28px)">
+${STAGES.slice(0, 3).map((s, i) => `            <div data-reveal data-reveal-delay="${i * 100}" class="ee-stack ee-bts" style="gap:12px">
+              <figure class="ee-bts-img"><img src="${attr(BTS[i].src)}" alt="${attr(BTS[i].alt)}" loading="lazy" decoding="async" width="776" height="1380"></figure>
               ${figTag(s.n, s.tag)}
-              <span class="ee-body" style="font-size:15px">${esc(s.title)}</span>
+              <span class="ee-body ee-bts-title" style="font-size:15px">${esc(s.title)}</span>
             </div>`).join("\n")}
           </div>
           <div style="margin-top:var(--sp-7)">
