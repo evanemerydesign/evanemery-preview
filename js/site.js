@@ -386,6 +386,13 @@
       return rows;
     }
 
+    // Row consistency is weighted heavily, except for a small catalogue in the
+    // works grid: with a dozen works or fewer, size matters more than uniform
+    // rows, otherwise the two landscape pieces drag every row down to three
+    // plates. Above that count the verified weighting (13-80 works) is kept.
+    var small = container.id === "ee-works-grid" && cards.length <= 12;
+    var spreadW = small ? 16 : 40;
+
     function score(rows) {
       // Consistency is judged across every row, including the trailing one,
       // because an outsized final row is exactly what we are avoiding.
@@ -397,7 +404,7 @@
       var drift = Math.abs(avg - target) / target;
       // Trailing space is acceptable, so it only breaks ties.
       var waste = rows.reduce(function (a, r) { return a + r.waste; }, 0);
-      return (spread - 1) * 40 + drift * 34 + waste * 6;
+      return (spread - 1) * spreadW + drift * 34 + waste * 6;
     }
 
     var best = null;
@@ -421,14 +428,20 @@
     card.style.width = w + "px";
   }
 
-  // Tall enough to read, and for the works grid short enough that the first row
-  // clears the fold. Measured from the container's position on the page.
+  // Tall enough to read. The carousel keeps a viewport-derived height. The works
+  // grid is sized from its own width instead: the catalogue is small, so each
+  // work should read as a plate on a wall, not a thumbnail. At ~1300px wide this
+  // gives two portraits per row; the solver adds a third only on wide monitors.
+  // Width-derived also means a phone's URL bar hiding and showing on scroll
+  // (which changes innerHeight) cannot re-solve the rows mid-scroll.
   function targetHeight(container) {
-    var base = Math.min(520, Math.max(300, window.innerHeight * 0.46));
-    if (container.id !== "ee-works-grid") return Math.round(base);
-    var top = container.getBoundingClientRect().top;
-    var toFold = window.innerHeight - top - 150;   // caption + mat + breathing room
-    return Math.round(Math.min(base, Math.max(260, toFold)));
+    if (container.id !== "ee-works-grid") {
+      return Math.round(Math.min(520, Math.max(300, window.innerHeight * 0.46)));
+    }
+    var w = container.clientWidth, gap = parseFloat(getComputedStyle(container).columnGap) || 0;
+    var two = (w - gap) / (2 * AR.portrait);          // two portrait plates fill the row
+    var fold = window.innerHeight * 0.9;               // but a plate never exceeds the viewport
+    return Math.round(Math.max(320, Math.min(two, fold, 900)));
   }
 
   function alignFrames() {
