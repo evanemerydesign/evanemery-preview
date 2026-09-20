@@ -605,7 +605,7 @@ ${nav({ prefix: P, standalone: true })}
 
     <div class="ee-work">
       <div data-reveal>
-        <div class="ee-work-stage">
+        <div class="ee-work-stage" style="--work-ar:${(() => { const s = imageSize(w.image); return s && s.h ? (s.w / s.h).toFixed(4) : "0.75"; })()}">
           <div class="ee-work-plate" id="ee-plate">
             <img id="ee-plate-img" src="${P}${attr(w.image)}" alt="${attr(w.title)}, ${attr(w.year)} — ${attr(w.medium)}" decoding="async"${sizeAttrs(w.image)}>
           </div>

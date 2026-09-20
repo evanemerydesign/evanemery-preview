@@ -13,6 +13,20 @@
   var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-focus]"));
   if (!plate || !crop || !buttons.length) return;
 
+  var current = null;
+
+  function fitCrop() {
+    if (crop.hidden) return;
+    var bw = crop.clientWidth, bh = crop.clientHeight;
+    var iw = plateImg.naturalWidth || 3, ih = plateImg.naturalHeight || 4;
+    if (!bw || !bh) return;
+    var cover = Math.max(bw / iw, bh / ih);
+    var zoom = window.matchMedia("(max-width: 700px)").matches ? 1.25 : 1.5;
+    crop.style.backgroundSize = Math.round(iw * cover * zoom) + "px " + Math.round(ih * cover * zoom) + "px";
+  }
+  window.addEventListener("resize", fitCrop);
+  if (plateImg && !plateImg.complete) plateImg.addEventListener("load", fitCrop);
+
   function select(btn) {
     var isFull = btn.getAttribute("data-focus") === "0";
     var img = btn.getAttribute("data-img");
@@ -28,14 +42,19 @@
       crop.hidden = true;
       plateImg.src = img;
     } else {
-      // A magnified region of the main scan.
+      // A region of the main scan. The catalogue's stored sizes (200-240%)
+      // zoomed far past what reads as the artwork, especially on a phone
+      // where the box is narrow. Instead the scan is scaled to cover the
+      // box and magnified only mildly beyond that, so the region still
+      // fills the frame and still looks like the work.
       plate.hidden = true;
       crop.hidden = false;
       crop.style.backgroundImage = 'url("' + img + '")';
-      crop.style.backgroundSize = size;
       crop.style.backgroundPosition = pos;
+      fitCrop();
     }
     if (isFull) plateImg.src = buttons[0].getAttribute("data-img");
+    current = btn;
 
     if (caption) caption.textContent = btn.getAttribute("data-label");
     buttons.forEach(function (b) { b.setAttribute("aria-pressed", String(b === btn)); });

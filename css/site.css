@@ -78,7 +78,7 @@ img { max-width: 100%; height: auto; }
 .ee-main { position: relative; z-index: 1; }
 
 /* section padding rhythm */
-.ee-sec { padding: clamp(30px, 3.2vw, 52px) var(--page-gutter) clamp(60px, 7vw, 120px); }
+.ee-sec { padding: clamp(16px, 2.2vw, 36px) var(--page-gutter) clamp(60px, 7vw, 120px); }
 .ee-sec--tight { padding-bottom: clamp(28px, 3.5vw, 48px); }
 .ee-rulewrap { padding: 0 var(--page-gutter); }
 
@@ -624,29 +624,42 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 
 /* ---------- work detail page --------------------------------------------- */
 
-.ee-work { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(0,0.65fr); gap: clamp(32px,4vw,72px); align-items: start; }
+/* The frame column is as wide as the frame; the record takes the rest. */
+.ee-work { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(32px,4vw,72px); align-items: start; }
+.ee-work > :last-child { max-width: 760px; }
 /* The stage keeps ONE height whatever view is shown. Every image is given the
    same fixed height (width follows its aspect, matted in white if the width
    must be capped) and the magnified crop is sized to the same outer box, so
    switching between the full work, a detail photo and a crop never moves the
    rest of the page. */
+/* The stage takes the WORK'S OWN ASPECT (--work-ar, emitted per page from the
+   file's dimensions), so a portrait piece is never asked to fill a landscape
+   box. The full work fills the frame edge to edge; a detail region is the
+   same box, gently magnified; the in-situ shot is matted inside it. The box
+   never changes size between views. */
 .ee-work-stage {
-  --stage-h: min(42vh, 440px);
-  --plate-pad: clamp(14px, 2vw, 34px);
+  --stage-h: min(54vh, 600px);
+  --plate-pad: clamp(12px, 1.8vw, 30px);
+  --stage-pad: clamp(14px, 2.2vw, 40px);
+  --stage-w: calc(var(--stage-h) * var(--work-ar, 0.75));
+  width: calc(var(--stage-w) + 2 * var(--plate-pad) + 2 * var(--stage-pad) + 3px);
+  max-width: 100%;
   position: relative; background-color: var(--sheet-bg, #f4f1ea);
-  border: 1.5px solid var(--border-strong); padding: clamp(14px,2.2vw,40px);
+  border: 1.5px solid var(--border-strong); padding: var(--stage-pad);
   display: flex; align-items: center; justify-content: center; min-height: 0;
 }
 .ee-work-plate {
-  max-width: 100%; background: #fff;
+  width: 100%; background: #fff;
   outline: 5px solid var(--ee-ink); outline-offset: -5px;
   padding: var(--plate-pad); box-shadow: var(--shadow-frame);
 }
-.ee-work-plate img { display: block; height: var(--stage-h); width: auto; max-width: 100%; object-fit: contain; }
+.ee-work-plate img { display: block; width: 100%; height: var(--stage-h); object-fit: contain; }
 .ee-work-crop {
   width: 100%; height: calc(var(--stage-h) + 2 * var(--plate-pad)); background-color: #0d0d0d;
   background-repeat: no-repeat; border: 1.5px solid var(--border-strong);
 }
+/* Caption and view strip line up under the frame, not across the column. */
+.ee-focusrow { max-width: 100%; }
 .ee-focusrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--sp-3); }
 .ee-focusbtn {
   background: none; padding: 0; cursor: pointer; width: 92px;
@@ -856,6 +869,28 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 @media (max-width: 700px) {
   /* One work per row on a phone; the solver enforces this too. */
   #ee-works-grid { gap: clamp(24px, 6vw, 36px); }
+
+  /* Works heading: keep the first plate near the top of the screen. The
+     filter chips run as one line that scrolls sideways, the cut-off last
+     chip saying there are more, rather than wrapping into three rows. */
+  [data-view="works"] > .ee-stack { gap: 8px !important; margin-bottom: var(--sp-4) !important; }
+  [data-view="works"] .ee-h1 { font-size: 30px; }
+  .ee-dimrow { margin-top: 0; }
+  .ee-chiprow { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .ee-chiprow::-webkit-scrollbar { display: none; }
+  .ee-chiprow > * { flex: none; }
+
+  /* Work page: the stage is sized from the work's own aspect so the full
+     piece fills the frame edge to edge, capped so it never swallows the
+     screen. The same height then holds for every view. */
+  .ee-work-stage {
+    --plate-pad: 10px;
+    --stage-pad: 10px;
+    width: 100%;
+    --stage-h: min(56vh, calc((100vw - 2 * var(--page-gutter) - 43px) / var(--work-ar, 0.75)));
+  }
+  .ee-focusbtn { width: calc((100% - 24px) / 4); max-width: 84px; }
+  .ee-focusrow { flex-wrap: nowrap; }
 }
 
 @media (max-width: 560px) {
