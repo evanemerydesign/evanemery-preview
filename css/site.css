@@ -937,12 +937,16 @@ a.ee-artcard { cursor: pointer; color: inherit; }
     --plate-pad: 10px;
     --stage-pad: 10px;
     max-width: 100%; margin: 0 auto;
-    --stage-h: min(50vh, calc((100vw - 2 * var(--page-gutter) - 43px) / var(--work-ar, 0.75)));
-    --stage-h: min(50svh, calc((100vw - 2 * var(--page-gutter) - 43px) / var(--work-ar, 0.75)));
+    /* Height budget: viewport minus nav, section padding, view strip, and
+       the series label + title, so exactly those land above the fold and the
+       frame takes everything else. Width caps it on tall phones. */
+    --stage-h: max(220px, min(calc(100vh - 262px), calc((100vw - 2 * var(--page-gutter) - 43px) / var(--work-ar, 0.75))));
+    --stage-h: max(220px, min(calc(100svh - 262px), calc((100vw - 2 * var(--page-gutter) - 43px) / var(--work-ar, 0.75))));
   }
-  #ee-focus-caption { margin-top: 8px !important; }
-  .ee-focusrow { margin-top: 8px; justify-content: center; gap: 8px; }
-  .ee-focusbtn { width: 56px; max-width: none; }
+  #ee-focus-caption { display: none; }
+  .ee-work { gap: 14px !important; }
+  .ee-focusrow { margin-top: 10px; justify-content: center; gap: 8px; }
+  .ee-focusbtn { width: 48px; max-width: none; }
   .ee-focusbtn .cap { display: none; }
   .ee-focusrow { flex-wrap: nowrap; }
 }
