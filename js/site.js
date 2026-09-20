@@ -234,8 +234,9 @@
         c.hidden = !on;
         if (on) { c.setAttribute("data-reveal-delay", String((shown % 3) * 90)); shown++; }
       });
+      // Name the filter, never the number of works.
       var count = $("#ee-works-count");
-      if (count) count.textContent = "Catalogue · " + shown + " works";
+      if (count) count.textContent = filter === "All" ? "Catalogue" : "Catalogue · " + filter;
       setupReveal();
       alignFrames();
     }
@@ -313,11 +314,30 @@
         return;
       }
 
-      // Stretch to fill when the selection is small enough to fit; otherwise
-      // hold the same plate height as the works grid and let the row scroll,
-      // so a work is never shown smaller here than it is on the works page.
+      // Stretch to fill when the selection is small enough to fit. Otherwise
+      // size the plates so a whole number of them fit plus a clear part of the
+      // next — a card cut by the edge is the one signal that says "there is
+      // more" without adding anything to the design.
       var fit = (width - insetSum - gap * (cards.length - 1)) / ratioSum;
-      var h = Math.max(fit, target);
+      var h;
+      if (fit >= target) {
+        h = fit;
+      } else {
+        // For each possible count k of whole cards, solve the height at which
+        // card k+1 shows exactly PEEK of itself at the edge, using the real
+        // ratios in row order (a landscape card changes the sum). Take the k
+        // whose height lands nearest the target.
+        var PEEK = 0.42, best = null;
+        var ratios = cards.map(ratioOf), insets = cards.map(matInset);
+        for (var k = 1; k < cards.length; k++) {
+          var rs = 0, is = 0;
+          for (var i = 0; i < k; i++) { rs += ratios[i]; is += insets[i]; }
+          var hk = (width - k * gap - is - PEEK * insets[k]) / (rs + PEEK * ratios[k]);
+          var err = Math.abs(hk - target) / target;
+          if (!best || err < best.err) best = { h: hk, err: err };
+        }
+        h = Math.max(target * 0.8, Math.min(target * 1.3, best.h));
+      }
 
       // No card may be wider than the rail itself.
       var cap = Infinity;
@@ -473,20 +493,14 @@
     var row = $("#ee-selscroll");
     if (!row) return;
     var rail = $("#ee-rail"), nav = $("#ee-selnav");
-    var thumb = $("#ee-railbar-thumb"), hint = $("#ee-railhint"), count = $("#ee-railcount");
-    var cards = $$(".ee-artcard", row);
+    var thumb = $("#ee-railbar-thumb");
 
     $$("[data-sel-scroll]").forEach(function (b) {
       b.addEventListener("click", function () {
         var dir = b.getAttribute("data-sel-scroll") === "next" ? 1 : -1;
         row.scrollBy({ left: dir * row.clientWidth * 0.85, behavior: "smooth" });
-        markUsed();
       });
     });
-
-    function markUsed() { if (hint) hint.setAttribute("data-used", "1"); }
-    row.addEventListener("pointerdown", markUsed, { once: true });
-    row.addEventListener("wheel", markUsed, { once: true, passive: true });
 
     function sync() {
       var max = row.scrollWidth - row.clientWidth;
@@ -519,14 +533,6 @@
         // its own width, is simply how many viewports along we have scrolled.
         thumb.style.width = (row.clientWidth / row.scrollWidth * 100) + "%";
         thumb.style.transform = "translateX(" + (x / row.clientWidth * 100) + "%)";
-      }
-      if (count && cards.length) {
-        // Which work sits at the left edge of the viewport.
-        var first = 1;
-        for (var i = 0; i < cards.length; i++) {
-          if (cards[i].offsetLeft - row.offsetLeft <= x + 8) first = i + 1;
-        }
-        count.textContent = String(first).padStart(2, "0") + " / " + String(cards.length).padStart(2, "0");
       }
     }
 

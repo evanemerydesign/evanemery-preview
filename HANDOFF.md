@@ -88,6 +88,30 @@ back to the page. Previously `touchmove` called `preventDefault()` on any drag,
 which is why a phone visitor got stuck orbiting the head and could not scroll.
 Needs a real touch device to confirm.
 
+## 2026-09-20 session (Claude Code, with Evan reviewing on his phone)
+
+- **Mobile hero**: the tile is pinned in pixels by `lockHeroTile()` in `js/site.js`
+  (viewport minus nav minus copy), re-measured only on a width change. `dvh` and
+  then `svh` both let the sim reshape as the phone's URL bar moved; do not go back
+  to a viewport unit here.
+- **Nav**: Workflow folded into About (statement first, workflow below). `#/workflow`
+  is an alias. Below 700px the Index link is hidden and the nav no longer scrolls.
+- **Works grid**: sized from its own width (`targetHeight`), two plates per row up to
+  ~1500px, three on wider screens. For ≤12 works the row-consistency weight is
+  relaxed (`spreadW`); above that the verified weighting holds. The count label was
+  removed on Evan's request — never show how many works there are.
+- **Card images**: `assets/works/grid/` (1800px) and `grid/sm/` (900px) derivatives,
+  made by `tools/make-grid-images.sh` (macOS sips). Cards use them with `srcset`;
+  detail pages keep the full files. `will-change: transform` on the card image is
+  what stops the white flash when the grid re-solves on resize.
+- **Carousel**: edge fades, hint text and the 01/08 counter are gone. The signal is a
+  card cut by the edge (solved in `justify()`, `PEEK`) plus the thin position bar.
+- **Work page**: the stage keeps one height across views (`--stage-h`); views are
+  preloaded on idle.
+- **Footer**: name and four icon links, no tagline. `site.tagline` is now unused.
+- **Build**: css/js URLs carry `?v=<stamp>` so redeploys are not served from cache.
+- Evan checks the GitHub Pages preview on his phone; test at ~390px for every change.
+
 ## Deferred, by decision
 
 - **Persistent docking hero on scroll** — the refinement named in

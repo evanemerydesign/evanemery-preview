@@ -246,6 +246,11 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   width: 100%; height: auto; display: block;
   flex: none;                 /* overflow rather than be squashed by the flexbox */
   transition: opacity var(--dur-base) var(--ease-standard);
+  /* Own compositor layer. When the justified grid re-solves on resize, Chrome
+     otherwise skips drawing each image until it has re-decoded it at the new
+     size, and the plates flash white. A composited image keeps its old raster
+     on screen, scaled, until the new one is ready. Verified 2026-09-20. */
+  will-change: transform;
 }
 /* No hover zoom — the frame lifts on its shadow instead. */
 .ee-artcard:hover .plate img { opacity: 0.94; }
@@ -433,28 +438,13 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 .ee-selrow::-webkit-scrollbar { display: none; }
 .ee-selrow > * { scroll-snap-align: start; flex: none; }
 /* ---------- scroll rail affordances ---------------------------------------
-   Horizontal scrolling has weak information scent: a visitor cannot tell there
-   is more unless the design says so. Four signals, per common guidance —
-   a peeking next card, a fade at the live edge, a position bar, and an
-   explicit hint. The arrows also disable at the ends. */
+   Horizontal scrolling has weak information scent. The row says "there is
+   more" in two quiet ways: the last visible card is deliberately cut by the
+   edge (site.js sizes the plates for that), and a thin position bar sits
+   under the row. The arrows disable at the ends. No edge fades, no hint text:
+   the work should not be dimmed to advertise the scroll. */
 
 .ee-rail { position: relative; }
-/* Fades sit over the live edges only, so they double as a direction cue. */
-.ee-rail::before, .ee-rail::after {
-  content: ""; position: absolute; top: 0; bottom: 0; width: clamp(32px, 6vw, 72px);
-  pointer-events: none; z-index: 2;
-  opacity: 0; transition: opacity var(--dur-base) var(--ease-standard);
-}
-.ee-rail::before {
-  left: 0;
-  background: linear-gradient(90deg, var(--ee-page, #f6f3ec) 10%, transparent 100%);
-}
-.ee-rail::after {
-  right: 0;
-  background: linear-gradient(270deg, var(--ee-page, #f6f3ec) 10%, transparent 100%);
-}
-.ee-rail[data-at-start="0"]::before { opacity: 1; }
-.ee-rail[data-at-end="0"]::after { opacity: 1; }
 
 .ee-railfoot {
   display: flex; align-items: center; gap: clamp(12px, 2vw, 24px);
@@ -469,20 +459,6 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   position: absolute; left: 0; top: 0; height: 100%; width: 0;
   background: var(--ee-ink);
   transition: transform var(--dur-fast) linear, width var(--dur-base) var(--ease-standard);
-}
-.ee-railhint {
-  display: flex; align-items: center; gap: 10px; white-space: nowrap;
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
-  text-transform: uppercase; color: var(--text-muted);
-  transition: opacity var(--dur-slow) var(--ease-standard);
-}
-.ee-railhint[data-used="1"] { opacity: 0.35; }
-.ee-railcount { color: var(--text-primary); }
-/* Show the gesture that actually applies to the device. */
-.ee-railhint-touch { display: none; }
-@media (hover: none) and (pointer: coarse) {
-  .ee-railhint-touch { display: inline; }
-  .ee-railhint-mouse { display: none; }
 }
 
 .ee-selrow:focus-visible { outline: none; box-shadow: var(--focus-ring); }
@@ -649,7 +625,14 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 /* ---------- work detail page --------------------------------------------- */
 
 .ee-work { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(0,0.65fr); gap: clamp(32px,4vw,72px); align-items: start; }
+/* The stage keeps ONE height whatever view is shown. Every image is given the
+   same fixed height (width follows its aspect, matted in white if the width
+   must be capped) and the magnified crop is sized to the same outer box, so
+   switching between the full work, a detail photo and a crop never moves the
+   rest of the page. */
 .ee-work-stage {
+  --stage-h: min(42vh, 440px);
+  --plate-pad: clamp(14px, 2vw, 34px);
   position: relative; background-color: var(--sheet-bg, #f4f1ea);
   border: 1.5px solid var(--border-strong); padding: clamp(14px,2.2vw,40px);
   display: flex; align-items: center; justify-content: center; min-height: 0;
@@ -657,11 +640,11 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 .ee-work-plate {
   max-width: 100%; background: #fff;
   outline: 5px solid var(--ee-ink); outline-offset: -5px;
-  padding: clamp(14px,2vw,34px); box-shadow: var(--shadow-frame);
+  padding: var(--plate-pad); box-shadow: var(--shadow-frame);
 }
-.ee-work-plate img { display: block; width: 100%; height: auto; max-height: min(42vh, 440px); object-fit: contain; }
+.ee-work-plate img { display: block; height: var(--stage-h); width: auto; max-width: 100%; object-fit: contain; }
 .ee-work-crop {
-  width: 100%; height: min(42vh, 440px); background-color: #0d0d0d;
+  width: 100%; height: calc(var(--stage-h) + 2 * var(--plate-pad)); background-color: #0d0d0d;
   background-repeat: no-repeat; border: 1.5px solid var(--border-strong);
 }
 .ee-focusrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--sp-3); }
@@ -806,11 +789,15 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   font-family: var(--font-display); font-weight: var(--fw-bold); font-size: 15px;
   letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-primary);
 }
-.ee-footer .links { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.ee-footer .links { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .ee-footer .links a {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--text-secondary);
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; color: var(--text-secondary);
+  border: 1px solid var(--border-strong); background: transparent;
+  transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
 }
+.ee-footer .links a:hover { background: var(--ee-ink); color: #fff; }
+.ee-footer .links svg { display: block; }
 .ee-footer .links a:hover { color: var(--text-primary); }
 
 /* ---------- responsive ---------------------------------------------------- */
@@ -881,8 +868,7 @@ a.ee-artcard { cursor: pointer; color: inherit; }
    below the fold. Tighten the type and plates rather than let them scroll. */
 @media (min-width: 1101px) and (max-height: 860px) {
   .ee-artcard h3 { font-size: 18px; }
-  .ee-work-plate img, .ee-work-crop { max-height: 36vh; }
-  .ee-work-crop { height: 36vh; }
+  .ee-work-stage { --stage-h: 36vh; }
   .ee-spec th, .ee-spec td { padding: 4px 0; font-size: 12px; }
   .ee-work h1 { font-size: clamp(26px, 2.8vw, 38px); }
   .ee-focusbtn { width: 78px; }

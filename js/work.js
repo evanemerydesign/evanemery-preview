@@ -45,6 +45,19 @@
     b.addEventListener("click", function () { select(b); });
   });
 
+  // Warm every view's image once the page is idle, so a swap is instant
+  // rather than showing the previous image while the next one downloads.
+  function preload() {
+    var seen = {};
+    buttons.forEach(function (b) {
+      var src = b.getAttribute("data-img");
+      if (!src || seen[src]) return;
+      seen[src] = true;
+      var im = new Image(); im.decoding = "async"; im.src = src;
+    });
+  }
+  if (window.requestIdleCallback) requestIdleCallback(preload); else setTimeout(preload, 800);
+
   // Arrow-key navigation across the view strip.
   buttons.forEach(function (b, i) {
     b.addEventListener("keydown", function (e) {

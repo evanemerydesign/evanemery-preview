@@ -117,9 +117,23 @@ function tag(text, variant) {
 }
 
 /** ArtworkCard, as an anchor so it is a real, crawlable link. */
+// Cards use a resized derivative of the work (assets/works/grid, made with
+// tools/make-grid-images.sh) rather than the full print file: a 2250×3000
+// JPEG per card made the works page ~19 MB and, when the grid re-solved on
+// resize, Chrome dropped and re-decoded each image, which read as a flash.
+// Falls back to the original if the derivative has not been generated.
+function gridImage(image) {
+  const base = image.replace(/^.*\//, "").replace(/\.[a-z0-9]+$/i, "") + ".jpg";
+  const lg = "assets/works/grid/" + base, sm = "assets/works/grid/sm/" + base;
+  if (!existsSync(join(ROOT, lg))) return { src: image, srcset: null };
+  const dl = imageSize(lg), ds = existsSync(join(ROOT, sm)) ? imageSize(sm) : null;
+  return { src: lg, w: dl ? dl.w : 0, srcset: ds ? { sm } : null, smW: ds ? ds.w : 0 };
+}
+
 function artworkCard(w, { delay = 0, prefix = "" } = {}) {
   const dims = [w.dims, w.medium].filter(Boolean);
   const d = imageSize(w.image);
+  const g = gridImage(w.image);
   // Landscape works span two grid cells so they hang alongside portraits
   // instead of being squeezed into a portrait window.
   const orient = d && d.w > d.h ? "landscape" : "portrait";
@@ -130,7 +144,7 @@ function artworkCard(w, { delay = 0, prefix = "" } = {}) {
              data-reveal data-reveal-delay="${delay}">
             <div class="mat">
               <div class="plate">
-                <img src="${prefix}${attr(w.image)}" alt="${attr(w.title)}, ${attr(w.year)} — ${attr(w.medium || "artwork")}" loading="lazy" decoding="async"${sizeAttrs(w.image)}>
+                <img src="${prefix}${attr(g.src)}"${g.srcset ? ` srcset="${prefix}${attr(g.srcset.sm)} ${g.smW}w, ${prefix}${attr(g.src)} ${g.w}w" sizes="(max-width: 620px) 100vw, (max-width: 1500px) 50vw, 33vw"` : ""} alt="${attr(w.title)}, ${attr(w.year)} — ${attr(w.medium || "artwork")}" loading="lazy" decoding="sync"${sizeAttrs(g.src)}>
               </div>
             </div>
             <figcaption>
@@ -203,15 +217,25 @@ function fxLayers() {
   <div id="ee-frame" aria-hidden="true"><span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span></div>`;
 }
 
-function footer(site) {
+const ICONS = {
+  instagram: `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.9" fill="currentColor" stroke="none"/></svg>`,
+  github: `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.58 9.58 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>`,
+  linkedin: `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9.5 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.5c0-1.3-.02-3-1.83-3-1.83 0-2.1 1.43-2.1 2.9V21h-4z"/></svg>`,
+  mail: `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>`
+};
+
+// Name and links only — no tagline. Icons carry a label for screen readers
+// and a title for the hover tooltip.
+function footer() {
+  const link = (href, label, icon, external) =>
+    `<a href="${href}" aria-label="${label}" title="${label}"${external ? ` target="_blank" rel="noopener"` : ""}>${ICONS[icon]}</a>`;
   return `  <footer class="ee-footer">
     <span class="mark">Evan Emery</span>
-    <span class="ee-mono">${esc(site.tagline)}</span>
     <div class="links">
-      <a href="https://www.instagram.com/evanemerydesign/" target="_blank" rel="noopener">Instagram ↗</a>
-      <a href="https://github.com/evanemerydesign" target="_blank" rel="noopener">GitHub ↗</a>
-      <a href="https://www.linkedin.com/in/evan-emery-2021/" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a href="mailto:${EMAIL}">${EMAIL}</a>
+      ${link("https://www.instagram.com/evanemerydesign/", "Instagram", "instagram", true)}
+      ${link("https://github.com/evanemerydesign", "GitHub", "github", true)}
+      ${link("https://www.linkedin.com/in/evan-emery-2021/", "LinkedIn", "linkedin", true)}
+      ${link(`mailto:${EMAIL}`, "Email", "mail", false)}
     </div>
   </footer>`;
 }
@@ -296,11 +320,6 @@ ${selected.map((w, i) => artworkCard(w, { delay: (i % 4) * 90 })).join("\n")}
         </div>
         <div class="ee-railfoot">
           <div class="ee-railbar" aria-hidden="true"><span id="ee-railbar-thumb"></span></div>
-          <span class="ee-railhint" id="ee-railhint">
-            <span class="ee-railhint-touch">Swipe for more</span>
-            <span class="ee-railhint-mouse">Drag or use the arrows</span>
-            <span class="ee-railcount" id="ee-railcount"></span>
-          </span>
         </div>
       </div>
 
@@ -328,7 +347,7 @@ ${STAGES.slice(0, 3).map((s, i) => `            <div data-reveal data-reveal-del
   const worksSection = `
     <section data-view="works" class="ee-sec" aria-label="Works" hidden style="position:relative;overflow:hidden">
       <div class="ee-stack" data-reveal style="position:relative;z-index:1;gap:var(--sp-3);margin-bottom:var(--sp-5)">
-        <div class="ee-speclabel" id="ee-works-count">Catalogue · ${works.length} works</div>
+        <div class="ee-speclabel" id="ee-works-count">Catalogue</div>
         <h1 class="ee-h1 ee-chroma" data-text="Works">Works</h1>
         <div class="ee-dimrow">
           <span class="lbl">Group by</span>
@@ -501,7 +520,7 @@ ${worksSection}
 ${experimentsSection}
 ${aboutSection}
   </main>
-${footer(site)}
+${footer()}
 </div>
 
 <script src="js/works-data.js?v=${V}"></script>
@@ -626,7 +645,7 @@ ${specRows.map(([k, v]) => `            <tr><th scope="row">${esc(k)}</th><td>${
     </div>
 
   </main>
-${footer(site)}
+${footer()}
 </div>
 
 <script src="${P}js/works-data.js?v=${V}"></script>
