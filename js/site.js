@@ -5,7 +5,9 @@
 (function () {
   "use strict";
 
-  var ROUTES = ["home", "works", "experiments", "workflow", "about"];
+  var ROUTES = ["home", "works", "experiments", "about"];
+  // Workflow was folded into About; old links and bookmarks still land there.
+  var ALIASES = { workflow: "about" };
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function $(sel, ctx) { return (ctx || document).querySelector(sel); }
@@ -15,8 +17,10 @@
 
   function routeFromUrl() {
     var h = (location.hash || "").replace(/^#\/?/, "").split("?")[0];
+    h = ALIASES[h] || h;
     if (ROUTES.indexOf(h) !== -1) return h;
     var v = new URLSearchParams(location.search).get("view");
+    v = ALIASES[v] || v;
     if (v && ROUTES.indexOf(v) !== -1) return v;
     return "home";
   }
@@ -41,8 +45,7 @@
     home: "Evan Emery — generative artwork, plotted and printed",
     works: "Works — Evan Emery",
     experiments: "Experiments — Evan Emery",
-    workflow: "Workflow — Evan Emery",
-    about: "Statement — Evan Emery"
+    about: "About — Evan Emery"
   };
   function titleFor(r) { return TITLES[r] || TITLES.home; }
 

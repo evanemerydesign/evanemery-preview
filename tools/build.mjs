@@ -177,9 +177,12 @@ ${(noindex || PREVIEW) ? `<meta name="robots" content="noindex,nofollow">\n` : "
 }
 
 function nav({ prefix = "", standalone = false }) {
-  const item = (route, label) => standalone
-    ? `<a class="ee-navlink" href="${prefix}#/${route}">${label}</a>`
-    : `<a class="ee-navlink" href="#/${route}" data-route="${route}">${label}</a>`;
+  const item = (route, label) => {
+    const cls = route === "home" ? "ee-navlink ee-navlink--home" : "ee-navlink";
+    return standalone
+      ? `<a class="${cls}" href="${prefix}#/${route}">${label}</a>`
+      : `<a class="${cls}" href="#/${route}" data-route="${route}">${label}</a>`;
+  };
   return `  <header id="ee-nav" data-nav="ink" data-scrolled="0">
     <div class="ee-navbar">
       <a class="ee-brand" href="${prefix}"${standalone ? "" : ` data-route="home"`}>Evan Emery</a>
@@ -187,7 +190,6 @@ function nav({ prefix = "", standalone = false }) {
         ${item("home", "Index")}
         ${item("works", "Works")}
         ${item("experiments", "Experiments")}
-        ${item("workflow", "Workflow")}
         ${item("about", "About")}
       </nav>
     </div>
@@ -316,7 +318,7 @@ ${STAGES.slice(0, 3).map((s, i) => `            <div data-reveal data-reveal-del
             </div>`).join("\n")}
           </div>
           <div style="margin-top:var(--sp-7)">
-            <a class="ee-btn ee-btn--secondary" href="#/workflow" data-route="workflow">Explore the workflow →</a>
+            <a class="ee-btn ee-btn--secondary" href="#/about" data-route="about">Explore the workflow →</a>
           </div>
         </div>
       </div>
@@ -383,12 +385,11 @@ ${exps.map((x, i) => `          <div class="ee-exp" data-reveal data-reveal-dela
     </section>`;
 
   const workflowSection = `
-    <section data-view="workflow" aria-label="Workflow" hidden>
-      <div class="ee-sec ee-sec--tight" style="position:relative;overflow:hidden">
+      <div id="workflow" class="ee-sec ee-sec--tight" style="position:relative;overflow:hidden">
         <div class="ee-splitend" data-reveal style="position:relative;z-index:1">
           <div class="ee-stack" style="gap:var(--sp-4);max-width:40ch">
             ${specLabel("The process · 2023–2025")}
-            <h1 class="ee-h1 ee-chroma" data-text="Workflow">Workflow</h1>
+            <h2 class="ee-h1 ee-chroma" data-text="Workflow">Workflow</h2>
             <p class="ee-body" style="font-size:16px;line-height:1.62">Every piece runs the same pipeline — from a captured reference, through a generative program, to plotter and pigment. The process is the work; this is the sheet that catalogs it.</p>
           </div>
           <div class="ee-datasheet">
@@ -428,20 +429,18 @@ ${STAGES.map((s) => `          <div class="ee-stage" data-reveal data-wf-stage d
             <a class="ee-btn" href="#/works" data-route="works">See the works →</a>
           </div>
         </div>
-      </div>
-    </section>`;
+      </div>`;
 
   const aw = byId("self-portrait") || works[0];
   const aboutSection = `
-    <section data-view="about" class="ee-sec" aria-label="Statement" hidden>
+    <section data-view="about" aria-label="About" hidden>
+      <div class="ee-sec">
       <div class="ee-about">
         <div class="ee-stack" data-reveal style="gap:var(--sp-5);max-width:56ch">
           ${specLabel("Statement")}
           <h1 class="ee-h1" style="font-size:clamp(32px,3.8vw,56px);line-height:1.02">The work lives between the machine's precision and the material's resistance.</h1>
           <p class="ee-body">Each piece begins as a process — a generative program that reads the human head as data: vector fields, depth maps, faceted meshes, a single continuous plotter path. The program is coaxed, seeded and re-run until an image resolves.</p>
           <p class="ee-body">What the machine makes is then pressed into the grain of natural material — pigment on cotton rag, plotter ink on paper, the black frame and its mat. The tension between the two is the subject.</p>
-          ${divider("Process vocabulary")}
-          <div class="ee-chiprow">${VOCAB.slice(0, 5).map((v) => tag(v, "soft")).join("")}</div>
           <div style="margin-top:var(--sp-3)">
             <a class="ee-mail" href="mailto:${EMAIL}">${EMAIL}</a>
           </div>
@@ -459,6 +458,10 @@ ${STAGES.map((s) => `          <div class="ee-stage" data-reveal data-wf-stage d
           <div class="ee-mono" style="text-align:center;margin-top:14px">${esc(aw.title)} · ${esc(aw.year)} · ${esc(aw.dims)}</div>
         </div>
       </div>
+      </div>
+
+      <div class="ee-rulewrap"><div class="ee-draw"></div></div>
+${workflowSection}
     </section>`;
 
   const jsonld = {
@@ -496,7 +499,6 @@ ${nav({})}
 ${homeSection}
 ${worksSection}
 ${experimentsSection}
-${workflowSection}
 ${aboutSection}
   </main>
 ${footer(site)}

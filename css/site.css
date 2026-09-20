@@ -837,6 +837,17 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   .ee-navlink { padding: 8px 7px; font-size: 10px; letter-spacing: 0.1em; white-space: nowrap; }
 }
 
+/* Phone: every destination must be visible at once — a clipped nav with a
+   hidden scrollbar gives no sign that more pages exist. The brand already
+   links home, so the Index item goes; the rest is sized to fit 360px. */
+@media (max-width: 700px) {
+  .ee-navbar { gap: 8px; }
+  .ee-navbar nav { overflow: visible; flex-shrink: 0; }
+  .ee-navlink--home { display: none; }
+  .ee-brand { font-size: 15px; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .ee-navlink { padding: 8px 6px; letter-spacing: 0.08em; }
+}
+
 @media (max-width: 820px) { #ee-frame { display: none; } }
 
 @media (max-width: 700px) {

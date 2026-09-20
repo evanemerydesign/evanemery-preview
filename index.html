@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="css/tokens/typography.css">
 <link rel="stylesheet" href="css/tokens/spacing.css">
 <link rel="stylesheet" href="css/tokens/effects.css">
-<link rel="stylesheet" href="css/site.css?v=mu9u86ak">
+<link rel="stylesheet" href="css/site.css?v=mu9uj6fk">
 <link rel="preload" href="assets/fonts/ChakraPetch-700n.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/SpaceGrotesk-400n.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/SpaceMono-400n.woff2" as="font" type="font/woff2" crossorigin>
@@ -42,10 +42,9 @@
     <div class="ee-navbar">
       <a class="ee-brand" href="" data-route="home">Evan Emery</a>
       <nav aria-label="Primary">
-        <a class="ee-navlink" href="#/home" data-route="home">Index</a>
+        <a class="ee-navlink ee-navlink--home" href="#/home" data-route="home">Index</a>
         <a class="ee-navlink" href="#/works" data-route="works">Works</a>
         <a class="ee-navlink" href="#/experiments" data-route="experiments">Experiments</a>
-        <a class="ee-navlink" href="#/workflow" data-route="workflow">Workflow</a>
         <a class="ee-navlink" href="#/about" data-route="about">About</a>
       </nav>
     </div>
@@ -287,7 +286,7 @@
             </div>
           </div>
           <div style="margin-top:var(--sp-7)">
-            <a class="ee-btn ee-btn--secondary" href="#/workflow" data-route="workflow">Explore the workflow →</a>
+            <a class="ee-btn ee-btn--secondary" href="#/about" data-route="about">Explore the workflow →</a>
           </div>
         </div>
       </div>
@@ -599,12 +598,40 @@
       </div>
     </section>
 
-    <section data-view="workflow" aria-label="Workflow" hidden>
-      <div class="ee-sec ee-sec--tight" style="position:relative;overflow:hidden">
+    <section data-view="about" aria-label="About" hidden>
+      <div class="ee-sec">
+      <div class="ee-about">
+        <div class="ee-stack" data-reveal style="gap:var(--sp-5);max-width:56ch">
+          <div class="ee-speclabel">Statement</div>
+          <h1 class="ee-h1" style="font-size:clamp(32px,3.8vw,56px);line-height:1.02">The work lives between the machine's precision and the material's resistance.</h1>
+          <p class="ee-body">Each piece begins as a process — a generative program that reads the human head as data: vector fields, depth maps, faceted meshes, a single continuous plotter path. The program is coaxed, seeded and re-run until an image resolves.</p>
+          <p class="ee-body">What the machine makes is then pressed into the grain of natural material — pigment on cotton rag, plotter ink on paper, the black frame and its mat. The tension between the two is the subject.</p>
+          <div style="margin-top:var(--sp-3)">
+            <a class="ee-mail" href="mailto:evanemerydesign@gmail.com">evanemerydesign@gmail.com</a>
+          </div>
+        </div>
+        <div data-reveal>
+          <div class="ee-sheetframe">
+            <span class="ee-sheet-tag tl" aria-hidden="true">Sheet — Linework · 2024</span>
+            <figure class="ee-framed">
+              <div class="mat"><div class="plate">
+                <img src="assets/works/self-portrait.jpg" alt="Self Portrait, 2024 — White ink on archival paper" decoding="async" width="2750" height="3480">
+              </div></div>
+            </figure>
+            <span class="ee-sheet-tag br" aria-hidden="true">seed 0006 · path 1 · length 214 m</span>
+          </div>
+          <div class="ee-mono" style="text-align:center;margin-top:14px">Self Portrait · 2024 · 18 × 22 in</div>
+        </div>
+      </div>
+      </div>
+
+      <div class="ee-rulewrap"><div class="ee-draw"></div></div>
+
+      <div id="workflow" class="ee-sec ee-sec--tight" style="position:relative;overflow:hidden">
         <div class="ee-splitend" data-reveal style="position:relative;z-index:1">
           <div class="ee-stack" style="gap:var(--sp-4);max-width:40ch">
             <div class="ee-speclabel">The process · 2023–2025</div>
-            <h1 class="ee-h1 ee-chroma" data-text="Workflow">Workflow</h1>
+            <h2 class="ee-h1 ee-chroma" data-text="Workflow">Workflow</h2>
             <p class="ee-body" style="font-size:16px;line-height:1.62">Every piece runs the same pipeline — from a captured reference, through a generative program, to plotter and pigment. The process is the work; this is the sheet that catalogs it.</p>
           </div>
           <div class="ee-datasheet">
@@ -679,34 +706,6 @@
         </div>
       </div>
     </section>
-
-    <section data-view="about" class="ee-sec" aria-label="Statement" hidden>
-      <div class="ee-about">
-        <div class="ee-stack" data-reveal style="gap:var(--sp-5);max-width:56ch">
-          <div class="ee-speclabel">Statement</div>
-          <h1 class="ee-h1" style="font-size:clamp(32px,3.8vw,56px);line-height:1.02">The work lives between the machine's precision and the material's resistance.</h1>
-          <p class="ee-body">Each piece begins as a process — a generative program that reads the human head as data: vector fields, depth maps, faceted meshes, a single continuous plotter path. The program is coaxed, seeded and re-run until an image resolves.</p>
-          <p class="ee-body">What the machine makes is then pressed into the grain of natural material — pigment on cotton rag, plotter ink on paper, the black frame and its mat. The tension between the two is the subject.</p>
-          <div class="ee-divider"><span>Process vocabulary</span></div>
-          <div class="ee-chiprow"><span class="ee-tag ee-tag--soft">Vector fields</span><span class="ee-tag ee-tag--soft">Pixel-sorting</span><span class="ee-tag ee-tag--soft">Depth extrusion</span><span class="ee-tag ee-tag--soft">Faceted geometry</span><span class="ee-tag ee-tag--soft">Plotter paths</span></div>
-          <div style="margin-top:var(--sp-3)">
-            <a class="ee-mail" href="mailto:evanemerydesign@gmail.com">evanemerydesign@gmail.com</a>
-          </div>
-        </div>
-        <div data-reveal>
-          <div class="ee-sheetframe">
-            <span class="ee-sheet-tag tl" aria-hidden="true">Sheet — Linework · 2024</span>
-            <figure class="ee-framed">
-              <div class="mat"><div class="plate">
-                <img src="assets/works/self-portrait.jpg" alt="Self Portrait, 2024 — White ink on archival paper" decoding="async" width="2750" height="3480">
-              </div></div>
-            </figure>
-            <span class="ee-sheet-tag br" aria-hidden="true">seed 0006 · path 1 · length 214 m</span>
-          </div>
-          <div class="ee-mono" style="text-align:center;margin-top:14px">Self Portrait · 2024 · 18 × 22 in</div>
-        </div>
-      </div>
-    </section>
   </main>
   <footer class="ee-footer">
     <span class="mark">Evan Emery</span>
@@ -720,13 +719,13 @@
   </footer>
 </div>
 
-<script src="js/works-data.js?v=mu9u86ak"></script>
-<script src="js/site-config.js?v=mu9u86ak"></script>
+<script src="js/works-data.js?v=mu9uj6fk"></script>
+<script src="js/site-config.js?v=mu9uj6fk"></script>
 <script src="assets/vendor/three.min.js"></script>
-<script src="js/head-points.js?v=mu9u86ak"></script>
-<script src="js/head-mesh.js?v=mu9u86ak"></script>
-<script src="js/hero-field.js?v=mu9u86ak"></script>
-<script src="js/bg-grid.js?v=mu9u86ak"></script>
-<script src="js/site.js?v=mu9u86ak"></script>
+<script src="js/head-points.js?v=mu9uj6fk"></script>
+<script src="js/head-mesh.js?v=mu9uj6fk"></script>
+<script src="js/hero-field.js?v=mu9uj6fk"></script>
+<script src="js/bg-grid.js?v=mu9uj6fk"></script>
+<script src="js/site.js?v=mu9uj6fk"></script>
 </body>
 </html>
