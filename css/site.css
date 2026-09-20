@@ -624,9 +624,20 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 
 /* ---------- work detail page --------------------------------------------- */
 
-/* The frame column is as wide as the frame; the record takes the rest. */
-.ee-work { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(32px,4vw,72px); align-items: start; }
-.ee-work > :last-child { max-width: 760px; }
+/* Artwork page, desktop: the frame is sized by viewport HEIGHT (portrait
+   work is tall, so height is what makes it large), the record is a narrow
+   column pinned beside it, and the pair is centered as one unit so spare
+   width is split to both sides rather than piling up on the right. This is
+   the Artsy / Saatchi arrangement. */
+.ee-work {
+  --work-gap: clamp(32px, 4vw, 64px);
+  --record-w: 380px;
+  display: grid; grid-template-columns: auto minmax(300px, var(--record-w));
+  gap: var(--work-gap); align-items: start; justify-content: center;
+}
+.ee-work > :last-child {
+  position: sticky; top: calc(var(--ee-nav-h, 60px) + 20px);
+}
 /* The stage keeps ONE height whatever view is shown. Every image is given the
    same fixed height (width follows its aspect, matted in white if the width
    must be capped) and the magnified crop is sized to the same outer box, so
@@ -638,9 +649,15 @@ a.ee-artcard { cursor: pointer; color: inherit; }
    same box, gently magnified; the in-situ shot is matted inside it. The box
    never changes size between views. */
 .ee-work-stage {
-  --stage-h: min(54vh, 600px);
-  --plate-pad: clamp(12px, 1.8vw, 30px);
-  --stage-pad: clamp(14px, 2.2vw, 40px);
+  --plate-pad: clamp(12px, 1.5vw, 24px);
+  --stage-pad: clamp(14px, 1.6vw, 28px);
+  /* As tall as the viewport allows, capped so the view strip still lands
+     near the fold; and never wider than the room left beside the record. */
+  --stage-h: min(
+    74vh, 860px,
+    calc((100vw - 2 * var(--page-gutter) - var(--work-gap, 64px) - var(--record-w, 380px)
+          - 2 * var(--plate-pad) - 2 * var(--stage-pad) - 3px) / var(--work-ar, 0.75))
+  );
   --stage-w: calc(var(--stage-h) * var(--work-ar, 0.75));
   width: calc(var(--stage-w) + 2 * var(--plate-pad) + 2 * var(--stage-pad) + 3px);
   max-width: 100%;
@@ -819,6 +836,11 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   .ee-hero-stack, .ee-splitend, .ee-about, .ee-stage, .ee-work {
     grid-template-columns: 1fr !important; gap: clamp(24px,5vw,40px) !important;
   }
+  .ee-work { justify-content: stretch; }
+  .ee-work > :last-child { position: static; max-width: 640px; }
+  .ee-work-stage {
+    --stage-h: min(70vh, calc((100vw - 2 * var(--page-gutter) - 2 * var(--plate-pad) - 2 * var(--stage-pad) - 3px) / var(--work-ar, 0.75)));
+  }
   .ee-hero-tile { min-height: 56vh; order: -1; }
   #ee-frame .reg { width: 12px; height: 12px; }
   #ee-frame .reg::before { top: -4px; height: 20px; }
@@ -903,7 +925,7 @@ a.ee-artcard { cursor: pointer; color: inherit; }
    below the fold. Tighten the type and plates rather than let them scroll. */
 @media (min-width: 1101px) and (max-height: 860px) {
   .ee-artcard h3 { font-size: 18px; }
-  .ee-work-stage { --stage-h: 36vh; }
+  .ee-work-stage { --stage-h: min(68vh, 860px, calc((100vw - 2 * var(--page-gutter) - var(--work-gap, 64px) - var(--record-w, 380px) - 2 * var(--plate-pad) - 2 * var(--stage-pad) - 3px) / var(--work-ar, 0.75))); }
   .ee-spec th, .ee-spec td { padding: 4px 0; font-size: 12px; }
   .ee-work h1 { font-size: clamp(26px, 2.8vw, 38px); }
   .ee-focusbtn { width: 78px; }
