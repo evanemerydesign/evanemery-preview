@@ -694,7 +694,7 @@ a.ee-artcard { cursor: pointer; color: inherit; }
     --stage-pad: 20px;
     --strip-w: 108px;
     --stage-h: max(360px, min(
-      calc(100vh - var(--ee-nav-h, 58px) - 112px - 2 * var(--plate-pad) - 2 * var(--stage-pad)),
+      calc(100vh - var(--ee-nav-h, 58px) - 78px - 2 * var(--plate-pad) - 2 * var(--stage-pad)),
       calc((100vw - 2 * var(--page-gutter) - var(--work-gap, 64px) - var(--record-w, 380px) - var(--strip-w)
             - 2 * var(--plate-pad) - 2 * var(--stage-pad) - 3px) / var(--work-ar, 0.75)),
       960px
@@ -861,11 +861,7 @@ a.ee-artcard { cursor: pointer; color: inherit; }
     grid-template-columns: 1fr !important; gap: clamp(24px,5vw,40px) !important;
   }
   .ee-work { justify-content: stretch; }
-  /* Single column: series + title FIRST, then the frame, then the rest of
-     the record — so the opening screen is the work and its name. */
-  .ee-work-record { display: contents; }
-  .ee-work-head { order: -1; }
-  .ee-work-rest { max-width: 640px; }
+  .ee-work-record { max-width: 640px; }
   .ee-work-stage {
     --stage-h: min(70vh, calc((100vw - 2 * var(--page-gutter) - 2 * var(--plate-pad) - 2 * var(--stage-pad) - 3px) / var(--work-ar, 0.75)));
   }
@@ -933,13 +929,21 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   /* Work page: the stage is sized from the work's own aspect so the full
      piece fills the frame edge to edge, capped so it never swallows the
      screen. The same height then holds for every view. */
+  /* Phone: the frame hugs the work (no white side bands), centered, and is
+     capped so frame, view strip AND the title all fit the opening screen
+     (svh: the stable small viewport; the vh line is the fallback). The view
+     strip is a compact row of squares; the caption line names the view. */
   .ee-work-stage {
     --plate-pad: 10px;
     --stage-pad: 10px;
-    width: 100%;
-    --stage-h: min(56vh, calc((100vw - 2 * var(--page-gutter) - 43px) / var(--work-ar, 0.75)));
+    max-width: 100%; margin: 0 auto;
+    --stage-h: min(50vh, calc((100vw - 2 * var(--page-gutter) - 43px) / var(--work-ar, 0.75)));
+    --stage-h: min(50svh, calc((100vw - 2 * var(--page-gutter) - 43px) / var(--work-ar, 0.75)));
   }
-  .ee-focusbtn { width: calc((100% - 24px) / 4); max-width: 84px; }
+  #ee-focus-caption { margin-top: 8px !important; }
+  .ee-focusrow { margin-top: 8px; justify-content: center; gap: 8px; }
+  .ee-focusbtn { width: 56px; max-width: none; }
+  .ee-focusbtn .cap { display: none; }
   .ee-focusrow { flex-wrap: nowrap; }
 }
 

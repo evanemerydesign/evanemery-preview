@@ -599,10 +599,6 @@ ${fxLayers()}
 ${nav({ prefix: P, standalone: true })}
   <main class="ee-main ee-sec" id="ee-main">
 
-    <nav class="ee-mono" aria-label="Breadcrumb" style="margin-bottom:var(--sp-4)">
-      <a href="${P}#/works">Works</a> <span aria-hidden="true">/</span> ${esc(w.title)}
-    </nav>
-
     <div class="ee-work">
       <div data-reveal>
         <div class="ee-work-stage" style="--work-ar:${(() => { const s = imageSize(w.image); return s && s.h ? (s.w / s.h).toFixed(4) : "0.75"; })()}">
