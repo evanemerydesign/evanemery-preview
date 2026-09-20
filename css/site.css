@@ -433,13 +433,17 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   display: flex;
   gap: var(--ee-row-gap, clamp(20px, 2.2vw, 40px));
   overflow-x: auto; scroll-snap-type: x proximity;
+  /* Reaching an end must not rubber-band the page or trigger the browser's
+     swipe-back — that is the jump a trackpad user feels. */
+  overscroll-behavior-x: contain;
   scrollbar-width: none; padding-bottom: 4px;
 }
 .ee-selrow::-webkit-scrollbar { display: none; }
 @media (hover: hover) and (pointer: fine) {
   /* No snap with a mouse or trackpad: the row scrolls and glides like any
      native view. Snap stays on touch, where it feels right. */
-  .ee-selrow { cursor: grab; scroll-snap-type: none; }
+  .ee-selrow { cursor: grab; scroll-snap-type: none; scroll-behavior: auto; }
+  .ee-selrow > * { scroll-snap-align: none; }
   .ee-selrow.is-grabbing { cursor: grabbing; user-select: none; }
   .ee-selrow.is-grabbing .ee-artcard { pointer-events: none; }
 }

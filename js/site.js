@@ -516,12 +516,31 @@
     var rail = $("#ee-rail"), nav = $("#ee-selnav");
     var thumb = $("#ee-railbar-thumb");
 
+    // One easing for every programmatic move, so arrows and glide feel like
+    // the same surface. Cubic ease-out over ~700ms.
+    var anim = 0;
+    function stopAnim() { cancelAnimationFrame(anim); anim = 0; }
+    function scrollTo(target, ms) {
+      stopAnim();
+      var from = row.scrollLeft, max = row.scrollWidth - row.clientWidth;
+      target = Math.max(0, Math.min(max, target));
+      var t0 = performance.now();
+      (function step(now) {
+        var p = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - p, 3);
+        row.scrollLeft = from + (target - from) * e;
+        if (p < 1) anim = requestAnimationFrame(step); else anim = 0;
+      })(t0);
+    }
+
     $$("[data-sel-scroll]").forEach(function (b) {
       b.addEventListener("click", function () {
         var dir = b.getAttribute("data-sel-scroll") === "next" ? 1 : -1;
-        row.scrollBy({ left: dir * row.clientWidth * 0.85, behavior: "smooth" });
+        scrollTo(row.scrollLeft + dir * row.clientWidth * 0.8, 700);
       });
     });
+    // The wheel or a finger always wins over any move in progress.
+    row.addEventListener("wheel", stopAnim, { passive: true });
+    row.addEventListener("touchstart", stopAnim, { passive: true });
 
     function sync() {
       var max = row.scrollWidth - row.clientWidth;
@@ -560,10 +579,10 @@
     // Mouse drag scrolls the row, as a finger does on a phone. Touch is left
     // to the browser. Snap is suspended during the drag so the row follows the
     // hand, and a drag suppresses the click that would otherwise open a work.
-    var drag = null, glide = 0;
+    var drag = null;
     row.addEventListener("pointerdown", function (e) {
       if (e.pointerType !== "mouse" || e.button !== 0) return;
-      cancelAnimationFrame(glide);
+      stopAnim();
       drag = { x: e.clientX, left: row.scrollLeft, moved: false, v: 0, lastX: e.clientX, lastT: performance.now() };
       row.classList.add("is-grabbing");
     });
@@ -591,15 +610,19 @@
       if (moved) {
         row.classList.add("is-dragged");
         setTimeout(function () { row.classList.remove("is-dragged"); }, 60);
-        // Glide: the row keeps moving with the hand's speed and eases out,
-        // the way a native scroll view behaves.
-        var last = performance.now();
+        // Glide: the row keeps moving with the hand's speed and eases out
+        // slowly, the way a native scroll view coasts — long enough not to
+        // feel like it hit a wall, and it stops at the row's ends.
+        stopAnim();
+        var last = performance.now(), max = row.scrollWidth - row.clientWidth;
+        v = Math.max(-3, Math.min(3, v));
         (function step(now) {
-          var dt = now - last; last = now;
-          v *= Math.pow(0.94, dt / 16);
-          if (Math.abs(v) < 0.02) return;
-          row.scrollLeft += v * dt;
-          glide = requestAnimationFrame(step);
+          var dt = Math.min(48, now - last); last = now;
+          v *= Math.pow(0.975, dt / 16);
+          var x = row.scrollLeft + v * dt;
+          if (Math.abs(v) < 0.01 || x <= 0 || x >= max) { row.scrollLeft = Math.max(0, Math.min(max, x)); anim = 0; return; }
+          row.scrollLeft = x;
+          anim = requestAnimationFrame(step);
         })(performance.now());
       }
     }
