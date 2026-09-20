@@ -88,29 +88,67 @@ back to the page. Previously `touchmove` called `preventDefault()` on any drag,
 which is why a phone visitor got stuck orbiting the head and could not scroll.
 Needs a real touch device to confirm.
 
-## 2026-09-20 session (Claude Code, with Evan reviewing on his phone)
+## 2026-09-20 session (Claude Code, Evan reviewing on his phone) — current state
 
-- **Mobile hero**: the tile is pinned in pixels by `lockHeroTile()` in `js/site.js`
-  (viewport minus nav minus copy), re-measured only on a width change. `dvh` and
-  then `svh` both let the sim reshape as the phone's URL bar moved; do not go back
+Everything below is pushed to this repo (`main`). Preview:
+https://evanemerydesign.github.io/evanemery-preview/ . Pick up on a new machine
+with the clone + `python3 -m http.server` steps above; `node tools/build.mjs`
+(or `PREVIEW=1 …`) after any template/data change. Test at ~390px for every
+change — Evan checks on his phone. A same-origin iframe harness (an untracked
+`_mobile.html` with `<iframe src="/" width="390" height="760">`) is the quick way
+when the desktop Chrome window will not resize.
+
+- **Mobile hero**: tile pinned in pixels by `lockHeroTile()` in `js/site.js`
+  (viewport minus nav minus copy), re-measured only on a width change. `dvh`
+  and then `svh` both let the sim reshape as the URL bar moved — never go back
   to a viewport unit here.
-- **Nav**: Workflow folded into About (statement first, workflow below). `#/workflow`
-  is an alias. Below 700px the Index link is hidden and the nav no longer scrolls.
-- **Works grid**: sized from its own width (`targetHeight`), two plates per row up to
-  ~1500px, three on wider screens. For ≤12 works the row-consistency weight is
-  relaxed (`spreadW`); above that the verified weighting holds. The count label was
-  removed on Evan's request — never show how many works there are.
-- **Card images**: `assets/works/grid/` (1800px) and `grid/sm/` (900px) derivatives,
-  made by `tools/make-grid-images.sh` (macOS sips). Cards use them with `srcset`;
-  detail pages keep the full files. `will-change: transform` on the card image is
-  what stops the white flash when the grid re-solves on resize.
-- **Carousel**: edge fades, hint text and the 01/08 counter are gone. The signal is a
-  card cut by the edge (solved in `justify()`, `PEEK`) plus the thin position bar.
-- **Work page**: the stage keeps one height across views (`--stage-h`); views are
-  preloaded on idle.
-- **Footer**: name and four icon links, no tagline. `site.tagline` is now unused.
-- **Build**: css/js URLs carry `?v=<stamp>` so redeploys are not served from cache.
-- Evan checks the GitHub Pages preview on his phone; test at ~390px for every change.
+- **Nav**: Workflow folded into About (statement first, workflow below).
+  `#/workflow` opens About scrolled to the `#workflow` section (`ANCHORS` in
+  site.js); the index "Explore the workflow" button uses it. Below 700px the
+  Index link is hidden (brand links home) and the nav does not scroll.
+- **Works grid**: sized from its own width (`targetHeight`), two plates per row
+  to ~1500px, three on wider screens; ≤12 works relaxes the row-consistency
+  weight (`spreadW`). No work count anywhere — Evan's request.
+- **Card images**: `assets/works/grid/` (1800px) + `grid/sm/` (900px) via
+  `tools/make-grid-images.sh` (macOS sips), used with `srcset`; detail pages keep
+  the full files. `will-change: transform` on card images stops the white flash
+  when the grid re-solves on resize (Chrome re-decodes otherwise).
+- **Selected-works row**: no edge fades, hint text or counter, and no
+  "All works" link — arrows only. Signal = last card cut by the edge (`PEEK` in
+  `justify()`) + thin position bar. Desktop: snap off for fine pointers, mouse
+  drag with a long glide, eased arrows (one `scrollTo()` easing), wheel cancels
+  any move, `overscroll-behavior-x: contain`. Phone: one plate height for all
+  cards; a landscape work keeps its 4:3 plate at that height so its card runs
+  wider than the screen. Evan judged desktop scroll "jumpy" twice; the last
+  round (contain + long glide) went out unverified by him — ask.
+- **Artwork page**: no breadcrumb. Stage takes the work's own aspect
+  (`--work-ar` per page); detail regions magnify 1.5x (1.25x phone) beyond
+  cover instead of the stored 220%; the box never changes size between views.
+  Desktop (≥1101px): view strip is a column LEFT of the frame, frame fills the
+  viewport height, record (`.ee-work-record`, 380px) right, pair centered.
+  Phone: frame hugs the work, height budget `100svh − 262px` so frame, 48px
+  view squares and series+title all land on the opening screen; caption line
+  hidden. Record order is the same as desktop.
+- **Behind the scenes**: three 9:16 stills in `assets/bts/` (cropped from the
+  Instagram plotter videos, UI excluded), monochrome until hover; compact
+  labels on phones. Replace with the real 9:16 clips when ready (`BTS` in
+  build.mjs).
+- **Footer**: name + four icon links, no tagline (`site.tagline` unused).
+- **Build**: css/js URLs carry `?v=<stamp>` so redeploys bypass phone caches.
+
+### To go live (unchanged, still owed)
+1. Replace `evanemerydesign/evanemery-portfolio` contents with this build and
+   run `node tools/build.mjs` there (production, no noindex):
+   `git rm -r -q --cached . && find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +`
+   then `rsync -a --exclude .git ../evanemery-preview/ ./ && node tools/build.mjs`.
+   The deletion was refused by the tool sandbox this session; Evan must run or
+   approve it.
+2. Cloudflare: Workers & Pages → Create → Pages → Connect to Git →
+   `evanemery-portfolio`, preset None, empty build command, output `/`; attach
+   `evanemery.art`, SSL Full. `evanemery.art` did not resolve on 2026-09-20.
+3. Admin (`admin.html`) is still localStorage-only and cannot publish; a real
+   admin needs a backend (Cloudflare Pages Functions + KV/R2 was the
+   recommendation).
 
 ## Deferred, by decision
 
