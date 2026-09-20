@@ -324,12 +324,13 @@
       // it stays fully visible, which makes it the shorter card here — the
       // trade for never cropping.
       if (width < 620) {
-        // Every card takes the portrait plate here (the stylesheet mats a
-        // landscape work inside it), so the row is one even height and a
-        // landscape piece is never the short card.
+        // One plate height for every card, set by a portrait at 86% of the
+        // rail. A landscape work keeps its own 4:3 plate at that same height
+        // and the same mat, so the ART is full height — its card runs wider
+        // than the screen and the row scrolls to reveal it, as a filmstrip does.
         var hPortrait = (width * 0.86 - matInset(cards[0])) / AR.portrait;
         cards.forEach(function (c) {
-          setCardWidth(c, Math.min(AR.portrait * hPortrait + matInset(c), width));
+          setCardWidth(c, ratioOf(c) * hPortrait + matInset(c));
         });
         return;
       }

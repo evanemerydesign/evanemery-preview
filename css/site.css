@@ -944,10 +944,6 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   /* One work per row on a phone; the solver enforces this too. */
   #ee-works-grid { gap: clamp(24px, 6vw, 36px); }
 
-  /* Phone carousel: a landscape work sits matted inside the portrait plate,
-     so every card in the row is the same full height. */
-  #ee-selscroll .ee-artcard[data-orient="landscape"] .plate { aspect-ratio: 3 / 4; }
-  #ee-selscroll .ee-artcard[data-orient="landscape"] .plate img { width: 100%; height: 100%; object-fit: contain; }
 
   /* Works heading: keep the first plate near the top of the screen. The
      filter chips run as one line that scrolls sideways, the cut-off last
