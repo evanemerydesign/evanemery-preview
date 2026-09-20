@@ -635,9 +635,9 @@ a.ee-artcard { cursor: pointer; color: inherit; }
   display: grid; grid-template-columns: auto minmax(300px, var(--record-w));
   gap: var(--work-gap); align-items: start; justify-content: center;
 }
-.ee-work > :last-child {
-  position: sticky; top: calc(var(--ee-nav-h, 60px) + 20px);
-}
+/* The record: title block, then the rest. Kept as two pieces so a phone can
+   lift the title above the frame (see the single-column rules). */
+.ee-work-record { display: flex; flex-direction: column; gap: var(--sp-4); }
 /* The stage keeps ONE height whatever view is shown. Every image is given the
    same fixed height (width follows its aspect, matted in white if the width
    must be capped) and the magnified crop is sized to the same outer box, so
@@ -651,13 +651,7 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 .ee-work-stage {
   --plate-pad: clamp(12px, 1.5vw, 24px);
   --stage-pad: clamp(14px, 1.6vw, 28px);
-  /* As tall as the viewport allows, capped so the view strip still lands
-     near the fold; and never wider than the room left beside the record. */
-  --stage-h: min(
-    74vh, 860px,
-    calc((100vw - 2 * var(--page-gutter) - var(--work-gap, 64px) - var(--record-w, 380px)
-          - 2 * var(--plate-pad) - 2 * var(--stage-pad) - 3px) / var(--work-ar, 0.75))
-  );
+  --stage-h: min(74vh, 860px);
   --stage-w: calc(var(--stage-h) * var(--work-ar, 0.75));
   width: calc(var(--stage-w) + 2 * var(--plate-pad) + 2 * var(--stage-pad) + 3px);
   max-width: 100%;
@@ -677,6 +671,36 @@ a.ee-artcard { cursor: pointer; color: inherit; }
 }
 /* Caption and view strip line up under the frame, not across the column. */
 .ee-focusrow { max-width: 100%; }
+
+/* Desktop: the view strip stands to the LEFT of the frame as a column, the
+   way gallery sites place alternate views, so the frame can take the full
+   viewport height and every view is reachable without scrolling. The frame
+   is bounded by the height left under the nav and by the width left beside
+   the strip and the record, whichever is tighter. */
+@media (min-width: 1101px) {
+  .ee-work > :first-child {
+    display: grid; grid-template-columns: auto auto;
+    grid-template-areas: "strip stage" "strip caption";
+    column-gap: 16px; row-gap: 12px; align-items: start; justify-content: start;
+  }
+  .ee-work-stage { grid-area: stage; }
+  #ee-focus-caption { grid-area: caption; margin-top: 0 !important; }
+  .ee-focusrow {
+    grid-area: strip; flex-direction: column; flex-wrap: nowrap;
+    margin-top: 0; width: 92px; gap: 10px;
+  }
+  .ee-work-stage {
+    --plate-pad: 18px;
+    --stage-pad: 20px;
+    --strip-w: 108px;
+    --stage-h: max(360px, min(
+      calc(100vh - var(--ee-nav-h, 58px) - 112px - 2 * var(--plate-pad) - 2 * var(--stage-pad)),
+      calc((100vw - 2 * var(--page-gutter) - var(--work-gap, 64px) - var(--record-w, 380px) - var(--strip-w)
+            - 2 * var(--plate-pad) - 2 * var(--stage-pad) - 3px) / var(--work-ar, 0.75)),
+      960px
+    ));
+  }
+}
 .ee-focusrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--sp-3); }
 .ee-focusbtn {
   background: none; padding: 0; cursor: pointer; width: 92px;
@@ -837,7 +861,11 @@ a.ee-artcard { cursor: pointer; color: inherit; }
     grid-template-columns: 1fr !important; gap: clamp(24px,5vw,40px) !important;
   }
   .ee-work { justify-content: stretch; }
-  .ee-work > :last-child { position: static; max-width: 640px; }
+  /* Single column: series + title FIRST, then the frame, then the rest of
+     the record — so the opening screen is the work and its name. */
+  .ee-work-record { display: contents; }
+  .ee-work-head { order: -1; }
+  .ee-work-rest { max-width: 640px; }
   .ee-work-stage {
     --stage-h: min(70vh, calc((100vw - 2 * var(--page-gutter) - 2 * var(--plate-pad) - 2 * var(--stage-pad) - 3px) / var(--work-ar, 0.75)));
   }
@@ -925,7 +953,6 @@ a.ee-artcard { cursor: pointer; color: inherit; }
    below the fold. Tighten the type and plates rather than let them scroll. */
 @media (min-width: 1101px) and (max-height: 860px) {
   .ee-artcard h3 { font-size: 18px; }
-  .ee-work-stage { --stage-h: min(68vh, 860px, calc((100vw - 2 * var(--page-gutter) - var(--work-gap, 64px) - var(--record-w, 380px) - 2 * var(--plate-pad) - 2 * var(--stage-pad) - 3px) / var(--work-ar, 0.75))); }
   .ee-spec th, .ee-spec td { padding: 4px 0; font-size: 12px; }
   .ee-work h1 { font-size: clamp(26px, 2.8vw, 38px); }
   .ee-focusbtn { width: 78px; }

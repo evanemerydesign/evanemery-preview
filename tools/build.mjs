@@ -621,9 +621,12 @@ ${opts.map((o, i) => `          <button type="button" class="ee-focusbtn" aria-p
         </div>` : ""}
       </div>
 
-      <div class="ee-stack" data-reveal style="gap:var(--sp-4)">
-        ${specLabel(`${w.series || "Work"} · ${w.year}`)}
-        <h1 class="ee-h1" style="font-size:clamp(30px,3.4vw,50px)">${esc(w.title)}</h1>
+      <div class="ee-work-record" data-reveal>
+        <div class="ee-work-head ee-stack" style="gap:var(--sp-3)">
+          ${specLabel(`${w.series || "Work"} · ${w.year}`)}
+          <h1 class="ee-h1" style="font-size:clamp(30px,3.4vw,50px)">${esc(w.title)}</h1>
+        </div>
+        <div class="ee-work-rest ee-stack" style="gap:var(--sp-4)">
         ${w.badge ? `<div class="ee-chiprow">${tag(w.badge, "outline")}</div>` : ""}
         <p class="ee-body">${esc(w.blurb)}</p>
         ${w.params ? `<div class="ee-datasheet"><div class="hd">Parameters</div><div>${esc(w.params)}</div></div>` : ""}
@@ -635,6 +638,7 @@ ${specRows.map(([k, v]) => `            <tr><th scope="row">${esc(k)}</th><td>${
         </table>
         <div>
           <a class="ee-btn" href="mailto:${EMAIL}?subject=${encodeURIComponent("Enquiry — " + w.title)}">Enquire about this work</a>
+        </div>
         </div>
       </div>
     </div>
