@@ -14,6 +14,10 @@ import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from "node
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+// Asset version stamp: appended to css/js URLs so a redeploy is never served
+// from a phone's stale cache (GitHub Pages / Cloudflare send max-age on assets).
+const V = Date.now().toString(36);
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://evanemery.art";
 const EMAIL = "evanemerydesign@gmail.com";
@@ -166,7 +170,7 @@ ${(noindex || PREVIEW) ? `<meta name="robots" content="noindex,nofollow">\n` : "
 <link rel="stylesheet" href="${prefix}css/tokens/typography.css">
 <link rel="stylesheet" href="${prefix}css/tokens/spacing.css">
 <link rel="stylesheet" href="${prefix}css/tokens/effects.css">
-<link rel="stylesheet" href="${prefix}css/site.css">
+<link rel="stylesheet" href="${prefix}css/site.css?v=${V}">
 <link rel="preload" href="${prefix}assets/fonts/ChakraPetch-700n.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${prefix}assets/fonts/SpaceGrotesk-400n.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${prefix}assets/fonts/SpaceMono-400n.woff2" as="font" type="font/woff2" crossorigin>`;
@@ -498,14 +502,14 @@ ${aboutSection}
 ${footer(site)}
 </div>
 
-<script src="js/works-data.js"></script>
-<script src="js/site-config.js"></script>
+<script src="js/works-data.js?v=${V}"></script>
+<script src="js/site-config.js?v=${V}"></script>
 <script src="assets/vendor/three.min.js"></script>
-<script src="js/head-points.js"></script>
-<script src="js/head-mesh.js"></script>
-<script src="js/hero-field.js"></script>
-<script src="js/bg-grid.js"></script>
-<script src="js/site.js"></script>
+<script src="js/head-points.js?v=${V}"></script>
+<script src="js/head-mesh.js?v=${V}"></script>
+<script src="js/hero-field.js?v=${V}"></script>
+<script src="js/bg-grid.js?v=${V}"></script>
+<script src="js/site.js?v=${V}"></script>
 </body>
 </html>
 `;
@@ -623,9 +627,9 @@ ${specRows.map(([k, v]) => `            <tr><th scope="row">${esc(k)}</th><td>${
 ${footer(site)}
 </div>
 
-<script src="${P}js/works-data.js"></script>
-<script src="${P}js/site-config.js"></script>
-<script src="${P}js/work.js"></script>
+<script src="${P}js/works-data.js?v=${V}"></script>
+<script src="${P}js/site-config.js?v=${V}"></script>
+<script src="${P}js/work.js?v=${V}"></script>
 </body>
 </html>
 `;

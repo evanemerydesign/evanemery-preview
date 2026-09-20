@@ -571,11 +571,42 @@
     }
   }
 
+  /* ---------------- mobile hero height lock -------------------------------- */
+
+  // On a phone the hero tile is sized to the viewport. Any viewport unit, dvh
+  // or svh, has proved to move with the URL bar on some browsers, and the sim
+  // then re-fits its camera mid-scroll and visibly changes shape. So the tile
+  // is measured once and pinned in pixels. It is re-measured only when the
+  // width changes (rotation, split screen), never for a height-only change,
+  // which is what the URL bar produces.
+  function lockHeroTile() {
+    var tile = $(".ee-hero-tile");
+    if (!tile) return;
+    var mq = window.matchMedia("(max-width: 700px)");
+    var lastW = -1;
+    function apply() {
+      if (!mq.matches) { tile.style.height = ""; lastW = -1; return; }
+      var w = window.innerWidth;
+      if (w === lastW) return;
+      lastW = w;
+      var nav = $("#ee-nav");
+      var navH = nav ? nav.offsetHeight : 96;
+      var h = Math.max(340, Math.round(window.innerHeight - navH - 112));
+      tile.style.height = h + "px";
+    }
+    apply();
+    [200, 800].forEach(function (ms) { setTimeout(apply, ms); });
+    window.addEventListener("resize", apply);
+    window.addEventListener("orientationchange", function () { lastW = -1; apply(); });
+    if (mq.addEventListener) mq.addEventListener("change", function () { lastW = -1; apply(); });
+  }
+
   /* ---------------- boot --------------------------------------------------- */
 
   function boot() {
     bindNav();
     trackNavHeight();
+    lockHeroTile();
     setupFilters();
     watchFrames();
     setupCarousel();
