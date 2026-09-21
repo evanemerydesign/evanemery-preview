@@ -1,0 +1,242 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Evan Emery Selected Works</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Space+Grotesk:wght@400;500&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root { --bg:#f4f0ea; --bg2:#efebe1; --card:#f9f7f2; --ink:#161616; --mute:#6f6e6b; --rule:#d8d5cf; --blue:#12305e; --blue2:#0b1a36; --paper:#faf9f4; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:'Space Grotesk', system-ui, sans-serif; font-size:16px; line-height:1.5; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } * { transition:none !important; animation:none !important; } }
+.cp { font-family:'Chakra Petch', 'Arial Narrow', sans-serif; font-weight:700; }
+.mono { font-family:'Space Mono', ui-monospace, monospace; }
+.lab { font-family:'Space Mono', ui-monospace, monospace; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--mute); }
+a { color:inherit; }
+button { font:inherit; color:inherit; }
+/* nav */
+.nav { position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:rgba(244,240,234,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--rule); }
+.nav .in { max-width:1400px; margin:0 auto; padding:12px 24px; display:flex; justify-content:space-between; align-items:center; gap:16px; }
+.nav .brand { font-size:15px; letter-spacing:-.01em; }
+.nav ul { list-style:none; margin:0; padding:0; display:flex; gap:22px; }
+.nav a { text-decoration:none; font-family:'Space Mono', monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--mute); }
+.nav a:hover { color:var(--ink); }
+/* hero */
+.hero { position:relative; background:var(--blue2); color:#f4f0ea; min-height:520px; height:72vh; max-height:820px; overflow:hidden; }
+.hero img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; }
+.hero .shade { position:absolute; inset:0; background:linear-gradient(to top, rgba(8,14,30,.92) 0%, rgba(8,14,30,.45) 40%, rgba(8,14,30,0) 70%), linear-gradient(to bottom, rgba(8,14,30,.6) 0%, rgba(8,14,30,0) 20%); }
+.hero .in { position:absolute; left:0; right:0; bottom:0; max-width:1400px; margin:0 auto; padding:0 24px 40px; display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap; }
+.hero h1 { margin:0; font-size:clamp(38px, 6.5vw, 76px); line-height:.94; letter-spacing:-.01em; text-wrap:balance; }
+.hero .sub { margin-top:16px; font-family:'Space Mono', monospace; font-size:11px; letter-spacing:.26em; text-transform:uppercase; opacity:.85; }
+.hero .tag { position:absolute; top:22px; left:24px; font-family:'Space Mono', monospace; font-size:10px; letter-spacing:.26em; text-transform:uppercase; opacity:.85; }
+.hero .r { font-family:'Space Mono', monospace; font-size:11px; line-height:1.9; letter-spacing:.06em; opacity:.85; text-align:right; }
+.hero .r a { text-decoration:none; }
+/* brief */
+.brief { padding-block:64px 56px; }
+.brief .in { max-width:1400px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.6fr); gap:48px; align-items:start; }
+@media (max-width:900px) { .brief .in { grid-template-columns:1fr; gap:20px; } }
+.brief .lede { margin:0; font-family:'Chakra Petch', 'Arial Narrow', sans-serif; font-weight:700; font-size:clamp(26px, 3.2vw, 40px); line-height:1.05; text-transform:uppercase; text-wrap:balance; }
+.brief .body p { margin:0 0 14px; font-size:17px; line-height:1.55; max-width:62ch; }
+.brief .lab { margin-top:6px; }
+/* sections */
+.wrap { max-width:1400px; margin:0 auto; padding:0 24px; }
+section.s { padding-block:56px; }
+.hd { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; border-bottom:2px solid var(--ink); padding-bottom:12px; margin-bottom:28px; flex-wrap:wrap; }
+.hd h2 { margin:0; font-size:24px; line-height:1; text-transform:uppercase; }
+/* gallery */
+.grid { display:grid; grid-template-columns:repeat(5, 1fr); gap:26px 22px; }
+@media (max-width:1100px) { .grid { grid-template-columns:repeat(3, 1fr); } }
+@media (max-width:640px) { .grid { grid-template-columns:repeat(2, 1fr); gap:20px 14px; } }
+.card { background:none; border:0; padding:0; text-align:left; cursor:pointer; display:flex; flex-direction:column; gap:10px; }
+.card .box { aspect-ratio:4/5; background:var(--card); border:2px solid var(--ink); box-shadow:3px 3px 0 var(--rule); display:flex; align-items:center; justify-content:center; padding:7%; transition:transform .18s ease, box-shadow .18s ease; }
+.card:hover .box, .card:focus-visible .box { transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--rule); }
+.card:focus-visible { outline:2px solid var(--blue); outline-offset:4px; }
+.card img { max-width:100%; max-height:100%; width:auto; height:auto; display:block; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+.card .cap { display:flex; gap:8px; align-items:baseline; font-family:'Space Mono', monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; }
+.card .cap .n { color:var(--mute); } .card .cap .p { margin-left:auto; font-weight:700; }
+.hint { margin-top:18px; }
+/* lightbox */
+.lb { position:fixed; inset:0; z-index:50; background:var(--bg2); display:grid; grid-template-columns:340px 1fr; overflow:auto; }
+.lb .bg { position:absolute; inset:0; pointer-events:none;
+  background-image:linear-gradient(to right, rgba(0,0,0,.055) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,.055) 1px, transparent 1px), linear-gradient(to right, rgba(0,0,0,.028) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,.028) 1px, transparent 1px);
+  background-size:48px 48px, 48px 48px, 12px 12px, 12px 12px; }
+.lb .panel { position:relative; background:#f5f2ec; padding:calc(40px + env(safe-area-inset-top,0px)) 30px 40px; min-height:100%; }
+.lb .num { font-family:'Space Mono', monospace; font-size:10px; letter-spacing:.12em; color:#5d5d5d; }
+.lb h3 { margin:28px 0 0; font-size:30px; line-height:1; text-transform:uppercase; padding-bottom:12px; border-bottom:1px solid #7d7c79; }
+.lb dl { margin:18px 0 0; display:grid; grid-template-columns:96px 1fr; row-gap:8px; font-family:'Space Mono', monospace; font-size:10.5px; line-height:1.5; }
+.lb dt { color:#7b7b79; letter-spacing:.12em; text-transform:uppercase; } .lb dd { margin:0; } .lb dd.price { font-weight:700; }
+.lb .desc { margin-top:22px; padding-top:18px; border-top:1px solid var(--rule); font-size:14.5px; line-height:1.55; color:#2a2a2a; }
+.lb .desc p { margin:0 0 8px; }
+.lb .stage { position:relative; display:flex; align-items:center; justify-content:center; padding:40px 24px; min-height:100vh; }
+.lb .frame { background:var(--paper); border:2px solid var(--ink); padding:14px; box-shadow:6px 6px 0 #cfccc3; max-width:100%; }
+.lb .frame img { display:block; max-height:calc(100vh - 110px); max-width:100%; width:auto; height:auto; }
+.lb .ctl { position:fixed; top:calc(14px + env(safe-area-inset-top,0px)); right:16px; display:flex; gap:8px; z-index:2; }
+.lb .ctl button, .lb .arrow { background:var(--paper); border:2px solid var(--ink); box-shadow:3px 3px 0 #cfccc3; width:42px; height:42px; cursor:pointer; font-family:'Space Mono', monospace; font-size:16px; display:flex; align-items:center; justify-content:center; }
+.lb .ctl button:hover, .lb .arrow:hover { transform:translate(-1px,-1px); box-shadow:4px 4px 0 #cfccc3; }
+.lb .ctl button:focus-visible, .lb .arrow:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+.lb .arrow { position:fixed; top:50%; transform:translateY(-50%); z-index:2; }
+.lb .arrow.prev { left:356px; } .lb .arrow.next { right:16px; }
+@media (max-width:900px) {
+  .lb { grid-template-columns:1fr; }
+  .lb .panel { order:2; min-height:0; padding-top:28px; }
+  .lb .stage { order:1; min-height:0; padding:calc(70px + env(safe-area-inset-top,0px)) 16px 24px; }
+  .lb .frame img { max-height:70vh; }
+  .lb .arrow.prev { left:16px; } .lb .arrow { top:auto; bottom:calc(16px + env(safe-area-inset-bottom,0px)); transform:none; }
+}
+/* process */
+.proc { display:grid; grid-template-columns:minmax(260px, 420px) 1fr; gap:48px; align-items:center; }
+@media (max-width:800px) { .proc { grid-template-columns:1fr; gap:28px; } }
+.vid { background:#0b1a36; border:2px solid #f4f0ea; box-shadow:6px 6px 0 rgba(244,240,234,.25); aspect-ratio:3/4; max-width:100%; }
+.vid video { display:block; width:100%; height:100%; object-fit:cover; background:#000; }
+.ptxt { max-width:60ch; }
+.ptxt h3 { margin:0 0 14px; font-size:20px; text-transform:uppercase; letter-spacing:.02em; }
+.ptxt p { margin:0 0 12px; font-size:16px; line-height:1.55; color:#e6e3dc; }
+/* statement */
+.cols { display:grid; grid-template-columns:repeat(3, 1fr); gap:40px; }
+@media (max-width:900px) { .cols { grid-template-columns:1fr; gap:8px; } }
+.cols p { margin:0 0 12px; max-width:62ch; }
+.cols h3 { margin:22px 0 10px; font-size:13px; letter-spacing:.06em; text-transform:uppercase; }
+/* list */
+.two { display:grid; grid-template-columns:1.4fr 1fr; gap:48px; align-items:start; }
+@media (max-width:900px) { .two { grid-template-columns:1fr; } }
+.tw { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:14px; min-width:560px; }
+th, td { text-align:left; padding:9px 8px; border-bottom:1px solid var(--rule); vertical-align:top; }
+th { font-family:'Space Mono', monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--mute); border-bottom:1px solid var(--ink); font-weight:400; }
+td:last-child, th:last-child, td:first-child { font-variant-numeric:tabular-nums; }
+td:last-child, th:last-child { text-align:right; white-space:nowrap; font-weight:500; }
+.total { margin-top:14px; font-family:'Space Mono', monospace; font-size:11px; }
+.contact div { display:flex; gap:12px; align-items:baseline; padding:6px 0; border-bottom:1px solid var(--rule); }
+.contact .k { flex:0 0 96px; }
+.contact a { text-decoration:none; } .contact a:hover { text-decoration:underline; }
+.contact h3 { margin:0 0 6px; font-size:13px; letter-spacing:.06em; text-transform:uppercase; }
+footer { border-top:1px solid var(--rule); }
+footer .in { max-width:1400px; margin:0 auto; padding:22px 24px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+</style></head><body>
+
+<nav class="nav"><div class="in"><span class="brand cp">EVAN EMERY</span>
+<ul><li><a href="#works">Works</a></li><li><a href="#process">Process</a></li><li><a href="#about">About</a></li><li><a href="#list">Available works</a></li><li><a href="#list">Contact</a></li></ul></div></nav>
+
+<header class="hero">
+  <img src="img/deep-blue.jpg" alt="Deep Blue, cyanotype print, 2025"><div class="shade"></div>
+  <div class="in">
+    <div><h1 class="cp">EVAN EMERY<br>SELECTED WORKS</h1><div class="sub">Human &nbsp;×&nbsp; Machine &nbsp;·&nbsp; Nine works &nbsp;·&nbsp; 2024 — 2025</div></div>
+    <div class="r">Phoenix, Arizona<br><a href="https://www.instagram.com/evanemerydesign/">@evanemerydesign</a></div>
+  </div>
+</header>
+
+<section class="brief" id="statement"><div class="in">
+  <div><p class="lede">My work applies the instruments of architecture to the human body.</p><div class="lab">Artist statement</div></div>
+  <div class="body"><p>Height fields, isometric projection, point clouds, the surveyor's annotation: the conventions we use to describe buildings and terrain, turned toward a face.</p><p>I write the system that finds the pattern. The mathematics acts on its own terms, and the human body is the surface it acts upon.</p><p>Every result lands in something physical and slow: cyanotype, plotted white ink, pigment on cotton rag.</p></div>
+</div></section>
+
+<section class="s" id="works"><div class="wrap">
+  <div class="hd"><h2 class="cp">Works submitted</h2><span class="lab">Nine works · 2024 — 2025 · all available</span></div>
+  <div class="grid">
+<button class="card" data-i="0" aria-label="Open Duality">
+  <div class="box"><img src="img/duality.jpg" alt="Duality" loading="eager"></div>
+  <div class="cap"><span class="t">Duality</span><span class="n">01</span><span class="p">$3,000</span></div>
+</button>
+<button class="card" data-i="1" aria-label="Open Deep Blue">
+  <div class="box"><img src="img/deep-blue.jpg" alt="Deep Blue" loading="eager"></div>
+  <div class="cap"><span class="t">Deep Blue</span><span class="n">02</span><span class="p">$2,000</span></div>
+</button>
+<button class="card" data-i="2" aria-label="Open Distant Blues">
+  <div class="box"><img src="img/distant-blues.jpg" alt="Distant Blues" loading="eager"></div>
+  <div class="cap"><span class="t">Distant Blues</span><span class="n">03</span><span class="p">$2,000</span></div>
+</button>
+<button class="card" data-i="3" aria-label="Open Fractal Blues">
+  <div class="box"><img src="img/fractal-blues.jpg" alt="Fractal Blues" loading="eager"></div>
+  <div class="cap"><span class="t">Fractal Blues</span><span class="n">04</span><span class="p">$2,000</span></div>
+</button>
+<button class="card" data-i="4" aria-label="Open Falling">
+  <div class="box"><img src="img/falling.jpg" alt="Falling" loading="eager"></div>
+  <div class="cap"><span class="t">Falling</span><span class="n">05</span><span class="p">$2,000</span></div>
+</button>
+<button class="card" data-i="5" aria-label="Open Disassembly">
+  <div class="box"><img src="img/disassembly.jpg" alt="Disassembly" loading="lazy"></div>
+  <div class="cap"><span class="t">Disassembly</span><span class="n">06</span><span class="p">$2,000</span></div>
+</button>
+<button class="card" data-i="6" aria-label="Open Dazzle Mass">
+  <div class="box"><img src="img/dazzle-mass.jpg" alt="Dazzle Mass" loading="lazy"></div>
+  <div class="cap"><span class="t">Dazzle Mass</span><span class="n">07</span><span class="p">$2,000</span></div>
+</button>
+<button class="card" data-i="7" aria-label="Open Dazzle Dim">
+  <div class="box"><img src="img/dazzle-dim.jpg" alt="Dazzle Dim" loading="lazy"></div>
+  <div class="cap"><span class="t">Dazzle Dim</span><span class="n">08</span><span class="p">$2,000</span></div>
+</button>
+<button class="card" data-i="8" aria-label="Open Fracture Head">
+  <div class="box"><img src="img/fracture-head.jpg" alt="Fracture Head" loading="lazy"></div>
+  <div class="cap"><span class="t">Fracture Head</span><span class="n">09</span><span class="p">$2,000</span></div>
+</button>
+  </div>
+  <div class="hint lab">Select a work to view it large</div>
+</div></section>
+
+<section class="s" id="process" style="background:var(--blue2); color:#f4f0ea"><div class="wrap">
+  <div class="hd" style="border-color:#f4f0ea"><h2 class="cp">Process</h2><span class="lab" style="color:#b9bec9">From code to paper</span></div>
+  <div class="proc">
+    <div class="vid"><video id="btsVideo" src="bts.mp4" poster="img/bts-poster.jpg" controls playsinline preload="metadata"></video></div>
+    <div class="ptxt">
+      <h3 class="cp">Pen plotter process · Duality</h3>
+      <p>Geometry generated in code, drawn by machine. This clip follows Duality from model to plotter bed.</p>
+      <p class="lab" style="color:#b9bec9; margin-top:18px">Press play · 90 seconds · sound on</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="s" id="about" style="background:var(--bg2)"><div class="wrap">
+  <div class="hd"><h2 class="cp">About</h2><span class="lab">Evan Emery · Phoenix, Arizona</span></div>
+  <div class="cols"><div><h3 class="cp" style="margin-top:0">Form</h3><p>Form and surface held in opposition, and surface prevailing.</p></div><div><h3 class="cp" style="margin-top:0">Material</h3><p>Digital process, analog output.</p><p>The digital carries no weight until it is pressed into paper.</p></div><div><h3 class="cp" style="margin-top:0">Biography</h3><p>Evan Emery is a Phoenix-based artist, fabricator and educator. He directs The Guild, the fabrication division of 180 Degrees Design Build, and a six-axis robotics lab at The Design School at Arizona State University. His work is generated in code and resolved in cyanotype, pigment and plotted ink.</p></div></div>
+</div></section>
+
+<section class="s" id="list"><div class="wrap">
+  <div class="hd"><h2 class="cp">Available works</h2><span class="lab">Retail prices · framed originals and prints</span></div>
+  <div class="two">
+    <div><div class="tw"><table><thead><tr><th>#</th><th>Title</th><th>Year</th><th>Medium</th><th>Dimensions</th><th>Retail</th></tr></thead><tbody><tr><td>1</td><td>Duality</td><td>2025</td><td>White ink on mat board</td><td>30 × 40 in</td><td>$3,000</td></tr><tr><td>2</td><td>Deep Blue</td><td>2025</td><td>Cyanotype print on watercolor paper</td><td>25 × 31 in</td><td>$2,000</td></tr><tr><td>3</td><td>Distant Blues</td><td>2025</td><td>Cyanotype print on watercolor paper</td><td>25 × 31 in</td><td>$2,000</td></tr><tr><td>4</td><td>Fractal Blues</td><td>2025</td><td>Cyanotype print on watercolor paper</td><td>25 × 31 in</td><td>$2,000</td></tr><tr><td>5</td><td>Falling</td><td>2025</td><td>Cyanotype print on watercolor paper</td><td>25 × 31 in</td><td>$2,000</td></tr><tr><td>6</td><td>Disassembly</td><td>2025</td><td>Ink on graph paper</td><td>25 × 31 in</td><td>$2,000</td></tr><tr><td>7</td><td>Dazzle Mass</td><td>2025</td><td>Archival pigment on fine art paper</td><td>25 × 31 in</td><td>$2,000</td></tr><tr><td>8</td><td>Dazzle Dim</td><td>2024</td><td>Archival pigment on fine art paper</td><td>25 × 31 in</td><td>$2,000</td></tr><tr><td>9</td><td>Fracture Head</td><td>2024</td><td>Mixed media on fine art paper</td><td>25 × 31 in</td><td>$2,000</td></tr></tbody></table></div>
+      </div>
+    <div class="contact"><h3 class="cp">Contact</h3>
+      <div><span class="k lab">Name</span><span>Evan Emery</span></div>
+      <div><span class="k lab">Location</span><span>Phoenix, Arizona</span></div>
+      <div><span class="k lab">Email</span><a href="mailto:evanemerydesign@gmail.com">evanemerydesign@gmail.com</a></div>
+      <div><span class="k lab">Instagram</span><a href="https://www.instagram.com/evanemerydesign/">@evanemerydesign</a></div>
+      <div><span class="k lab">LinkedIn</span><a href="https://www.linkedin.com/in/evan-emery-2021/">evan-emery-2021</a></div>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="in"><span class="lab">Evan Emery · Phoenix, Arizona</span><span class="lab">Selected works · 2024 — 2025</span></div></footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Work detail">
+  <div class="bg"></div>
+  <div class="panel"><div class="num" id="lbNum"></div><h3 class="cp" id="lbTitle"></h3>
+    <dl><dt>Year</dt><dd id="lbYear"></dd><dt>Medium</dt><dd id="lbMedium"></dd><dt>Size</dt><dd id="lbSize"></dd><dt>Tools</dt><dd id="lbTools"></dd><dt>Output</dt><dd id="lbOut"></dd><dt>Retail</dt><dd class="price" id="lbPrice"></dd></dl>
+    <div class="desc" id="lbDesc"></div></div>
+  <div class="stage"><div class="frame"><img id="lbImg" src="" alt=""></div></div>
+  <div class="ctl"><button type="button" id="lbClose" aria-label="Close">✕</button></div>
+  <button type="button" class="arrow prev" id="lbPrev" aria-label="Previous work">←</button>
+  <button type="button" class="arrow next" id="lbNext" aria-label="Next work">→</button>
+</div>
+
+<script>
+const WORKS = [{"id": "duality", "title": "Duality", "year": "2025", "medium": "White ink on mat board", "size": "30 \u00d7 40 in", "price": "$3,000", "tools": "Rhino \u00b7 Grasshopper", "out": "CNC pen plotter", "wide": true, "desc": "<p>Linework and a point cloud read the same head and disagree. 1,904 nodes in white ink by plotter.</p>"}, {"id": "deep-blue", "title": "Deep Blue", "year": "2025", "medium": "Cyanotype print on watercolor paper", "size": "25 \u00d7 31 in", "price": "$2,000", "tools": "Octane Render \u00b7 Vectron \u00b7 C4D", "out": "Cyanotype", "wide": false, "desc": "<p>Two heads pushed forward out of fractal geometry. Exposed in cyanotype, the blueprint's own chemistry.</p>"}, {"id": "distant-blues", "title": "Distant Blues", "year": "2025", "medium": "Cyanotype print on watercolor paper", "size": "25 \u00d7 31 in", "price": "$2,000", "tools": "Octane Render \u00b7 Vectron \u00b7 C4D", "out": "Cyanotype", "wide": false, "desc": "<p>A figure raised out of a height field until the body reads as terrain.</p>"}, {"id": "fractal-blues", "title": "Fractal Blues", "year": "2025", "medium": "Cyanotype print on watercolor paper", "size": "25 \u00d7 31 in", "price": "$2,000", "tools": "Octane Render \u00b7 Vectron \u00b7 C4D", "out": "Cyanotype", "wide": false, "desc": "<p>Recursive displacement folds the profile into itself, self-similar at every scale.</p>"}, {"id": "falling", "title": "Falling", "year": "2025", "medium": "Cyanotype print on watercolor paper", "size": "25 \u00d7 31 in", "price": "$2,000", "tools": "Octane Render \u00b7 Vectron \u00b7 C4D", "out": "Cyanotype", "wide": false, "desc": "<p>A figure mid-descent, extruded and inverted so the mass unspools downward.</p>"}, {"id": "disassembly", "title": "Disassembly", "year": "2025", "medium": "Ink on graph paper", "size": "25 \u00d7 31 in", "price": "$2,000", "tools": "Rhino \u00b7 Grasshopper \u00b7 DrawingBot v3", "out": "CNC pen plotter", "wide": false, "desc": "<p>An isometric mass drawn block by block on graph paper, shaking loose as it is drawn.</p>"}, {"id": "dazzle-mass", "title": "Dazzle Mass", "year": "2025", "medium": "Archival pigment on fine art paper", "size": "25 \u00d7 31 in", "price": "$2,000", "tools": "Rhino \u00b7 Grasshopper \u00b7 Blender", "out": "Archival inkjet", "wide": false, "desc": "<p>A gridded volume carved into a figure, dazzle pattern flashing where the form breaks.</p>"}, {"id": "dazzle-dim", "title": "Dazzle Dim", "year": "2024", "medium": "Archival pigment on fine art paper", "size": "25 \u00d7 31 in", "price": "$2,000", "tools": "Rhino \u00b7 Grasshopper", "out": "CNC pen plotter", "wide": false, "desc": "<p>A portrait resolved from 4,120 vector arrows. No contour, no edge, only the field.</p>"}, {"id": "fracture-head", "title": "Fracture Head", "year": "2024", "medium": "Mixed media on fine art paper", "size": "25 \u00d7 31 in", "price": "$2,000", "tools": "Rhino \u00b7 Grasshopper \u00b7 Blender \u00b7 DrawingBot v3", "out": "Spray paint \u00b7 CNC pen plotter", "wide": false, "desc": "<p>A faceted profile split along an algorithmic seam, pressed into paper with spray paint and plotter ink.</p>"}];
+const lb = document.getElementById('lb'); let cur = 0, lastFocus = null;
+const $ = id => document.getElementById(id);
+function show(i) {
+  cur = (i + WORKS.length) % WORKS.length; const w = WORKS[cur];
+  $('lbNum').textContent = String(cur+1).padStart(2,'0') + ' / ' + String(WORKS.length).padStart(2,'0');
+  $('lbTitle').textContent = w.title; $('lbYear').textContent = w.year; $('lbMedium').textContent = w.medium;
+  $('lbSize').textContent = w.size; $('lbTools').textContent = w.tools; $('lbOut').textContent = w.out; $('lbPrice').textContent = w.price;
+  $('lbDesc').innerHTML = w.desc; const im = $('lbImg'); im.src = 'img/' + w.id + '.jpg'; im.alt = w.title;
+  lb.scrollTop = 0;
+}
+function open(i) { lastFocus = document.activeElement; show(i); lb.hidden = false; document.body.style.overflow = 'hidden'; $('lbClose').focus(); }
+function close() { lb.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
+document.querySelectorAll('.card').forEach(c => c.addEventListener('click', () => open(+c.dataset.i)));
+$('lbClose').addEventListener('click', close);
+$('lbPrev').addEventListener('click', () => show(cur-1));
+$('lbNext').addEventListener('click', () => show(cur+1));
+document.addEventListener('keydown', e => { if (lb.hidden) return; if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') show(cur-1); if (e.key === 'ArrowRight') show(cur+1); });
+let tx = null; lb.addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive:true});
+lb.addEventListener('touchend', e => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 60) show(cur + (dx < 0 ? 1 : -1)); tx = null; });
+</script>
+
+</body></html>
